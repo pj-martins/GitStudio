@@ -120,7 +120,7 @@ namespace PaJaMa.GitStudio
 		{
 			string error = string.Empty;
 			var diffLines = RunCommand("status --short", ref error);
-			if (!string.IsNullOrEmpty(error)) return new List<Difference>();
+			if (!string.IsNullOrEmpty(error)) return null;
 
 			var diffs = new List<Difference>();
 

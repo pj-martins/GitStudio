@@ -100,8 +100,6 @@ namespace PaJaMa.GitStudio
 				if (remote) remote = false;
 				else break;
 			}
-
-			_previousDifferences = null;
 		}
 
 		private void branchToolStripMenuItem_Click(object sender, EventArgs e)
@@ -126,10 +124,10 @@ namespace PaJaMa.GitStudio
 		{
 			// checkoutToolStripMenuItem.Enabled = lstLocalBranches.SelectedItems.Count == 1;
 			var branch = tvLocalBranches.SelectedNode == null ? null : tvLocalBranches.SelectedNode.Tag as LocalBranch;
-			pullToolStripMenuItem.Enabled = branch != null && branch.Behind > 0 && branch == _currentBranch;
-			pushToolStripMenuItem.Enabled = branch != null;
-			mergeFromLocalToolStripMenuItem.Enabled = branch != null;
-			deleteToolStripMenuItem.Enabled = getCheckedNodes<LocalBranch>(tvLocalBranches.Nodes).Any();
+			pullToolStripMenuItem.Visible = branch != null && branch.Behind > 0 && branch == _currentBranch;
+			pushToolStripMenuItem.Visible = branch != null;
+			mergeFromLocalToolStripMenuItem.Visible = branch != null;
+			deleteToolStripMenuItem.Visible = getCheckedNodes<LocalBranch>(tvLocalBranches.Nodes).Any();
 		}
 
 		private void fetchToolStripMenuItem_Click(object sender, EventArgs e)
@@ -175,6 +173,8 @@ namespace PaJaMa.GitStudio
 			if (!this.Parent.Visible)
 				return;
 			var diffs = _helper.GetDifferences();
+			if (diffs == null) return;
+
 			if (_previousDifferences != null)
 			{
 				if (diffs.All(d => _previousDifferences.Any(pd => pd.IsStaged == d.IsStaged && pd.DifferenceType == d.DifferenceType && pd.FileName == d.FileName))
@@ -183,7 +183,6 @@ namespace PaJaMa.GitStudio
 			}
 
 			_previousDifferences = diffs;
-			if (diffs.Count < 1) return;
 
 			var selectedDiff = tvDifferences.SelectedNode == null ? null : tvDifferences.SelectedNode.Tag as Difference;
 			var selectedStaged = tvStaged.SelectedNode == null ? null : tvStaged.SelectedNode.Tag as Difference;
@@ -341,7 +340,9 @@ namespace PaJaMa.GitStudio
 		{
 			var tv = tvDifferences.Focused ? tvDifferences : tvStaged;
 			var selectedItems = getCheckedNodes<Difference>(tv.Nodes);
-			ignorePathToolStripMenuItem.Enabled = selectedItems.Count() == 1 && selectedItems.First().FileName.Contains("/");
+			var diff = tv.SelectedNode == null ? null : tv.SelectedNode.Tag as Difference;
+			resolveConflictToolStripMenuItem.Visible = diff != null && diff.IsConflict;
+			ignorePathToolStripMenuItem.Visible = selectedItems.Count() == 1 && selectedItems.First().FileName.Contains("/");
 		}
 
 		private void ignorePathToolStripMenuItem_Click(object sender, EventArgs e)
@@ -420,9 +421,12 @@ namespace PaJaMa.GitStudio
 		private void tv_DrawNode(object sender, DrawTreeNodeEventArgs e)
 		{
 			var text = e.Node.Text;
+			var font = e.Node.NodeFont ?? (sender as TreeView).Font;
+			var color = e.Node.ForeColor;
 			if (e.Node.Tag is Difference)
 			{
-				switch ((e.Node.Tag as Difference).DifferenceType)
+				var diff = e.Node.Tag as Difference;
+				switch (diff.DifferenceType)
 				{
 					case DifferenceType.Add:
 						text = "A: " + text;
@@ -434,10 +438,15 @@ namespace PaJaMa.GitStudio
 						text = "D: " + text;
 						break;
 				}
+				if (diff.IsConflict)
+				{
+					font = new Font(font, FontStyle.Bold);
+					color = Color.Red;
+				}
 			}
 
-			TextRenderer.DrawText(e.Graphics, text, e.Node.NodeFont, new Rectangle(e.Bounds.X, e.Bounds.Y, e.Bounds.Width + 10, e.Bounds.Height),
-				e.Node.ForeColor, e.Node.BackColor, TextFormatFlags.GlyphOverhangPadding);
+			TextRenderer.DrawText(e.Graphics, text, font, new Rectangle(e.Bounds.X, e.Bounds.Y, e.Bounds.Width + 10, e.Bounds.Height),
+				color, e.Node.BackColor, TextFormatFlags.GlyphOverhangPadding);
 		}
 
 		private List<TTagType> getCheckedNodes<TTagType>(TreeNodeCollection nodes)
@@ -502,17 +511,30 @@ namespace PaJaMa.GitStudio
 			frm.Repository = _repository;
 			frm.ShowDialog();
 			refreshBranches();
+// <<<<<<< HEAD
 			// blah blah blah
+// =======
+			timDiff_Tick(this, new EventArgs());
+// >>>>>>> myself
 		}
 
 		private void mergeFromLocalToolStripMenuItem_Click(object sender, EventArgs e)
 		{
 			var branch = tvLocalBranches.SelectedNode.Tag as LocalBranch;
-			string error = string.Empty;
-			_helper.RunCommand("merge " + branch.BranchName, ref error);
+			if (MessageBox.Show("Are you sure you want to merge " + branch.BranchName + " into " + _currentBranch.BranchName + "?", "Warning!",
+				MessageBoxButtons.YesNo) == DialogResult.Yes)
+			{
+				string error = string.Empty;
+				_helper.RunCommand("merge " + branch.BranchName, ref error);
+			}
 		}
 
 		private void mergeFromToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+
+		}
+
+		private void resolveConflictToolStripMenuItem_Click(object sender, EventArgs e)
 		{
 
 		}
