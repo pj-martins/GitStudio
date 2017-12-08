@@ -100,8 +100,6 @@ namespace PaJaMa.GitStudio
 				if (remote) remote = false;
 				else break;
 			}
-
-			_previousDifferences = null;
 		}
 
 		private void branchToolStripMenuItem_Click(object sender, EventArgs e)
@@ -175,6 +173,8 @@ namespace PaJaMa.GitStudio
 			if (!this.Parent.Visible)
 				return;
 			var diffs = _helper.GetDifferences();
+			if (diffs == null) return;
+
 			if (_previousDifferences != null)
 			{
 				if (diffs.All(d => _previousDifferences.Any(pd => pd.IsStaged == d.IsStaged && pd.DifferenceType == d.DifferenceType && pd.FileName == d.FileName))
@@ -183,7 +183,6 @@ namespace PaJaMa.GitStudio
 			}
 
 			_previousDifferences = diffs;
-			if (diffs.Count < 1) return;
 
 			var selectedDiff = tvDifferences.SelectedNode == null ? null : tvDifferences.SelectedNode.Tag as Difference;
 			var selectedStaged = tvStaged.SelectedNode == null ? null : tvStaged.SelectedNode.Tag as Difference;
