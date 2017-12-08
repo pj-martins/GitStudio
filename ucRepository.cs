@@ -58,7 +58,7 @@ namespace PaJaMa.GitStudio
 
 			_currentBranch = branches.OfType<LocalBranch>().First(b => b.IsCurrent);
 			_remoteBranches = branches.OfType<RemoteBranch>().ToList();
-
+			
 			bool remote = true;
 			while (true)
 			{
@@ -100,6 +100,8 @@ namespace PaJaMa.GitStudio
 				if (remote) remote = false;
 				else break;
 			}
+
+			_previousDifferences = null;
 		}
 
 		private void branchToolStripMenuItem_Click(object sender, EventArgs e)
