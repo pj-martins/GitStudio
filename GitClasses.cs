@@ -36,8 +36,7 @@ namespace PaJaMa.GitStudio
 		public DifferenceType DifferenceType { get; set; }
 		public string FileName { get; set; }
 		public bool IsStaged { get; set; }
-
-		
+		public bool IsConflict { get; set; }
 	}
 
 	public enum DifferenceType

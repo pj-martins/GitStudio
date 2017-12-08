@@ -177,8 +177,8 @@ namespace PaJaMa.GitStudio
 
 			if (_previousDifferences != null)
 			{
-				if (diffs.All(d => _previousDifferences.Any(pd => pd.IsStaged == d.IsStaged && pd.DifferenceType == d.DifferenceType && pd.FileName == d.FileName))
-				 && _previousDifferences.All(d => diffs.Any(pd => pd.IsStaged == d.IsStaged && pd.DifferenceType == d.DifferenceType && pd.FileName == d.FileName)))
+				if (diffs.All(x => _previousDifferences.Any(y => y.IsStaged == x.IsStaged && y.IsConflict == x.IsConflict && y.DifferenceType == x.DifferenceType && y.FileName == x.FileName))
+				 && _previousDifferences.All(x => diffs.Any(y => y.IsStaged == x.IsStaged && y.IsConflict == x.IsConflict && y.DifferenceType == x.DifferenceType && y.FileName == x.FileName)))
 					return;
 			}
 
@@ -511,11 +511,7 @@ namespace PaJaMa.GitStudio
 			frm.Repository = _repository;
 			frm.ShowDialog();
 			refreshBranches();
-// <<<<<<< HEAD
-			// blah blah blah
-// =======
 			timDiff_Tick(this, new EventArgs());
-// >>>>>>> myself
 		}
 
 		private void mergeFromLocalToolStripMenuItem_Click(object sender, EventArgs e)
@@ -536,7 +532,10 @@ namespace PaJaMa.GitStudio
 
 		private void resolveConflictToolStripMenuItem_Click(object sender, EventArgs e)
 		{
-
+			var tv = tvDifferences.Focused ? tvDifferences : tvStaged;
+			var diff = tv.SelectedNode.Tag as Difference;
+			string error = string.Empty;
+			_helper.RunCommand("add " + diff.FileName, ref error);
 		}
 	}
 }

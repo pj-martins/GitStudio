@@ -140,11 +140,18 @@ namespace PaJaMa.GitStudio
 						diff.DifferenceType = DifferenceType.Add;
 						break;
 					case "M":
+					case "MM":
 						diff.DifferenceType = DifferenceType.Modify;
 						break;
 					case "D":
 						diff.DifferenceType = DifferenceType.Delete;
 						break;
+					case "UU":
+						diff.DifferenceType = DifferenceType.Modify;
+						diff.IsConflict = true;
+						break;
+					default:
+						throw new Exception(diffParts[0]);
 				}
 
 				diffParts.RemoveAt(0);
