@@ -507,8 +507,12 @@ namespace PaJaMa.GitStudio
 		private void mergeFromLocalToolStripMenuItem_Click(object sender, EventArgs e)
 		{
 			var branch = tvLocalBranches.SelectedNode.Tag as LocalBranch;
-			string error = string.Empty;
-			_helper.RunCommand("merge " + branch.BranchName, ref error);
+			if (MessageBox.Show("Are you sure you want to merge " + branch.BranchName + " into " + _currentBranch.BranchName + "?", "Warning!",
+				MessageBoxButtons.YesNo) == DialogResult.Yes)
+			{
+				string error = string.Empty;
+				_helper.RunCommand("merge " + branch.BranchName, ref error);
+			}
 		}
 
 		private void mergeFromToolStripMenuItem_Click(object sender, EventArgs e)
