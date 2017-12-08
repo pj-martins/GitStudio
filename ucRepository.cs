@@ -126,6 +126,7 @@ namespace PaJaMa.GitStudio
 			var branch = tvLocalBranches.SelectedNode == null ? null : tvLocalBranches.SelectedNode.Tag as LocalBranch;
 			pullToolStripMenuItem.Enabled = branch != null && branch.Behind > 0 && branch == _currentBranch;
 			pushToolStripMenuItem.Enabled = branch != null;
+			mergeFromLocalToolStripMenuItem.Enabled = branch != null;
 			deleteToolStripMenuItem.Enabled = getCheckedNodes<LocalBranch>(tvLocalBranches.Nodes).Any();
 		}
 
@@ -499,6 +500,18 @@ namespace PaJaMa.GitStudio
 			frm.Repository = _repository;
 			frm.ShowDialog();
 			refreshBranches();
+		}
+
+		private void mergeFromLocalToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+			var branch = tvLocalBranches.SelectedNode.Tag as LocalBranch;
+			string error = string.Empty;
+			_helper.RunCommand("merge " + branch.BranchName, ref error);
+		}
+
+		private void mergeFromToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+
 		}
 	}
 }

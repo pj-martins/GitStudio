@@ -84,9 +84,9 @@ namespace PaJaMa.GitStudio
 		{
 			var helper = new GitHelper(Repository.LocalPath);
 			string error = string.Empty;
-			helper.RunCommand("commit -m=\"" + txtComment.Text + "\"", ref error);
+			helper.RunCommand("commit -m \"" + txtComment.Text + "\"", ref error);
 			if (!string.IsNullOrEmpty(error)) return;
-			var test = helper.RunCommand("push -u origin " + cboRemote.Text, ref error);
+			helper.RunCommand("push -u origin " + cboRemote.Text, ref error);
 			this.DialogResult = DialogResult.OK;
 			this.Close();
 		}
