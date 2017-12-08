@@ -498,7 +498,13 @@ namespace PaJaMa.GitStudio
 
 		private void mergeFromToolStripMenuItem_Click(object sender, EventArgs e)
 		{
-
+			var branch = tvRemoteBranches.SelectedNode.Tag as RemoteBranch;
+			if (MessageBox.Show("Are you sure you want to merge " + branch.BranchName + " into " + _currentBranch.BranchName + "?", "Warning!",
+				MessageBoxButtons.YesNo) == DialogResult.Yes)
+			{
+				string error = string.Empty;
+				_helper.RunCommand("merge origin/" + branch.BranchName, ref error);
+			}
 		}
 
 		private void resolveConflictToolStripMenuItem_Click(object sender, EventArgs e)
