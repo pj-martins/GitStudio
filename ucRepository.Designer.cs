@@ -50,6 +50,7 @@
 			this.undoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.ignoreToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.ignorePathToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.selectAllToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.btnStage = new System.Windows.Forms.Button();
 			this.tvStaged = new System.Windows.Forms.TreeView();
 			this.btnUnStage = new System.Windows.Forms.Button();
@@ -57,8 +58,6 @@
 			this.timDiff = new System.Windows.Forms.Timer(this.components);
 			this.panel1 = new System.Windows.Forms.Panel();
 			this.btnCommit = new System.Windows.Forms.Button();
-			this.btnCommitPush = new System.Windows.Forms.Button();
-			this.selectAllToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
 			this.splitContainer1.Panel1.SuspendLayout();
 			this.splitContainer1.Panel2.SuspendLayout();
@@ -272,36 +271,43 @@
             this.ignorePathToolStripMenuItem,
             this.selectAllToolStripMenuItem});
 			this.mnuDiffs.Name = "mnuDiffs";
-			this.mnuDiffs.Size = new System.Drawing.Size(153, 136);
+			this.mnuDiffs.Size = new System.Drawing.Size(144, 114);
 			this.mnuDiffs.Opening += new System.ComponentModel.CancelEventHandler(this.mnuDiffs_Opening);
 			// 
 			// viewExternalToolStripMenuItem
 			// 
 			this.viewExternalToolStripMenuItem.Name = "viewExternalToolStripMenuItem";
-			this.viewExternalToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+			this.viewExternalToolStripMenuItem.Size = new System.Drawing.Size(143, 22);
 			this.viewExternalToolStripMenuItem.Text = "&View External";
 			this.viewExternalToolStripMenuItem.Click += new System.EventHandler(this.viewExternalToolStripMenuItem_Click);
 			// 
 			// undoToolStripMenuItem
 			// 
 			this.undoToolStripMenuItem.Name = "undoToolStripMenuItem";
-			this.undoToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+			this.undoToolStripMenuItem.Size = new System.Drawing.Size(143, 22);
 			this.undoToolStripMenuItem.Text = "&Undo";
 			this.undoToolStripMenuItem.Click += new System.EventHandler(this.undoToolStripMenuItem_Click);
 			// 
 			// ignoreToolStripMenuItem
 			// 
 			this.ignoreToolStripMenuItem.Name = "ignoreToolStripMenuItem";
-			this.ignoreToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+			this.ignoreToolStripMenuItem.Size = new System.Drawing.Size(143, 22);
 			this.ignoreToolStripMenuItem.Text = "I&gnore";
 			this.ignoreToolStripMenuItem.Click += new System.EventHandler(this.ignoreToolStripMenuItem_Click);
 			// 
 			// ignorePathToolStripMenuItem
 			// 
 			this.ignorePathToolStripMenuItem.Name = "ignorePathToolStripMenuItem";
-			this.ignorePathToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+			this.ignorePathToolStripMenuItem.Size = new System.Drawing.Size(143, 22);
 			this.ignorePathToolStripMenuItem.Text = "Ignore &Path";
 			this.ignorePathToolStripMenuItem.Click += new System.EventHandler(this.ignorePathToolStripMenuItem_Click);
+			// 
+			// selectAllToolStripMenuItem
+			// 
+			this.selectAllToolStripMenuItem.Name = "selectAllToolStripMenuItem";
+			this.selectAllToolStripMenuItem.Size = new System.Drawing.Size(143, 22);
+			this.selectAllToolStripMenuItem.Text = "Select &All";
+			this.selectAllToolStripMenuItem.Click += new System.EventHandler(this.selectAllToolStripMenuItem_Click);
 			// 
 			// btnStage
 			// 
@@ -360,7 +366,6 @@
 			// panel1
 			// 
 			this.panel1.Controls.Add(this.btnCommit);
-			this.panel1.Controls.Add(this.btnCommitPush);
 			this.panel1.Dock = System.Windows.Forms.DockStyle.Bottom;
 			this.panel1.Location = new System.Drawing.Point(0, 618);
 			this.panel1.Name = "panel1";
@@ -369,30 +374,15 @@
 			// 
 			// btnCommit
 			// 
+			this.btnCommit.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
 			this.btnCommit.Enabled = false;
-			this.btnCommit.Location = new System.Drawing.Point(662, 6);
+			this.btnCommit.Location = new System.Drawing.Point(787, 6);
 			this.btnCommit.Name = "btnCommit";
 			this.btnCommit.Size = new System.Drawing.Size(119, 23);
 			this.btnCommit.TabIndex = 1;
 			this.btnCommit.Text = "Commit";
 			this.btnCommit.UseVisualStyleBackColor = true;
-			// 
-			// btnCommitPush
-			// 
-			this.btnCommitPush.Enabled = false;
-			this.btnCommitPush.Location = new System.Drawing.Point(787, 6);
-			this.btnCommitPush.Name = "btnCommitPush";
-			this.btnCommitPush.Size = new System.Drawing.Size(119, 23);
-			this.btnCommitPush.TabIndex = 0;
-			this.btnCommitPush.Text = "Commit && Push";
-			this.btnCommitPush.UseVisualStyleBackColor = true;
-			// 
-			// selectAllToolStripMenuItem
-			// 
-			this.selectAllToolStripMenuItem.Name = "selectAllToolStripMenuItem";
-			this.selectAllToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
-			this.selectAllToolStripMenuItem.Text = "Select &All";
-			this.selectAllToolStripMenuItem.Click += new System.EventHandler(this.selectAllToolStripMenuItem_Click);
+			this.btnCommit.Click += new System.EventHandler(this.btnCommit_Click);
 			// 
 			// ucRepository
 			// 
@@ -451,7 +441,6 @@
 		private System.Windows.Forms.TreeView tvStaged;
 		private System.Windows.Forms.Button btnUnStage;
 		private System.Windows.Forms.Panel panel1;
-		private System.Windows.Forms.Button btnCommitPush;
 		private System.Windows.Forms.Button btnCommit;
 		private System.Windows.Forms.ToolStripMenuItem pushToolStripMenuItem;
 		private System.Windows.Forms.ToolStripMenuItem undoToolStripMenuItem;

@@ -16,7 +16,8 @@ namespace PaJaMa.GitStudio
 	public partial class ucRepository : UserControl
 	{
 		private GitHelper _helper;
-		private Branch _currentBranch;
+		private LocalBranch _currentBranch;
+		private List<RemoteBranch> _remoteBranches;
 
 		private GitRepository _repository;
 		public GitRepository Repository
@@ -56,6 +57,7 @@ namespace PaJaMa.GitStudio
 			if (branches.Count < 1) return;
 
 			_currentBranch = branches.OfType<LocalBranch>().First(b => b.IsCurrent);
+			_remoteBranches = branches.OfType<RemoteBranch>().ToList();
 
 			bool remote = true;
 			while (true)
@@ -123,7 +125,7 @@ namespace PaJaMa.GitStudio
 			// checkoutToolStripMenuItem.Enabled = lstLocalBranches.SelectedItems.Count == 1;
 			var branch = tvLocalBranches.SelectedNode == null ? null : tvLocalBranches.SelectedNode.Tag as LocalBranch;
 			pullToolStripMenuItem.Enabled = branch != null && branch.Behind > 0 && branch == _currentBranch;
-			pushToolStripMenuItem.Enabled = branch != null && branch.Ahead > 0 && branch == _currentBranch;
+			pushToolStripMenuItem.Enabled = branch != null;
 			deleteToolStripMenuItem.Enabled = getCheckedNodes<LocalBranch>(tvLocalBranches.Nodes).Any();
 		}
 
@@ -231,7 +233,7 @@ namespace PaJaMa.GitStudio
 			}
 			tvDifferences.EndUpdate();
 			tvStaged.EndUpdate();
-			btnCommit.Enabled = btnCommitPush.Enabled = tvStaged.Nodes.Count > 0;
+			btnCommit.Enabled = tvStaged.Nodes.Count > 0;
 			_lockCheck = false;
 		}
 
@@ -257,11 +259,11 @@ namespace PaJaMa.GitStudio
 
 		private void pushToolStripMenuItem_Click(object sender, EventArgs e)
 		{
-			//var lb = tvLocalBranches.SelectedNode.Tag as LocalBranch;
-			//if ()
-			bool error = false;
-			_helper.RunCommand("push", ref error);
-			if (error) return;
+			var frm = new frmPush();
+			frm.RemoteBranches = _remoteBranches;
+			frm.LocalBranch = _currentBranch;
+			frm.Repository = _repository;
+			frm.ShowDialog();
 			refreshBranches();
 		}
 
@@ -487,6 +489,16 @@ namespace PaJaMa.GitStudio
 			{
 				node.Checked = true;
 			}
+		}
+
+		private void btnCommit_Click(object sender, EventArgs e)
+		{
+			var frm = new frmCommit();
+			frm.RemoteBranches = _remoteBranches;
+			frm.LocalBranch = _currentBranch;
+			frm.Repository = _repository;
+			frm.ShowDialog();
+			refreshBranches();
 		}
 	}
 }

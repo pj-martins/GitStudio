@@ -64,6 +64,18 @@
     <Compile Include="frmClone.Designer.cs">
       <DependentUpon>frmClone.cs</DependentUpon>
     </Compile>
+    <Compile Include="frmPush.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="frmPush.Designer.cs">
+      <DependentUpon>frmPush.cs</DependentUpon>
+    </Compile>
+    <Compile Include="frmCommit.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="frmCommit.Designer.cs">
+      <DependentUpon>frmCommit.cs</DependentUpon>
+    </Compile>
     <Compile Include="frmIgnorePath.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -107,6 +119,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="frmClone.resx">
       <DependentUpon>frmClone.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="frmPush.resx">
+      <DependentUpon>frmPush.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="frmCommit.resx">
+      <DependentUpon>frmCommit.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="frmIgnorePath.resx">
       <DependentUpon>frmIgnorePath.cs</DependentUpon>
