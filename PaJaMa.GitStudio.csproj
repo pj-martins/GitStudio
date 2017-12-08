@@ -52,17 +52,23 @@
     <Compile Include="frmAccounts.Designer.cs">
       <DependentUpon>frmAccounts.cs</DependentUpon>
     </Compile>
-    <Compile Include="frmCheckout.cs">
+    <Compile Include="frmBranch.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="frmCheckout.Designer.cs">
-      <DependentUpon>frmCheckout.cs</DependentUpon>
+    <Compile Include="frmBranch.Designer.cs">
+      <DependentUpon>frmBranch.cs</DependentUpon>
     </Compile>
     <Compile Include="frmClone.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="frmClone.Designer.cs">
       <DependentUpon>frmClone.cs</DependentUpon>
+    </Compile>
+    <Compile Include="frmIgnorePath.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="frmIgnorePath.Designer.cs">
+      <DependentUpon>frmIgnorePath.cs</DependentUpon>
     </Compile>
     <Compile Include="frmMain.cs">
       <SubType>Form</SubType>
@@ -82,6 +88,7 @@
     <Compile Include="frmSelectAccount.Designer.cs">
       <DependentUpon>frmSelectAccount.cs</DependentUpon>
     </Compile>
+    <Compile Include="GitClasses.cs" />
     <Compile Include="ucRepository.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -95,11 +102,14 @@
     <EmbeddedResource Include="frmAccounts.resx">
       <DependentUpon>frmAccounts.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="frmCheckout.resx">
-      <DependentUpon>frmCheckout.cs</DependentUpon>
+    <EmbeddedResource Include="frmBranch.resx">
+      <DependentUpon>frmBranch.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="frmClone.resx">
       <DependentUpon>frmClone.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="frmIgnorePath.resx">
+      <DependentUpon>frmIgnorePath.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="frmMain.resx">
       <DependentUpon>frmMain.cs</DependentUpon>
@@ -140,6 +150,10 @@
     <ProjectReference Include="..\Common\PaJaMa.Common.csproj">
       <Project>{4c71ada7-e306-467a-b014-9bd42287dcb1}</Project>
       <Name>PaJaMa.Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\WinControls\PaJaMa.WinControls.csproj">
+      <Project>{bd3684c1-dd08-441f-9448-ca39006e113a}</Project>
+      <Name>PaJaMa.WinControls</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

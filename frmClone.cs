@@ -14,7 +14,9 @@ namespace PaJaMa.GitStudio
 {
 	public partial class frmClone : Form
 	{
+		const string REFS_HEAD = "refs/heads/";
 		public GitRepository ClonedRepo { get; private set; }
+
 		public frmClone()
 		{
 			InitializeComponent();
@@ -34,7 +36,17 @@ namespace PaJaMa.GitStudio
 		{
 			if (cboBranches.Items.Count < 1)
 			{
-				cboBranches.Items.AddRange(GitHelper.GetRemoteBranches(txtURL.Text).ToArray());
+				bool error = false;
+				var remotes = new GitHelper(null).RunCommand("ls-remote " + txtURL.Text, ref error);
+				if (error) return;
+				foreach (var remote in remotes)
+				{
+					var repo = remote.Split('\t')[1];
+					if (repo.StartsWith(REFS_HEAD))
+					{
+						cboBranches.Items.Add(repo.Substring(REFS_HEAD.Length));
+					}
+				}
 			}
 		}
 

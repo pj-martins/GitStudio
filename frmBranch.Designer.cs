@@ -1,6 +1,6 @@
 ﻿namespace PaJaMa.GitStudio
 {
-	partial class frmCheckout
+	partial class frmBranch
 	{
 		/// <summary>
 		/// Required designer variable.
@@ -28,26 +28,27 @@
 		/// </summary>
 		private void InitializeComponent()
 		{
-			this.txtRemote = new System.Windows.Forms.TextBox();
-			this.txtLocal = new System.Windows.Forms.TextBox();
+			this.txtFrom = new System.Windows.Forms.TextBox();
+			this.txtTo = new System.Windows.Forms.TextBox();
 			this.btnBranch = new System.Windows.Forms.Button();
 			this.chkTrack = new System.Windows.Forms.CheckBox();
+			this.chkCheckout = new System.Windows.Forms.CheckBox();
 			this.SuspendLayout();
 			// 
-			// txtRemote
+			// txtFrom
 			// 
-			this.txtRemote.Location = new System.Drawing.Point(32, 25);
-			this.txtRemote.Name = "txtRemote";
-			this.txtRemote.ReadOnly = true;
-			this.txtRemote.Size = new System.Drawing.Size(582, 20);
-			this.txtRemote.TabIndex = 0;
+			this.txtFrom.Location = new System.Drawing.Point(32, 25);
+			this.txtFrom.Name = "txtFrom";
+			this.txtFrom.ReadOnly = true;
+			this.txtFrom.Size = new System.Drawing.Size(582, 20);
+			this.txtFrom.TabIndex = 0;
 			// 
-			// txtLocal
+			// txtTo
 			// 
-			this.txtLocal.Location = new System.Drawing.Point(32, 51);
-			this.txtLocal.Name = "txtLocal";
-			this.txtLocal.Size = new System.Drawing.Size(582, 20);
-			this.txtLocal.TabIndex = 1;
+			this.txtTo.Location = new System.Drawing.Point(32, 51);
+			this.txtTo.Name = "txtTo";
+			this.txtTo.Size = new System.Drawing.Size(582, 20);
+			this.txtTo.TabIndex = 1;
 			// 
 			// btnBranch
 			// 
@@ -64,20 +65,31 @@
 			this.chkTrack.AutoSize = true;
 			this.chkTrack.Location = new System.Drawing.Point(534, 231);
 			this.chkTrack.Name = "chkTrack";
-			this.chkTrack.Size = new System.Drawing.Size(80, 17);
+			this.chkTrack.Size = new System.Drawing.Size(94, 17);
 			this.chkTrack.TabIndex = 3;
-			this.chkTrack.Text = "checkBox1";
+			this.chkTrack.Text = "Track Remote";
 			this.chkTrack.UseVisualStyleBackColor = true;
+			// 
+			// chkCheckout
+			// 
+			this.chkCheckout.AutoSize = true;
+			this.chkCheckout.Location = new System.Drawing.Point(534, 254);
+			this.chkCheckout.Name = "chkCheckout";
+			this.chkCheckout.Size = new System.Drawing.Size(72, 17);
+			this.chkCheckout.TabIndex = 4;
+			this.chkCheckout.Text = "Checkout";
+			this.chkCheckout.UseVisualStyleBackColor = true;
 			// 
 			// frmBranch
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.ClientSize = new System.Drawing.Size(666, 378);
+			this.Controls.Add(this.chkCheckout);
 			this.Controls.Add(this.chkTrack);
 			this.Controls.Add(this.btnBranch);
-			this.Controls.Add(this.txtLocal);
-			this.Controls.Add(this.txtRemote);
+			this.Controls.Add(this.txtTo);
+			this.Controls.Add(this.txtFrom);
 			this.Name = "frmBranch";
 			this.Text = "frmBranch";
 			this.ResumeLayout(false);
@@ -87,9 +99,10 @@
 
 		#endregion
 
-		private System.Windows.Forms.TextBox txtRemote;
-		private System.Windows.Forms.TextBox txtLocal;
+		private System.Windows.Forms.TextBox txtFrom;
+		private System.Windows.Forms.TextBox txtTo;
 		private System.Windows.Forms.Button btnBranch;
 		private System.Windows.Forms.CheckBox chkTrack;
+		private System.Windows.Forms.CheckBox chkCheckout;
 	}
 }

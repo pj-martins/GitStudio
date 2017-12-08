@@ -51,7 +51,6 @@ namespace PaJaMa.GitStudio
 			tab.Controls.Add(uc);
 			tab.Text = repo.LocalPath;
 			tabMain.TabPages.Add(tab);
-			tab.Focus();
 		}
 
 		private void openToolStripMenuItem_Click(object sender, EventArgs e)
@@ -60,8 +59,12 @@ namespace PaJaMa.GitStudio
 			if (dlg.ShowDialog() == DialogResult.OK)
 			{
 				var settings = SettingsHelper.GetUserSettings<GitUserSettings>();
-				var remote = GitHelper.RunCommand("config --get remote.origin.url", dlg.SelectedPath)[0];
-				var username = GitHelper.RunCommand("config user.name", dlg.SelectedPath)[0];
+				bool error = false;
+				var helper = new GitHelper(dlg.SelectedPath);
+				var remote = helper.RunCommand("config --get remote.origin.url", ref error).FirstOrDefault();
+				if (error) return;
+				var username = helper.RunCommand("config user.name", ref error).FirstOrDefault();
+				if (error) return;
 				var repo = new GitRepository()
 				{
 					LocalPath = dlg.SelectedPath,
@@ -77,6 +80,11 @@ namespace PaJaMa.GitStudio
 		private void tabMain_TabIndexChanged(object sender, EventArgs e)
 		{
 			(tabMain.SelectedTab.Controls[0] as ucRepository).Init();
+		}
+
+		private void openInExplorerToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+			System.Diagnostics.Process.Start(tabMain.SelectedTab.Text);
 		}
 	}
 }

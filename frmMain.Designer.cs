@@ -28,14 +28,18 @@
 		/// </summary>
 		private void InitializeComponent()
 		{
+			this.components = new System.ComponentModel.Container();
 			this.menuStrip1 = new System.Windows.Forms.MenuStrip();
 			this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.openToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.cloneToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.setupToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.accountsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.tabMain = new System.Windows.Forms.TabControl();
-			this.openToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.mnuTab = new System.Windows.Forms.ContextMenuStrip(this.components);
+			this.openInExplorerToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.menuStrip1.SuspendLayout();
+			this.mnuTab.SuspendLayout();
 			this.SuspendLayout();
 			// 
 			// menuStrip1
@@ -58,10 +62,17 @@
 			this.fileToolStripMenuItem.Size = new System.Drawing.Size(37, 20);
 			this.fileToolStripMenuItem.Text = "&File";
 			// 
+			// openToolStripMenuItem
+			// 
+			this.openToolStripMenuItem.Name = "openToolStripMenuItem";
+			this.openToolStripMenuItem.Size = new System.Drawing.Size(105, 22);
+			this.openToolStripMenuItem.Text = "&Open";
+			this.openToolStripMenuItem.Click += new System.EventHandler(this.openToolStripMenuItem_Click);
+			// 
 			// cloneToolStripMenuItem
 			// 
 			this.cloneToolStripMenuItem.Name = "cloneToolStripMenuItem";
-			this.cloneToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+			this.cloneToolStripMenuItem.Size = new System.Drawing.Size(105, 22);
 			this.cloneToolStripMenuItem.Text = "&Clone";
 			this.cloneToolStripMenuItem.Click += new System.EventHandler(this.cloneToolStripMenuItem_Click);
 			// 
@@ -76,12 +87,13 @@
 			// accountsToolStripMenuItem
 			// 
 			this.accountsToolStripMenuItem.Name = "accountsToolStripMenuItem";
-			this.accountsToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+			this.accountsToolStripMenuItem.Size = new System.Drawing.Size(124, 22);
 			this.accountsToolStripMenuItem.Text = "&Accounts";
 			this.accountsToolStripMenuItem.Click += new System.EventHandler(this.accountsToolStripMenuItem_Click);
 			// 
 			// tabMain
 			// 
+			this.tabMain.ContextMenuStrip = this.mnuTab;
 			this.tabMain.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.tabMain.Location = new System.Drawing.Point(0, 24);
 			this.tabMain.Name = "tabMain";
@@ -91,12 +103,19 @@
 			this.tabMain.SelectedIndexChanged += new System.EventHandler(this.tabMain_TabIndexChanged);
 			this.tabMain.TabIndexChanged += new System.EventHandler(this.tabMain_TabIndexChanged);
 			// 
-			// openToolStripMenuItem
+			// mnuTab
 			// 
-			this.openToolStripMenuItem.Name = "openToolStripMenuItem";
-			this.openToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
-			this.openToolStripMenuItem.Text = "&Open";
-			this.openToolStripMenuItem.Click += new System.EventHandler(this.openToolStripMenuItem_Click);
+			this.mnuTab.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.openInExplorerToolStripMenuItem});
+			this.mnuTab.Name = "mnuTab";
+			this.mnuTab.Size = new System.Drawing.Size(162, 48);
+			// 
+			// openInExplorerToolStripMenuItem
+			// 
+			this.openInExplorerToolStripMenuItem.Name = "openInExplorerToolStripMenuItem";
+			this.openInExplorerToolStripMenuItem.Size = new System.Drawing.Size(161, 22);
+			this.openInExplorerToolStripMenuItem.Text = "&Open In Explorer";
+			this.openInExplorerToolStripMenuItem.Click += new System.EventHandler(this.openInExplorerToolStripMenuItem_Click);
 			// 
 			// frmMain
 			// 
@@ -111,6 +130,7 @@
 			this.Load += new System.EventHandler(this.frmMain_Load);
 			this.menuStrip1.ResumeLayout(false);
 			this.menuStrip1.PerformLayout();
+			this.mnuTab.ResumeLayout(false);
 			this.ResumeLayout(false);
 			this.PerformLayout();
 
@@ -125,6 +145,8 @@
 		private System.Windows.Forms.ToolStripMenuItem accountsToolStripMenuItem;
 		private System.Windows.Forms.TabControl tabMain;
 		private System.Windows.Forms.ToolStripMenuItem openToolStripMenuItem;
+		private System.Windows.Forms.ContextMenuStrip mnuTab;
+		private System.Windows.Forms.ToolStripMenuItem openInExplorerToolStripMenuItem;
 	}
 }
 
