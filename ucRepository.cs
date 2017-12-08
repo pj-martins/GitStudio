@@ -501,6 +501,7 @@ namespace PaJaMa.GitStudio
 			frm.Repository = _repository;
 			frm.ShowDialog();
 			refreshBranches();
+			timDiff_Tick(this, new EventArgs());
 		}
 
 		private void mergeFromLocalToolStripMenuItem_Click(object sender, EventArgs e)
