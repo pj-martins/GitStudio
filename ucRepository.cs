@@ -519,5 +519,10 @@ namespace PaJaMa.GitStudio
 		{
 
 		}
+
+		private void testing()
+		{
+
+		}
 	}
 }
