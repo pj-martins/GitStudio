@@ -91,6 +91,7 @@
 			this.Controls.Add(this.txtTo);
 			this.Controls.Add(this.txtFrom);
 			this.Name = "frmBranch";
+			this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
 			this.Text = "frmBranch";
 			this.ResumeLayout(false);
 			this.PerformLayout();

@@ -46,6 +46,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="FormSettings.cs" />
     <Compile Include="frmAccounts.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -75,12 +76,6 @@
     </Compile>
     <Compile Include="frmCommit.Designer.cs">
       <DependentUpon>frmCommit.cs</DependentUpon>
-    </Compile>
-    <Compile Include="frmIgnorePath.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="frmIgnorePath.Designer.cs">
-      <DependentUpon>frmIgnorePath.cs</DependentUpon>
     </Compile>
     <Compile Include="frmMain.cs">
       <SubType>Form</SubType>
@@ -125,9 +120,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="frmCommit.resx">
       <DependentUpon>frmCommit.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="frmIgnorePath.resx">
-      <DependentUpon>frmIgnorePath.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="frmMain.resx">
       <DependentUpon>frmMain.cs</DependentUpon>

@@ -34,15 +34,36 @@ namespace PaJaMa.GitStudio
 
 		private void frmMain_Load(object sender, EventArgs e)
 		{
+			var formSettings = SettingsHelper.GetUserSettings<FormSettings>();
+			if (formSettings != null)
+			{
+				this.DesktopLocation = new Point(formSettings.MainFormLeft, formSettings.MainFormTop);
+				if (formSettings.MainFormMaximized)
+					this.WindowState = FormWindowState.Maximized;
+				else
+				{
+					if (formSettings.MainFormHeight > 0)
+						this.Height = formSettings.MainFormHeight;
+					if (formSettings.MainFormWidth > 0)
+						this.Width = formSettings.MainFormWidth;
+				}
+			}
+
 			var settings = SettingsHelper.GetUserSettings<GitUserSettings>();
+			TabPage selectedTab = null;
 			foreach (var repo in settings.Repositories)
 			{
-				createRepository(repo);
+				var tab = createRepository(repo);
+				if (tab.Text == formSettings.FocusedRepository)
+					selectedTab = tab;
 			}
-			(tabMain.SelectedTab.Controls[0] as ucRepository).Init();
+			if (selectedTab != null)
+				tabMain.SelectedTab = selectedTab;
+			if (tabMain.SelectedTab != null)
+				(tabMain.SelectedTab.Controls[0] as ucRepository).Init();
 		}
 
-		private void createRepository(GitRepository repo)
+		private TabPage createRepository(GitRepository repo)
 		{
 			var uc = new ucRepository();
 			uc.Repository = repo;
@@ -51,6 +72,7 @@ namespace PaJaMa.GitStudio
 			tab.Controls.Add(uc);
 			tab.Text = repo.LocalPath;
 			tabMain.TabPages.Add(tab);
+			return tab;
 		}
 
 		private void openToolStripMenuItem_Click(object sender, EventArgs e)
@@ -85,6 +107,26 @@ namespace PaJaMa.GitStudio
 		private void openInExplorerToolStripMenuItem_Click(object sender, EventArgs e)
 		{
 			System.Diagnostics.Process.Start(tabMain.SelectedTab.Text);
+		}
+
+		private void frmMain_FormClosing(object sender, FormClosingEventArgs e)
+		{
+			if (this.WindowState == FormWindowState.Minimized) return;
+
+			var formSettings = SettingsHelper.GetUserSettings<FormSettings>() ?? new FormSettings();
+			formSettings.MainFormLeft = this.DesktopLocation.X;
+			formSettings.MainFormTop = this.DesktopLocation.Y;
+			if (this.WindowState == FormWindowState.Maximized)
+				formSettings.MainFormMaximized = true;
+			else
+			{
+				formSettings.MainFormMaximized = false;
+				formSettings.MainFormWidth = this.Width;
+				formSettings.MainFormHeight = this.Height;
+			}
+			if (tabMain.SelectedTab != null)
+				formSettings.FocusedRepository = tabMain.SelectedTab.Text;
+			SettingsHelper.SaveUserSettings<FormSettings>(formSettings);
 		}
 	}
 }

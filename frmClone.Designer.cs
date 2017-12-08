@@ -88,6 +88,7 @@
 			this.Controls.Add(this.txtPath);
 			this.Controls.Add(this.txtURL);
 			this.Name = "frmClone";
+			this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
 			this.Text = "frmClone";
 			this.Load += new System.EventHandler(this.frmClone_Load);
 			this.ResumeLayout(false);

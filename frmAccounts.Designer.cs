@@ -70,6 +70,7 @@
 			this.Controls.Add(this.menuStrip1);
 			this.MainMenuStrip = this.menuStrip1;
 			this.Name = "frmAccounts";
+			this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
 			this.Text = "Accounts";
 			((System.ComponentModel.ISupportInitialize)(this.gridAccounts)).EndInit();
 			this.menuStrip1.ResumeLayout(false);

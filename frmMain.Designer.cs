@@ -108,7 +108,7 @@
 			this.mnuTab.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.openInExplorerToolStripMenuItem});
 			this.mnuTab.Name = "mnuTab";
-			this.mnuTab.Size = new System.Drawing.Size(162, 48);
+			this.mnuTab.Size = new System.Drawing.Size(162, 26);
 			// 
 			// openInExplorerToolStripMenuItem
 			// 
@@ -127,6 +127,7 @@
 			this.MainMenuStrip = this.menuStrip1;
 			this.Name = "frmMain";
 			this.Text = "Form1";
+			this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.frmMain_FormClosing);
 			this.Load += new System.EventHandler(this.frmMain_Load);
 			this.menuStrip1.ResumeLayout(false);
 			this.menuStrip1.PerformLayout();

@@ -58,6 +58,7 @@
 			this.Controls.Add(this.btnSelect);
 			this.Controls.Add(this.cboAccount);
 			this.Name = "frmSelectAccount";
+			this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
 			this.Text = "frmSelectAccount";
 			this.Load += new System.EventHandler(this.frmSelectAccount_Load);
 			this.ResumeLayout(false);

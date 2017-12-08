@@ -82,6 +82,7 @@
 			this.Controls.Add(this.chkPush);
 			this.Controls.Add(this.txtComment);
 			this.Name = "frmCommit";
+			this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
 			this.Text = "frmCommit";
 			this.Load += new System.EventHandler(this.frmCommit_Load);
 			this.ResumeLayout(false);

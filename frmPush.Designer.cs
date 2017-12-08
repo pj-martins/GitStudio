@@ -58,6 +58,7 @@
 			this.Controls.Add(this.btnGo);
 			this.Controls.Add(this.cboRemote);
 			this.Name = "frmPush";
+			this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
 			this.Text = "frmCommit";
 			this.Load += new System.EventHandler(this.frmPush_Load);
 			this.ResumeLayout(false);

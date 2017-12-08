@@ -67,6 +67,7 @@
 			this.Controls.Add(this.txtPassword);
 			this.Controls.Add(this.txtUserName);
 			this.Name = "frmManageAccount";
+			this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
 			this.Text = "frmManageAccount";
 			this.Load += new System.EventHandler(this.frmManageAccount_Load);
 			this.ResumeLayout(false);
