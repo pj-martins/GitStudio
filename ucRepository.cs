@@ -115,7 +115,7 @@ namespace PaJaMa.GitStudio
 
 		private void checkoutToolStripMenuItem_Click(object sender, EventArgs e)
 		{
-			bool error = false;
+			string error = string.Empty;
 			_helper.RunCommand("checkout " + tvLocalBranches.SelectedNode.Tag.ToString(), ref error);
 			refreshBranches();
 		}
@@ -131,9 +131,9 @@ namespace PaJaMa.GitStudio
 
 		private void fetchToolStripMenuItem_Click(object sender, EventArgs e)
 		{
-			bool error = false;
+			string error = string.Empty;
 			_helper.RunCommand("fetch " + tvRemoteBranches.SelectedNode.Text, ref error);
-			if (error) return;
+			if (!string.IsNullOrEmpty(error)) return;
 			refreshBranches();
 		}
 
@@ -155,7 +155,7 @@ namespace PaJaMa.GitStudio
 			{
 				foreach (var s in selected)
 				{
-					bool error = false;
+					string error = string.Empty;
 					_helper.RunCommand("branch -D " + s.BranchName, ref error);
 				}
 				refreshBranches();
@@ -174,8 +174,8 @@ namespace PaJaMa.GitStudio
 			var diffs = _helper.GetDifferences();
 			if (_previousDifferences != null)
 			{
-				if (diffs.All(d => _previousDifferences.Any(pd => pd.FileName == d.FileName && pd.DifferenceType == d.DifferenceType && pd.FileName == d.FileName))
-				 && _previousDifferences.All(d => diffs.Any(pd => pd.FileName == d.FileName && pd.DifferenceType == d.DifferenceType && pd.FileName == d.FileName)))
+				if (diffs.All(d => _previousDifferences.Any(pd => pd.IsStaged == d.IsStaged && pd.DifferenceType == d.DifferenceType && pd.FileName == d.FileName))
+				 && _previousDifferences.All(d => diffs.Any(pd => pd.IsStaged == d.IsStaged && pd.DifferenceType == d.DifferenceType && pd.FileName == d.FileName)))
 					return;
 			}
 
@@ -242,18 +242,18 @@ namespace PaJaMa.GitStudio
 			var tv = tvDifferences.Focused ? tvDifferences : tvStaged;
 			var currFile = Path.Combine(Repository.LocalPath, (tv.SelectedNode.Tag as Difference).FileName);
 			var tmpFile = Path.GetTempFileName();
-			bool error = false;
+			string error = string.Empty;
 			var oldContent = _helper.RunCommand("--no-pager show " + _currentBranch + ":\"" + (tv.SelectedNode.Tag as Difference).FileName + "\"", ref error);
-			if (error) return;
+			if (!string.IsNullOrEmpty(error)) return;
 			File.WriteAllLines(tmpFile, oldContent);
 			Process.Start("WinMerge", currFile + " " + tmpFile);
 		}
 
 		private void pullToolStripMenuItem_Click(object sender, EventArgs e)
 		{
-			bool error = false;
+			string error = string.Empty;
 			_helper.RunCommand("pull", ref error);
-			if (error) return;
+			if (!string.IsNullOrEmpty(error)) return;
 			refreshBranches();
 		}
 
@@ -271,7 +271,7 @@ namespace PaJaMa.GitStudio
 		{
 			foreach (var selectedItem in getCheckedNodes<Difference>(tvDifferences.Nodes))
 			{
-				bool error = false;
+				string error = string.Empty;
 				_helper.RunCommand("add " + selectedItem.FileName, ref error);
 			}
 			txtDiffText.Text = string.Empty;
@@ -282,7 +282,7 @@ namespace PaJaMa.GitStudio
 		{
 			foreach (var selectedItem in getCheckedNodes<Difference>(tvStaged.Nodes))
 			{
-				bool error = false;
+				string error = string.Empty;
 				_helper.RunCommand("reset -- " + selectedItem.FileName, ref error);
 			}
 			txtDiffText.Text = string.Empty;
@@ -297,7 +297,7 @@ namespace PaJaMa.GitStudio
 			var tv = tvDifferences.Focused ? tvDifferences : tvStaged;
 			foreach (var selectedItem in getCheckedNodes<Difference>(tv.Nodes))
 			{
-				bool error = false;
+				string error = string.Empty;
 				if (tv == tvStaged)
 					_helper.RunCommand("reset -- " + selectedItem.FileName, ref error);
 				if (selectedItem.DifferenceType == DifferenceType.Add)
@@ -325,7 +325,7 @@ namespace PaJaMa.GitStudio
 			var selectedItems = getCheckedNodes<Difference>(tv.Nodes);
 			foreach (var selectedItem in selectedItems)
 			{
-				bool error = false;
+				string error = string.Empty;
 				if (tv == tvStaged)
 					_helper.RunCommand("reset " + selectedItem.FileName, ref error);
 			}
@@ -357,7 +357,7 @@ namespace PaJaMa.GitStudio
 
 		private void tv_AfterSelect(object sender, TreeViewEventArgs e)
 		{
-			bool error = false;
+			string error = string.Empty;
 			if (e.Node.Tag == null)
 			{
 				txtDiffText.Text = string.Empty;
@@ -366,7 +366,7 @@ namespace PaJaMa.GitStudio
 
 			var diff = e.Node.Tag as Difference;
 			var diffs = diff == null || diff.DifferenceType != DifferenceType.Modify ? new string[0] : _helper.RunCommand("--no-pager diff " + (diff.IsStaged ? "--cached " : "") + "\"" + diff.FileName + "\"", ref error);
-			if (error) return;
+			if (!string.IsNullOrEmpty(error)) return;
 			txtDiffText.Text = string.Join("\r\n", diffs);
 		}
 

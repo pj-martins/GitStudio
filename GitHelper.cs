@@ -17,7 +17,7 @@ namespace PaJaMa.GitStudio
 			this.WorkingDirectory = workingDirectory;
 		}
 
-		public string[] RunCommand(string arguments, ref bool error)
+		public string[] RunCommand(string arguments, ref string errorMessage)
 		{
 			var inf = new ProcessStartInfo("git.exe", arguments);
 			inf.UseShellExecute = false;
@@ -43,8 +43,8 @@ namespace PaJaMa.GitStudio
 			p.WaitForExit();
 			if (errorLines.Count > 0)
 			{
-				error = true;
-				MessageBox.Show(string.Join("\r\n", errorLines.ToArray()));
+				errorMessage = string.Join("\r\n", errorLines.ToArray());
+				MessageBox.Show(errorMessage);
 			}
 			return lines.ToArray();
 		}
@@ -55,9 +55,9 @@ namespace PaJaMa.GitStudio
 			List<Branch> branches = new List<Branch>();
 			while (true)
 			{
-				bool error = false;
+				string error = string.Empty;
 				var branchLines = RunCommand("branch " + (remote ? "-r" : "-l") + " -vv", ref error);
-				if (error) return new List<Branch>();
+				if (!string.IsNullOrEmpty(error)) return new List<Branch>();
 
 				foreach (var b in branchLines)
 				{
@@ -72,6 +72,10 @@ namespace PaJaMa.GitStudio
 						branchParts.RemoveAt(0);
 					}
 					branch.BranchName = branchParts[0];
+					if (remote && branch.BranchName.StartsWith("origin/"))
+					{
+						branch.BranchName = branch.BranchName.Substring(7);
+					}
 					branch.BranchID = branchParts[1];
 					branchParts.RemoveRange(0, 2);
 					var remainingParts = string.Join(" ", branchParts.ToArray());
@@ -96,6 +100,10 @@ namespace PaJaMa.GitStudio
 							if (!lb.RemoteIsGone)
 							{
 								var remoteBranchName = match2.Success ? match2.Groups[1].Value : match.Groups[1].Value;
+								if (remoteBranchName.StartsWith("origin/"))
+								{
+									remoteBranchName = remoteBranchName.Substring(7);
+								}
 								lb.TracksBranch = branches.OfType<RemoteBranch>().First(rb => rb.BranchName == remoteBranchName);
 							}
 						}
@@ -110,9 +118,9 @@ namespace PaJaMa.GitStudio
 
 		public List<Difference> GetDifferences()
 		{
-			bool error = false;
+			string error = string.Empty;
 			var diffLines = RunCommand("status --short", ref error);
-			if (error) return new List<Difference>();
+			if (!string.IsNullOrEmpty(error)) return new List<Difference>();
 
 			var diffs = new List<Difference>();
 

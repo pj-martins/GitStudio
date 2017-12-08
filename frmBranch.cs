@@ -34,10 +34,10 @@ namespace PaJaMa.GitStudio
 
 		private void btnBranch_Click(object sender, EventArgs e)
 		{
-			bool error = false;
+			string error = string.Empty;
 			new GitHelper(Repository.LocalPath).RunCommand((chkCheckout.Checked ? "checkout -b " : "branch ") + txtTo.Text
 				+ (chkTrack.Checked ? " --track " : " --no-track ") + txtFrom.Text, ref error);
-			if (error) return;
+			if (!string.IsNullOrEmpty(error)) return;
 			this.DialogResult = DialogResult.OK;
 			this.Close();
 		}

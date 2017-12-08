@@ -59,9 +59,9 @@ namespace PaJaMa.GitStudio
 		private void btnGo_Click(object sender, EventArgs e)
 		{
 			var helper = new GitHelper(Repository.LocalPath);
-			bool error = false;
+			string error = string.Empty;
 			helper.RunCommand("push -u origin " + cboRemote.Text, ref error);
-			if (error) return;
+			if (!string.IsNullOrEmpty(error)) return;
 			this.DialogResult = DialogResult.OK;
 			this.Close();
 		}

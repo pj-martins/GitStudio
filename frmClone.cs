@@ -36,9 +36,9 @@ namespace PaJaMa.GitStudio
 		{
 			if (cboBranches.Items.Count < 1)
 			{
-				bool error = false;
+				string error = string.Empty;
 				var remotes = new GitHelper(null).RunCommand("ls-remote " + txtURL.Text, ref error);
-				if (error) return;
+				if (!string.IsNullOrEmpty(error)) return;
 				foreach (var remote in remotes)
 				{
 					var repo = remote.Split('\t')[1];
