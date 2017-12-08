@@ -511,6 +511,7 @@ namespace PaJaMa.GitStudio
 			frm.Repository = _repository;
 			frm.ShowDialog();
 			refreshBranches();
+			_previousDifferences = null;
 			timDiff_Tick(this, new EventArgs());
 		}
 
@@ -530,18 +531,13 @@ namespace PaJaMa.GitStudio
 
 		}
 
-//<<<<<<< HEAD
-//		private void testing()
-//		{
-
-//=======
 		private void resolveConflictToolStripMenuItem_Click(object sender, EventArgs e)
 		{
 			var tv = tvDifferences.Focused ? tvDifferences : tvStaged;
 			var diff = tv.SelectedNode.Tag as Difference;
 			string error = string.Empty;
 			_helper.RunCommand("add " + diff.FileName, ref error);
-//>>>>>>> myself2
+			_previousDifferences = null;
 		}
 	}
 }
