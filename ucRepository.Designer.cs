@@ -325,6 +325,7 @@
 			this.tvStaged.CheckBoxes = true;
 			this.tvStaged.ContextMenuStrip = this.mnuDiffs;
 			this.tvStaged.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.tvStaged.DrawMode = System.Windows.Forms.TreeViewDrawMode.OwnerDrawText;
 			this.tvStaged.FullRowSelect = true;
 			this.tvStaged.Indent = 10;
 			this.tvStaged.Location = new System.Drawing.Point(0, 0);
