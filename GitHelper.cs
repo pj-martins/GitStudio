@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -159,9 +160,50 @@ namespace PaJaMa.GitStudio
 				var remaining = string.Join(" ", diffParts.ToArray());
 				diff.FileName = remaining;
 				diffs.Add(diff);
+				if (diff.DifferenceType == DifferenceType.Add && !diff.IsStaged)
+					checkSubdirectoryAddDifferences(diff, diffs);
 			}
 
 			return diffs;
+		}
+
+		private void checkSubdirectoryAddDifferences(Difference difference, List<Difference> diffs)
+		{
+			string[] ignoreLines = new string[0];
+			var ignoreFile = Path.Combine(WorkingDirectory, ".gitignore");
+			if (File.Exists(ignoreFile))
+				ignoreLines = File.ReadAllLines(ignoreFile);
+			var dir = Path.Combine(WorkingDirectory, difference.FileName);
+			if (Directory.Exists(dir))
+			{
+				var files = recursivelyGetFiles(dir, ignoreLines);
+				foreach (var file in files)
+				{
+					var diff = new Difference();
+					diff.DifferenceType = DifferenceType.Add;
+					diff.FileName = file.Substring(WorkingDirectory.Length + 1).Replace("\\", "/");
+					diffs.Add(diff);
+				}
+			}
+		}
+
+		private List<string> recursivelyGetFiles(string parentDirectory, string[] ignoreLines)
+		{
+			List<string> files = new List<string>();
+			var checkDirectory = parentDirectory.Substring(WorkingDirectory.Length + 1);
+			if (ignoreLines.Contains(checkDirectory.Replace("\\", "/")) || ignoreLines.Contains(checkDirectory.Replace("\\", "/") + "/"))
+				return new List<string>();
+
+			var dinf = new DirectoryInfo(parentDirectory);
+			foreach (var f in dinf.GetFiles())
+			{
+				files.Add(f.FullName);
+			}
+			foreach (var d in dinf.GetDirectories())
+			{
+				files.AddRange(recursivelyGetFiles(d.FullName, ignoreLines));
+			}
+			return files;
 		}
 	}
 }

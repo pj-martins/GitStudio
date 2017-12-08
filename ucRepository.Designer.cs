@@ -29,9 +29,10 @@
 		private void InitializeComponent()
 		{
 			this.components = new System.ComponentModel.Container();
+			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ucRepository));
 			this.splitContainer1 = new System.Windows.Forms.SplitContainer();
 			this.splitContainer2 = new System.Windows.Forms.SplitContainer();
-			this.tvLocalBranches = new System.Windows.Forms.TreeView();
+			this.tvLocalBranches = new PaJaMa.WinControls.MWTreeView.MWTreeView();
 			this.mnuLocal = new System.Windows.Forms.ContextMenuStrip(this.components);
 			this.checkoutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.pullToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -39,28 +40,26 @@
 			this.deleteToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.branchLocalToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.mergeFromLocalToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-			this.tvRemoteBranches = new System.Windows.Forms.TreeView();
+			this.tvRemoteBranches = new PaJaMa.WinControls.MWTreeView.MWTreeView();
 			this.mnuRemote = new System.Windows.Forms.ContextMenuStrip(this.components);
 			this.branchToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.fetchToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.mergeFromToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.splitContainer3 = new System.Windows.Forms.SplitContainer();
 			this.splitContainer4 = new System.Windows.Forms.SplitContainer();
-			this.tvDifferences = new System.Windows.Forms.TreeView();
+			this.tvDifferences = new PaJaMa.WinControls.MWTreeView.MWTreeView();
 			this.mnuDiffs = new System.Windows.Forms.ContextMenuStrip(this.components);
 			this.viewExternalToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.undoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.ignoreToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-			this.ignorePathToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-			this.selectAllToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-			this.btnStage = new System.Windows.Forms.Button();
-			this.tvStaged = new System.Windows.Forms.TreeView();
-			this.btnUnStage = new System.Windows.Forms.Button();
+			this.resolveConflictToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.tvStaged = new PaJaMa.WinControls.MWTreeView.MWTreeView();
 			this.txtDiffText = new System.Windows.Forms.RichTextBox();
 			this.timDiff = new System.Windows.Forms.Timer(this.components);
 			this.panel1 = new System.Windows.Forms.Panel();
 			this.btnCommit = new System.Windows.Forms.Button();
-			this.resolveConflictToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.stageToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.unStageToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
 			this.splitContainer1.Panel1.SuspendLayout();
 			this.splitContainer1.Panel2.SuspendLayout();
@@ -120,13 +119,15 @@
 			// 
 			// tvLocalBranches
 			// 
-			this.tvLocalBranches.CheckBoxes = true;
+			this.tvLocalBranches.CheckedNodes = ((System.Collections.Hashtable)(resources.GetObject("tvLocalBranches.CheckedNodes")));
 			this.tvLocalBranches.ContextMenuStrip = this.mnuLocal;
 			this.tvLocalBranches.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.tvLocalBranches.DrawMode = System.Windows.Forms.TreeViewDrawMode.OwnerDrawText;
 			this.tvLocalBranches.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 			this.tvLocalBranches.Location = new System.Drawing.Point(0, 0);
 			this.tvLocalBranches.Name = "tvLocalBranches";
+			this.tvLocalBranches.RubberbandGradientBlend = new PaJaMa.WinControls.MWTreeView.MWRubberbandGradientBlend[0];
+			this.tvLocalBranches.RubberbandGradientColorBlend = new PaJaMa.WinControls.MWTreeView.MWRubberbandGradientColorBlend[0];
 			this.tvLocalBranches.Size = new System.Drawing.Size(303, 300);
 			this.tvLocalBranches.TabIndex = 2;
 			this.tvLocalBranches.DrawNode += new System.Windows.Forms.DrawTreeNodeEventHandler(this.tvLocalBranches_DrawNode);
@@ -188,10 +189,13 @@
 			// 
 			// tvRemoteBranches
 			// 
+			this.tvRemoteBranches.CheckedNodes = ((System.Collections.Hashtable)(resources.GetObject("tvRemoteBranches.CheckedNodes")));
 			this.tvRemoteBranches.ContextMenuStrip = this.mnuRemote;
 			this.tvRemoteBranches.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.tvRemoteBranches.Location = new System.Drawing.Point(0, 0);
 			this.tvRemoteBranches.Name = "tvRemoteBranches";
+			this.tvRemoteBranches.RubberbandGradientBlend = new PaJaMa.WinControls.MWTreeView.MWRubberbandGradientBlend[0];
+			this.tvRemoteBranches.RubberbandGradientColorBlend = new PaJaMa.WinControls.MWTreeView.MWRubberbandGradientColorBlend[0];
 			this.tvRemoteBranches.Size = new System.Drawing.Size(303, 314);
 			this.tvRemoteBranches.TabIndex = 1;
 			// 
@@ -252,19 +256,17 @@
 			// splitContainer4.Panel1
 			// 
 			this.splitContainer4.Panel1.Controls.Add(this.tvDifferences);
-			this.splitContainer4.Panel1.Controls.Add(this.btnStage);
 			// 
 			// splitContainer4.Panel2
 			// 
 			this.splitContainer4.Panel2.Controls.Add(this.tvStaged);
-			this.splitContainer4.Panel2.Controls.Add(this.btnUnStage);
 			this.splitContainer4.Size = new System.Drawing.Size(602, 336);
 			this.splitContainer4.SplitterDistance = 283;
 			this.splitContainer4.TabIndex = 1;
 			// 
 			// tvDifferences
 			// 
-			this.tvDifferences.CheckBoxes = true;
+			this.tvDifferences.CheckedNodes = ((System.Collections.Hashtable)(resources.GetObject("tvDifferences.CheckedNodes")));
 			this.tvDifferences.ContextMenuStrip = this.mnuDiffs;
 			this.tvDifferences.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.tvDifferences.DrawMode = System.Windows.Forms.TreeViewDrawMode.OwnerDrawText;
@@ -272,6 +274,8 @@
 			this.tvDifferences.Indent = 10;
 			this.tvDifferences.Location = new System.Drawing.Point(0, 0);
 			this.tvDifferences.Name = "tvDifferences";
+			this.tvDifferences.RubberbandGradientBlend = new PaJaMa.WinControls.MWTreeView.MWRubberbandGradientBlend[0];
+			this.tvDifferences.RubberbandGradientColorBlend = new PaJaMa.WinControls.MWTreeView.MWRubberbandGradientColorBlend[0];
 			this.tvDifferences.ShowLines = false;
 			this.tvDifferences.Size = new System.Drawing.Size(283, 313);
 			this.tvDifferences.TabIndex = 0;
@@ -287,62 +291,44 @@
             this.viewExternalToolStripMenuItem,
             this.undoToolStripMenuItem,
             this.ignoreToolStripMenuItem,
-            this.ignorePathToolStripMenuItem,
-            this.selectAllToolStripMenuItem,
-            this.resolveConflictToolStripMenuItem});
+            this.resolveConflictToolStripMenuItem,
+            this.stageToolStripMenuItem,
+            this.unStageToolStripMenuItem});
 			this.mnuDiffs.Name = "mnuDiffs";
-			this.mnuDiffs.Size = new System.Drawing.Size(160, 158);
+			this.mnuDiffs.Size = new System.Drawing.Size(160, 180);
 			this.mnuDiffs.Opening += new System.ComponentModel.CancelEventHandler(this.mnuDiffs_Opening);
 			// 
 			// viewExternalToolStripMenuItem
 			// 
 			this.viewExternalToolStripMenuItem.Name = "viewExternalToolStripMenuItem";
-			this.viewExternalToolStripMenuItem.Size = new System.Drawing.Size(143, 22);
+			this.viewExternalToolStripMenuItem.Size = new System.Drawing.Size(159, 22);
 			this.viewExternalToolStripMenuItem.Text = "&View External";
 			this.viewExternalToolStripMenuItem.Click += new System.EventHandler(this.viewExternalToolStripMenuItem_Click);
 			// 
 			// undoToolStripMenuItem
 			// 
 			this.undoToolStripMenuItem.Name = "undoToolStripMenuItem";
-			this.undoToolStripMenuItem.Size = new System.Drawing.Size(143, 22);
+			this.undoToolStripMenuItem.Size = new System.Drawing.Size(159, 22);
 			this.undoToolStripMenuItem.Text = "&Undo";
 			this.undoToolStripMenuItem.Click += new System.EventHandler(this.undoToolStripMenuItem_Click);
 			// 
 			// ignoreToolStripMenuItem
 			// 
 			this.ignoreToolStripMenuItem.Name = "ignoreToolStripMenuItem";
-			this.ignoreToolStripMenuItem.Size = new System.Drawing.Size(143, 22);
+			this.ignoreToolStripMenuItem.Size = new System.Drawing.Size(159, 22);
 			this.ignoreToolStripMenuItem.Text = "I&gnore";
 			this.ignoreToolStripMenuItem.Click += new System.EventHandler(this.ignoreToolStripMenuItem_Click);
 			// 
-			// ignorePathToolStripMenuItem
+			// resolveConflictToolStripMenuItem
 			// 
-			this.ignorePathToolStripMenuItem.Name = "ignorePathToolStripMenuItem";
-			this.ignorePathToolStripMenuItem.Size = new System.Drawing.Size(143, 22);
-			this.ignorePathToolStripMenuItem.Text = "Ignore &Path";
-			this.ignorePathToolStripMenuItem.Click += new System.EventHandler(this.ignorePathToolStripMenuItem_Click);
-			// 
-			// selectAllToolStripMenuItem
-			// 
-			this.selectAllToolStripMenuItem.Name = "selectAllToolStripMenuItem";
-			this.selectAllToolStripMenuItem.Size = new System.Drawing.Size(143, 22);
-			this.selectAllToolStripMenuItem.Text = "Select &All";
-			this.selectAllToolStripMenuItem.Click += new System.EventHandler(this.selectAllToolStripMenuItem_Click);
-			// 
-			// btnStage
-			// 
-			this.btnStage.Dock = System.Windows.Forms.DockStyle.Bottom;
-			this.btnStage.Location = new System.Drawing.Point(0, 313);
-			this.btnStage.Name = "btnStage";
-			this.btnStage.Size = new System.Drawing.Size(283, 23);
-			this.btnStage.TabIndex = 1;
-			this.btnStage.Text = ">>";
-			this.btnStage.UseVisualStyleBackColor = true;
-			this.btnStage.Click += new System.EventHandler(this.btnStage_Click);
+			this.resolveConflictToolStripMenuItem.Name = "resolveConflictToolStripMenuItem";
+			this.resolveConflictToolStripMenuItem.Size = new System.Drawing.Size(159, 22);
+			this.resolveConflictToolStripMenuItem.Text = "Resolve &Conflict";
+			this.resolveConflictToolStripMenuItem.Click += new System.EventHandler(this.resolveConflictToolStripMenuItem_Click);
 			// 
 			// tvStaged
 			// 
-			this.tvStaged.CheckBoxes = true;
+			this.tvStaged.CheckedNodes = ((System.Collections.Hashtable)(resources.GetObject("tvStaged.CheckedNodes")));
 			this.tvStaged.ContextMenuStrip = this.mnuDiffs;
 			this.tvStaged.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.tvStaged.DrawMode = System.Windows.Forms.TreeViewDrawMode.OwnerDrawText;
@@ -350,6 +336,8 @@
 			this.tvStaged.Indent = 10;
 			this.tvStaged.Location = new System.Drawing.Point(0, 0);
 			this.tvStaged.Name = "tvStaged";
+			this.tvStaged.RubberbandGradientBlend = new PaJaMa.WinControls.MWTreeView.MWRubberbandGradientBlend[0];
+			this.tvStaged.RubberbandGradientColorBlend = new PaJaMa.WinControls.MWTreeView.MWRubberbandGradientColorBlend[0];
 			this.tvStaged.ShowLines = false;
 			this.tvStaged.Size = new System.Drawing.Size(315, 313);
 			this.tvStaged.TabIndex = 2;
@@ -357,17 +345,6 @@
 			this.tvStaged.AfterCollapse += new System.Windows.Forms.TreeViewEventHandler(this.tv_AfterCollapse);
 			this.tvStaged.DrawNode += new System.Windows.Forms.DrawTreeNodeEventHandler(this.tv_DrawNode);
 			this.tvStaged.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.tv_AfterSelect);
-			// 
-			// btnUnStage
-			// 
-			this.btnUnStage.Dock = System.Windows.Forms.DockStyle.Bottom;
-			this.btnUnStage.Location = new System.Drawing.Point(0, 313);
-			this.btnUnStage.Name = "btnUnStage";
-			this.btnUnStage.Size = new System.Drawing.Size(315, 23);
-			this.btnUnStage.TabIndex = 3;
-			this.btnUnStage.Text = "<<";
-			this.btnUnStage.UseVisualStyleBackColor = true;
-			this.btnUnStage.Click += new System.EventHandler(this.btnUnStage_Click);
 			// 
 			// txtDiffText
 			// 
@@ -405,12 +382,19 @@
 			this.btnCommit.UseVisualStyleBackColor = true;
 			this.btnCommit.Click += new System.EventHandler(this.btnCommit_Click);
 			// 
-			// resolveConflictToolStripMenuItem
+			// stageToolStripMenuItem
 			// 
-			this.resolveConflictToolStripMenuItem.Name = "resolveConflictToolStripMenuItem";
-			this.resolveConflictToolStripMenuItem.Size = new System.Drawing.Size(159, 22);
-			this.resolveConflictToolStripMenuItem.Text = "Resolve &Conflict";
-			this.resolveConflictToolStripMenuItem.Click += new System.EventHandler(this.resolveConflictToolStripMenuItem_Click);
+			this.stageToolStripMenuItem.Name = "stageToolStripMenuItem";
+			this.stageToolStripMenuItem.Size = new System.Drawing.Size(159, 22);
+			this.stageToolStripMenuItem.Text = "&Stage";
+			this.stageToolStripMenuItem.Click += new System.EventHandler(this.stageToolStripMenuItem_Click);
+			// 
+			// unStageToolStripMenuItem
+			// 
+			this.unStageToolStripMenuItem.Name = "unStageToolStripMenuItem";
+			this.unStageToolStripMenuItem.Size = new System.Drawing.Size(159, 22);
+			this.unStageToolStripMenuItem.Text = "&UnStage";
+			this.unStageToolStripMenuItem.Click += new System.EventHandler(this.unStageToolStripMenuItem_Click);
 			// 
 			// ucRepository
 			// 
@@ -449,35 +433,33 @@
 
 		private System.Windows.Forms.SplitContainer splitContainer1;
 		private System.Windows.Forms.SplitContainer splitContainer2;
-		private System.Windows.Forms.TreeView tvRemoteBranches;
+		private PaJaMa.WinControls.MWTreeView.MWTreeView tvRemoteBranches;
 		private System.Windows.Forms.ContextMenuStrip mnuRemote;
 		private System.Windows.Forms.ToolStripMenuItem branchToolStripMenuItem;
 		private System.Windows.Forms.ContextMenuStrip mnuLocal;
 		private System.Windows.Forms.ToolStripMenuItem checkoutToolStripMenuItem;
 		private System.Windows.Forms.ToolStripMenuItem fetchToolStripMenuItem;
-		private System.Windows.Forms.TreeView tvLocalBranches;
+		private PaJaMa.WinControls.MWTreeView.MWTreeView tvLocalBranches;
 		private System.Windows.Forms.ToolStripMenuItem deleteToolStripMenuItem;
 		private System.Windows.Forms.Timer timDiff;
 		private System.Windows.Forms.SplitContainer splitContainer3;
-		private System.Windows.Forms.TreeView tvDifferences;
+		private PaJaMa.WinControls.MWTreeView.MWTreeView tvDifferences;
 		private System.Windows.Forms.RichTextBox txtDiffText;
 		private System.Windows.Forms.ContextMenuStrip mnuDiffs;
 		private System.Windows.Forms.ToolStripMenuItem viewExternalToolStripMenuItem;
 		private System.Windows.Forms.ToolStripMenuItem pullToolStripMenuItem;
 		private System.Windows.Forms.SplitContainer splitContainer4;
-		private System.Windows.Forms.Button btnStage;
-		private System.Windows.Forms.TreeView tvStaged;
-		private System.Windows.Forms.Button btnUnStage;
+		private PaJaMa.WinControls.MWTreeView.MWTreeView tvStaged;
 		private System.Windows.Forms.Panel panel1;
 		private System.Windows.Forms.Button btnCommit;
 		private System.Windows.Forms.ToolStripMenuItem pushToolStripMenuItem;
 		private System.Windows.Forms.ToolStripMenuItem undoToolStripMenuItem;
 		private System.Windows.Forms.ToolStripMenuItem ignoreToolStripMenuItem;
-		private System.Windows.Forms.ToolStripMenuItem ignorePathToolStripMenuItem;
 		private System.Windows.Forms.ToolStripMenuItem branchLocalToolStripMenuItem;
-		private System.Windows.Forms.ToolStripMenuItem selectAllToolStripMenuItem;
 		private System.Windows.Forms.ToolStripMenuItem mergeFromLocalToolStripMenuItem;
 		private System.Windows.Forms.ToolStripMenuItem mergeFromToolStripMenuItem;
 		private System.Windows.Forms.ToolStripMenuItem resolveConflictToolStripMenuItem;
+		private System.Windows.Forms.ToolStripMenuItem stageToolStripMenuItem;
+		private System.Windows.Forms.ToolStripMenuItem unStageToolStripMenuItem;
 	}
 }

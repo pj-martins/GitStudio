@@ -1,4 +1,5 @@
-﻿using System;
+﻿using PaJaMa.WinControls.MWTreeView;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -127,7 +128,7 @@ namespace PaJaMa.GitStudio
 			pullToolStripMenuItem.Visible = branch != null && branch.Behind > 0 && branch == _currentBranch;
 			pushToolStripMenuItem.Visible = branch != null;
 			mergeFromLocalToolStripMenuItem.Visible = branch != null;
-			deleteToolStripMenuItem.Visible = getCheckedNodes<LocalBranch>(tvLocalBranches.Nodes).Any();
+			deleteToolStripMenuItem.Visible = getSelectedNodeTags<LocalBranch>(tvLocalBranches, false).Any();
 		}
 
 		private void fetchToolStripMenuItem_Click(object sender, EventArgs e)
@@ -148,7 +149,7 @@ namespace PaJaMa.GitStudio
 
 		private void deleteToolStripMenuItem_Click(object sender, EventArgs e)
 		{
-			var selected = getCheckedNodes<LocalBranch>(tvLocalBranches.Nodes);
+			var selected = getSelectedNodeTags<LocalBranch>(tvLocalBranches, false);
 			if (MessageBox.Show("Are you sure you want to delete " +
 				string.Join("\r\n", selected.Select(s => s.ToString()).ToArray())
 				+ "?", "Warning!",
@@ -269,35 +270,13 @@ namespace PaJaMa.GitStudio
 			refreshBranches();
 		}
 
-		private void btnStage_Click(object sender, EventArgs e)
-		{
-			foreach (var selectedItem in getCheckedNodes<Difference>(tvDifferences.Nodes))
-			{
-				string error = string.Empty;
-				_helper.RunCommand("add " + selectedItem.FileName, ref error);
-			}
-			txtDiffText.Text = string.Empty;
-			timDiff_Tick(this, new EventArgs());
-		}
-
-		private void btnUnStage_Click(object sender, EventArgs e)
-		{
-			foreach (var selectedItem in getCheckedNodes<Difference>(tvStaged.Nodes))
-			{
-				string error = string.Empty;
-				_helper.RunCommand("reset -- " + selectedItem.FileName, ref error);
-			}
-			txtDiffText.Text = string.Empty;
-			timDiff_Tick(this, new EventArgs());
-		}
-
 		private void undoToolStripMenuItem_Click(object sender, EventArgs e)
 		{
 			if (MessageBox.Show("Are you sure you want to undo selected files?", "Warning!", MessageBoxButtons.YesNo) != DialogResult.Yes)
 				return;
 
 			var tv = tvDifferences.Focused ? tvDifferences : tvStaged;
-			foreach (var selectedItem in getCheckedNodes<Difference>(tv.Nodes))
+			foreach (var selectedItem in getSelectedNodeTags<Difference>(tv, true))
 			{
 				string error = string.Empty;
 				if (tv == tvStaged)
@@ -324,14 +303,24 @@ namespace PaJaMa.GitStudio
 				return;
 
 			var tv = tvDifferences.Focused ? tvDifferences : tvStaged;
-			var selectedItems = getCheckedNodes<Difference>(tv.Nodes);
-			foreach (var selectedItem in selectedItems)
+			var nodes = tv.SelectedNodes;
+			List<string> selectedItems = new List<string>();
+			foreach (var node in nodes)
 			{
 				string error = string.Empty;
-				if (tv == tvStaged)
-					_helper.RunCommand("reset " + selectedItem.FileName, ref error);
+				if (tv == tvStaged && node.Tag is Difference)
+					_helper.RunCommand("reset " + (node.Tag as Difference).FileName, ref error);
+
+				var runningNode = node;
+				var runningText = string.Empty;
+				while (runningNode != null)
+				{
+					runningText = runningNode.Text + (string.IsNullOrEmpty(runningText) ? "" : "/") + runningText;
+					runningNode = runningNode.Parent;
+				}
+				selectedItems.Add(runningText);
 			}
-			File.AppendAllLines(Path.Combine(Repository.LocalPath, ".gitignore"), selectedItems.Select(i => i.FileName));
+			File.AppendAllLines(Path.Combine(Repository.LocalPath, ".gitignore"), selectedItems);
 			txtDiffText.Text = string.Empty;
 			timDiff_Tick(this, new EventArgs());
 		}
@@ -339,24 +328,9 @@ namespace PaJaMa.GitStudio
 		private void mnuDiffs_Opening(object sender, CancelEventArgs e)
 		{
 			var tv = tvDifferences.Focused ? tvDifferences : tvStaged;
-			var selectedItems = getCheckedNodes<Difference>(tv.Nodes);
+			var selectedItems = getSelectedNodeTags<Difference>(tv, false);
 			var diff = tv.SelectedNode == null ? null : tv.SelectedNode.Tag as Difference;
 			resolveConflictToolStripMenuItem.Visible = diff != null && diff.IsConflict;
-			ignorePathToolStripMenuItem.Visible = selectedItems.Count() == 1 && selectedItems.First().FileName.Contains("/");
-		}
-
-		private void ignorePathToolStripMenuItem_Click(object sender, EventArgs e)
-		{
-			var tv = tvDifferences.Focused ? tvDifferences : tvStaged;
-			var selectedItem = getCheckedNodes<Difference>(tv.Nodes).First();
-			var frm = new frmIgnorePath();
-			frm.FullPath = selectedItem.FileName;
-			if (frm.ShowDialog() == DialogResult.OK)
-			{
-				File.AppendAllLines(Path.Combine(Repository.LocalPath, ".gitignore"), new string[] { frm.IgnorePath });
-				txtDiffText.Text = string.Empty;
-				timDiff_Tick(this, new EventArgs());
-			}
 		}
 
 		private void tv_AfterSelect(object sender, TreeViewEventArgs e)
@@ -449,38 +423,43 @@ namespace PaJaMa.GitStudio
 				color, e.Node.BackColor, TextFormatFlags.GlyphOverhangPadding);
 		}
 
-		private List<TTagType> getCheckedNodes<TTagType>(TreeNodeCollection nodes)
+		private List<TTagType> getSelectedNodeTags<TTagType>(MWTreeView tv, bool andChildren)
 		{
-			List<TTagType> differences = new List<TTagType>();
+			List<TTagType> selected = new List<TTagType>();
+			var nodes = tv.SelectedNodes.ToList();
+			if (andChildren)
+			{
+				foreach (var n in tv.SelectedNodes)
+				{
+					nodes.AddRange(recursivelyGetChildren(n));
+				}
+				nodes = nodes.Distinct().ToList();
+			}
+
 			foreach (TreeNode node in nodes)
 			{
-				if (node.Checked && node.Tag is TTagType)
+				if (node.Tag is TTagType)
 				{
-					differences.Add((TTagType)node.Tag);
-				}
-				if (node.Nodes.Count > 0)
-				{
-					differences.AddRange(getCheckedNodes<TTagType>(node.Nodes));
+					var tag = ((TTagType)node.Tag);
+					if (!selected.Contains(tag))
+						selected.Add(tag);
 				}
 			}
-			return differences;
+			return selected;
 		}
 
-		private List<TreeNode> getLowLevelNodes(TreeNodeCollection nodes)
+		private List<TreeNode> recursivelyGetChildren(TreeNode parent)
 		{
-			List<TreeNode> lowLevels = new List<TreeNode>();
-			foreach (TreeNode node in nodes)
+			List<TreeNode> nodes = new List<TreeNode>();
+			foreach (TreeNode node in parent.Nodes)
 			{
-				if (node.Tag != null)
+				nodes.Add(node);
+				foreach (TreeNode child in node.Nodes)
 				{
-					lowLevels.Add(node);
-				}
-				if (node.Nodes.Count > 0)
-				{
-					lowLevels.AddRange(getLowLevelNodes(node.Nodes));
+					nodes.AddRange(recursivelyGetChildren(child));
 				}
 			}
-			return lowLevels;
+			return nodes;
 		}
 
 		private void branchLocalToolStripMenuItem_Click(object sender, EventArgs e)
@@ -491,15 +470,6 @@ namespace PaJaMa.GitStudio
 			if (frm.ShowDialog() == DialogResult.OK)
 			{
 				refreshBranches();
-			}
-		}
-
-		private void selectAllToolStripMenuItem_Click(object sender, EventArgs e)
-		{
-			var tv = tvDifferences.Focused ? tvDifferences : tvStaged;
-			foreach (var node in getLowLevelNodes(tv.Nodes))
-			{
-				node.Checked = true;
 			}
 		}
 
@@ -538,6 +508,28 @@ namespace PaJaMa.GitStudio
 			string error = string.Empty;
 			_helper.RunCommand("add " + diff.FileName, ref error);
 			_previousDifferences = null;
+		}
+
+		private void stageToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+			foreach (var selectedItem in getSelectedNodeTags<Difference>(tvDifferences, true))
+			{
+				string error = string.Empty;
+				_helper.RunCommand("add " + selectedItem.FileName, ref error);
+			}
+			txtDiffText.Text = string.Empty;
+			timDiff_Tick(this, new EventArgs());
+		}
+
+		private void unStageToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+			foreach (var selectedItem in getSelectedNodeTags<Difference>(tvStaged, true))
+			{
+				string error = string.Empty;
+				_helper.RunCommand("reset -- " + selectedItem.FileName, ref error);
+			}
+			txtDiffText.Text = string.Empty;
+			timDiff_Tick(this, new EventArgs());
 		}
 	}
 }
