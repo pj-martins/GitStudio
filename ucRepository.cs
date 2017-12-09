@@ -125,7 +125,7 @@ namespace PaJaMa.GitStudio
 		{
 			// checkoutToolStripMenuItem.Enabled = lstLocalBranches.SelectedItems.Count == 1;
 			var branch = tvLocalBranches.SelectedNode == null ? null : tvLocalBranches.SelectedNode.Tag as LocalBranch;
-			pullToolStripMenuItem.Visible = branch != null && branch.Behind > 0 && branch == _currentBranch;
+			pullToolStripMenuItem.Visible = branch != null && branch.TracksBranch != null;
 			pushToolStripMenuItem.Visible = branch != null;
 			mergeFromLocalToolStripMenuItem.Visible = branch != null;
 			deleteToolStripMenuItem.Visible = getSelectedNodeTags<LocalBranch>(tvLocalBranches, false).Any();
@@ -254,8 +254,9 @@ namespace PaJaMa.GitStudio
 
 		private void pullToolStripMenuItem_Click(object sender, EventArgs e)
 		{
+			var branch = tvLocalBranches.SelectedNode.Tag as LocalBranch;
 			string error = string.Empty;
-			_helper.RunCommand("pull", ref error);
+			_helper.RunCommand("pull origin " + branch.TracksBranch.BranchName, ref error);
 			if (!string.IsNullOrEmpty(error)) return;
 			refreshBranches();
 		}
@@ -534,6 +535,31 @@ namespace PaJaMa.GitStudio
 				string error = string.Empty;
 				_helper.RunCommand("reset -- " + selectedItem.FileName, ref error);
 			}
+			txtDiffText.Text = string.Empty;
+			timDiff_Tick(this, new EventArgs());
+		}
+
+		private void ignoreExtensionToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+			if (MessageBox.Show("Are you sure you want to ignore selected files?", "Warning!", MessageBoxButtons.YesNo) != DialogResult.Yes)
+				return;
+
+			var tv = tvDifferences.Focused ? tvDifferences : tvStaged;
+			var differences = getSelectedNodeTags<Difference>(tv, false);
+			List<string> selectedItems = new List<string>();
+			foreach (var diff in differences)
+			{
+				string error = string.Empty;
+				if (tv == tvStaged)
+					_helper.RunCommand("reset " + diff.FileName, ref error);
+
+				var finf = new FileInfo(Path.Combine(Repository.LocalPath, diff.FileName));
+				if (finf.Exists)
+				{
+					selectedItems.Add("**/*" + finf.Extension);
+				}
+			}
+			File.AppendAllLines(Path.Combine(Repository.LocalPath, ".gitignore"), selectedItems);
 			txtDiffText.Text = string.Empty;
 			timDiff_Tick(this, new EventArgs());
 		}

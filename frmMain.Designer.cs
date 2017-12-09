@@ -38,6 +38,8 @@
 			this.tabMain = new System.Windows.Forms.TabControl();
 			this.mnuTab = new System.Windows.Forms.ContextMenuStrip(this.components);
 			this.openInExplorerToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.closeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.switchAccountToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.menuStrip1.SuspendLayout();
 			this.mnuTab.SuspendLayout();
 			this.SuspendLayout();
@@ -106,9 +108,11 @@
 			// mnuTab
 			// 
 			this.mnuTab.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.openInExplorerToolStripMenuItem});
+            this.openInExplorerToolStripMenuItem,
+            this.closeToolStripMenuItem,
+            this.switchAccountToolStripMenuItem});
 			this.mnuTab.Name = "mnuTab";
-			this.mnuTab.Size = new System.Drawing.Size(162, 26);
+			this.mnuTab.Size = new System.Drawing.Size(162, 92);
 			// 
 			// openInExplorerToolStripMenuItem
 			// 
@@ -116,6 +120,20 @@
 			this.openInExplorerToolStripMenuItem.Size = new System.Drawing.Size(161, 22);
 			this.openInExplorerToolStripMenuItem.Text = "&Open In Explorer";
 			this.openInExplorerToolStripMenuItem.Click += new System.EventHandler(this.openInExplorerToolStripMenuItem_Click);
+			// 
+			// closeToolStripMenuItem
+			// 
+			this.closeToolStripMenuItem.Name = "closeToolStripMenuItem";
+			this.closeToolStripMenuItem.Size = new System.Drawing.Size(161, 22);
+			this.closeToolStripMenuItem.Text = "&Close";
+			this.closeToolStripMenuItem.Click += new System.EventHandler(this.closeToolStripMenuItem_Click);
+			// 
+			// switchAccountToolStripMenuItem
+			// 
+			this.switchAccountToolStripMenuItem.Name = "switchAccountToolStripMenuItem";
+			this.switchAccountToolStripMenuItem.Size = new System.Drawing.Size(161, 22);
+			this.switchAccountToolStripMenuItem.Text = "&Switch Account";
+			this.switchAccountToolStripMenuItem.Click += new System.EventHandler(this.switchAccountToolStripMenuItem_Click);
 			// 
 			// frmMain
 			// 
@@ -148,6 +166,8 @@
 		private System.Windows.Forms.ToolStripMenuItem openToolStripMenuItem;
 		private System.Windows.Forms.ContextMenuStrip mnuTab;
 		private System.Windows.Forms.ToolStripMenuItem openInExplorerToolStripMenuItem;
+		private System.Windows.Forms.ToolStripMenuItem closeToolStripMenuItem;
+		private System.Windows.Forms.ToolStripMenuItem switchAccountToolStripMenuItem;
 	}
 }
 

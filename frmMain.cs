@@ -90,12 +90,14 @@ namespace PaJaMa.GitStudio
 				var repo = new GitRepository()
 				{
 					LocalPath = dlg.SelectedPath,
-					RemoteURL = remote,
+					RemoteURLDecrypted = remote,
 					UserName = username
 				};
-				createRepository(repo);
+				var tab = createRepository(repo);
 				settings.Repositories.Add(repo);
 				SettingsHelper.SaveUserSettings<GitUserSettings>(settings);
+				tabMain.SelectedTab = tab;
+				(tab.Controls[0] as ucRepository).Init();
 			}
 		}
 
@@ -127,6 +129,31 @@ namespace PaJaMa.GitStudio
 			if (tabMain.SelectedTab != null)
 				formSettings.FocusedRepository = tabMain.SelectedTab.Text;
 			SettingsHelper.SaveUserSettings<FormSettings>(formSettings);
+		}
+
+		private void closeToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+			var settings = SettingsHelper.GetUserSettings<GitUserSettings>();
+			var tab = tabMain.SelectedTab;
+			var repo = settings.Repositories.First(r => r.LocalPath == tab.Text);
+			settings.Repositories.Remove(repo);
+			tabMain.TabPages.Remove(tab);
+			SettingsHelper.SaveUserSettings<GitUserSettings>(settings);
+		}
+
+		private void switchAccountToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+			var settings = SettingsHelper.GetUserSettings<GitUserSettings>();
+			var frm = new frmAccount();
+			if (frm.ShowDialog() == DialogResult.OK)
+			{
+				var account = frm.SelectedAccount;
+				var repo = (tabMain.SelectedTab.Controls[0] as ucRepository).Repository;
+				settings.Repositories.First(r => r.LocalPath == repo.LocalPath).UserName = account.UserName;
+				SettingsHelper.SaveUserSettings<GitUserSettings>(settings);
+				var error = string.Empty;
+				new GitHelper(repo.LocalPath).RunCommand("config user.name \"" + account.UserName + "\"", ref error);
+			}
 		}
 	}
 }

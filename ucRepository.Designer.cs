@@ -53,13 +53,14 @@
 			this.undoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.ignoreToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.resolveConflictToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.stageToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.unStageToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.tvStaged = new PaJaMa.WinControls.MWTreeView.MWTreeView();
 			this.txtDiffText = new System.Windows.Forms.RichTextBox();
 			this.timDiff = new System.Windows.Forms.Timer(this.components);
 			this.panel1 = new System.Windows.Forms.Panel();
 			this.btnCommit = new System.Windows.Forms.Button();
-			this.stageToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-			this.unStageToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.ignoreExtensionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
 			this.splitContainer1.Panel1.SuspendLayout();
 			this.splitContainer1.Panel2.SuspendLayout();
@@ -277,7 +278,7 @@
 			this.tvDifferences.RubberbandGradientBlend = new PaJaMa.WinControls.MWTreeView.MWRubberbandGradientBlend[0];
 			this.tvDifferences.RubberbandGradientColorBlend = new PaJaMa.WinControls.MWTreeView.MWRubberbandGradientColorBlend[0];
 			this.tvDifferences.ShowLines = false;
-			this.tvDifferences.Size = new System.Drawing.Size(283, 313);
+			this.tvDifferences.Size = new System.Drawing.Size(283, 336);
 			this.tvDifferences.TabIndex = 0;
 			this.tvDifferences.AfterCheck += new System.Windows.Forms.TreeViewEventHandler(this.tv_AfterCheck);
 			this.tvDifferences.AfterCollapse += new System.Windows.Forms.TreeViewEventHandler(this.tv_AfterCollapse);
@@ -291,40 +292,55 @@
             this.viewExternalToolStripMenuItem,
             this.undoToolStripMenuItem,
             this.ignoreToolStripMenuItem,
+            this.ignoreExtensionToolStripMenuItem,
             this.resolveConflictToolStripMenuItem,
             this.stageToolStripMenuItem,
             this.unStageToolStripMenuItem});
 			this.mnuDiffs.Name = "mnuDiffs";
-			this.mnuDiffs.Size = new System.Drawing.Size(160, 180);
+			this.mnuDiffs.Size = new System.Drawing.Size(162, 180);
 			this.mnuDiffs.Opening += new System.ComponentModel.CancelEventHandler(this.mnuDiffs_Opening);
 			// 
 			// viewExternalToolStripMenuItem
 			// 
 			this.viewExternalToolStripMenuItem.Name = "viewExternalToolStripMenuItem";
-			this.viewExternalToolStripMenuItem.Size = new System.Drawing.Size(159, 22);
+			this.viewExternalToolStripMenuItem.Size = new System.Drawing.Size(161, 22);
 			this.viewExternalToolStripMenuItem.Text = "&View External";
 			this.viewExternalToolStripMenuItem.Click += new System.EventHandler(this.viewExternalToolStripMenuItem_Click);
 			// 
 			// undoToolStripMenuItem
 			// 
 			this.undoToolStripMenuItem.Name = "undoToolStripMenuItem";
-			this.undoToolStripMenuItem.Size = new System.Drawing.Size(159, 22);
+			this.undoToolStripMenuItem.Size = new System.Drawing.Size(161, 22);
 			this.undoToolStripMenuItem.Text = "&Undo";
 			this.undoToolStripMenuItem.Click += new System.EventHandler(this.undoToolStripMenuItem_Click);
 			// 
 			// ignoreToolStripMenuItem
 			// 
 			this.ignoreToolStripMenuItem.Name = "ignoreToolStripMenuItem";
-			this.ignoreToolStripMenuItem.Size = new System.Drawing.Size(159, 22);
+			this.ignoreToolStripMenuItem.Size = new System.Drawing.Size(161, 22);
 			this.ignoreToolStripMenuItem.Text = "I&gnore";
 			this.ignoreToolStripMenuItem.Click += new System.EventHandler(this.ignoreToolStripMenuItem_Click);
 			// 
 			// resolveConflictToolStripMenuItem
 			// 
 			this.resolveConflictToolStripMenuItem.Name = "resolveConflictToolStripMenuItem";
-			this.resolveConflictToolStripMenuItem.Size = new System.Drawing.Size(159, 22);
+			this.resolveConflictToolStripMenuItem.Size = new System.Drawing.Size(161, 22);
 			this.resolveConflictToolStripMenuItem.Text = "Resolve &Conflict";
 			this.resolveConflictToolStripMenuItem.Click += new System.EventHandler(this.resolveConflictToolStripMenuItem_Click);
+			// 
+			// stageToolStripMenuItem
+			// 
+			this.stageToolStripMenuItem.Name = "stageToolStripMenuItem";
+			this.stageToolStripMenuItem.Size = new System.Drawing.Size(161, 22);
+			this.stageToolStripMenuItem.Text = "&Stage";
+			this.stageToolStripMenuItem.Click += new System.EventHandler(this.stageToolStripMenuItem_Click);
+			// 
+			// unStageToolStripMenuItem
+			// 
+			this.unStageToolStripMenuItem.Name = "unStageToolStripMenuItem";
+			this.unStageToolStripMenuItem.Size = new System.Drawing.Size(161, 22);
+			this.unStageToolStripMenuItem.Text = "&UnStage";
+			this.unStageToolStripMenuItem.Click += new System.EventHandler(this.unStageToolStripMenuItem_Click);
 			// 
 			// tvStaged
 			// 
@@ -339,7 +355,7 @@
 			this.tvStaged.RubberbandGradientBlend = new PaJaMa.WinControls.MWTreeView.MWRubberbandGradientBlend[0];
 			this.tvStaged.RubberbandGradientColorBlend = new PaJaMa.WinControls.MWTreeView.MWRubberbandGradientColorBlend[0];
 			this.tvStaged.ShowLines = false;
-			this.tvStaged.Size = new System.Drawing.Size(315, 313);
+			this.tvStaged.Size = new System.Drawing.Size(315, 336);
 			this.tvStaged.TabIndex = 2;
 			this.tvStaged.AfterCheck += new System.Windows.Forms.TreeViewEventHandler(this.tv_AfterCheck);
 			this.tvStaged.AfterCollapse += new System.Windows.Forms.TreeViewEventHandler(this.tv_AfterCollapse);
@@ -382,19 +398,12 @@
 			this.btnCommit.UseVisualStyleBackColor = true;
 			this.btnCommit.Click += new System.EventHandler(this.btnCommit_Click);
 			// 
-			// stageToolStripMenuItem
+			// ignoreExtensionToolStripMenuItem
 			// 
-			this.stageToolStripMenuItem.Name = "stageToolStripMenuItem";
-			this.stageToolStripMenuItem.Size = new System.Drawing.Size(159, 22);
-			this.stageToolStripMenuItem.Text = "&Stage";
-			this.stageToolStripMenuItem.Click += new System.EventHandler(this.stageToolStripMenuItem_Click);
-			// 
-			// unStageToolStripMenuItem
-			// 
-			this.unStageToolStripMenuItem.Name = "unStageToolStripMenuItem";
-			this.unStageToolStripMenuItem.Size = new System.Drawing.Size(159, 22);
-			this.unStageToolStripMenuItem.Text = "&UnStage";
-			this.unStageToolStripMenuItem.Click += new System.EventHandler(this.unStageToolStripMenuItem_Click);
+			this.ignoreExtensionToolStripMenuItem.Name = "ignoreExtensionToolStripMenuItem";
+			this.ignoreExtensionToolStripMenuItem.Size = new System.Drawing.Size(161, 22);
+			this.ignoreExtensionToolStripMenuItem.Text = "Ignore &Extension";
+			this.ignoreExtensionToolStripMenuItem.Click += new System.EventHandler(this.ignoreExtensionToolStripMenuItem_Click);
 			// 
 			// ucRepository
 			// 
@@ -461,5 +470,6 @@
 		private System.Windows.Forms.ToolStripMenuItem resolveConflictToolStripMenuItem;
 		private System.Windows.Forms.ToolStripMenuItem stageToolStripMenuItem;
 		private System.Windows.Forms.ToolStripMenuItem unStageToolStripMenuItem;
+		private System.Windows.Forms.ToolStripMenuItem ignoreExtensionToolStripMenuItem;
 	}
 }

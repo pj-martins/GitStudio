@@ -43,6 +43,13 @@ namespace PaJaMa.GitStudio
 
 	public class GitRepository
 	{
+		[XmlIgnore]
+		public string RemoteURLDecrypted
+		{
+			get { return EncrypterDecrypter.Instance.Decrypt(RemoteURL, GitUserSettings.PASSWORD); }
+			set { RemoteURL = EncrypterDecrypter.Instance.Encrypt(value, GitUserSettings.PASSWORD); }
+		}
+
 		public string RemoteURL { get; set; }
 		public string LocalPath { get; set; }
 		public string UserName { get; set; }

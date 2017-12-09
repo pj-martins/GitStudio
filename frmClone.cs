@@ -70,7 +70,7 @@ namespace PaJaMa.GitStudio
 			{
 				UserName = acct.UserName,
 				LocalPath = txtPath.Text,
-				RemoteURL = txtURL.Text
+				RemoteURLDecrypted = txtURL.Text
 			};
 			settings.Repositories.Add(ClonedRepo);
 			SettingsHelper.SaveUserSettings<GitUserSettings>(settings);
