@@ -131,6 +131,13 @@ namespace PaJaMa.GitStudio
 			deleteToolStripMenuItem.Visible = getSelectedNodeTags<LocalBranch>(tvLocalBranches, false).Any();
 		}
 
+
+		private void mnuRemote_Opening(object sender, CancelEventArgs e)
+		{
+			var branch = tvRemoteBranches.SelectedNode == null ? null : tvRemoteBranches.SelectedNode.Tag as RemoteBranch;
+			deleteToolStripMenuItem.Visible = getSelectedNodeTags<RemoteBranch>(tvRemoteBranches, false).Any();
+		}
+
 		private void fetchToolStripMenuItem_Click(object sender, EventArgs e)
 		{
 			string error = string.Empty;
@@ -159,6 +166,23 @@ namespace PaJaMa.GitStudio
 				{
 					string error = string.Empty;
 					_helper.RunCommand("branch -D " + s.BranchName, ref error);
+				}
+				refreshBranches();
+			}
+		}
+
+		private void deleteRemoteToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+			var selected = getSelectedNodeTags<RemoteBranch>(tvRemoteBranches, false);
+			if (MessageBox.Show("Are you sure you want to delete " +
+				string.Join("\r\n", selected.Select(s => s.ToString()).ToArray())
+				+ "?", "Warning!",
+				MessageBoxButtons.YesNo) == DialogResult.Yes)
+			{
+				foreach (var s in selected)
+				{
+					string error = string.Empty;
+					_helper.RunCommand("push origin --delete " + s.BranchName, ref error);
 				}
 				refreshBranches();
 			}
