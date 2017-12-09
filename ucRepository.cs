@@ -563,5 +563,15 @@ namespace PaJaMa.GitStudio
 			txtDiffText.Text = string.Empty;
 			timDiff_Tick(this, new EventArgs());
 		}
+
+		private void abortMergeToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+			if (MessageBox.Show("Are you sure you want to abort merge for " + _currentBranch.BranchName + "?", "Warning!",
+				MessageBoxButtons.YesNo) == DialogResult.Yes)
+			{
+				string error = string.Empty;
+				_helper.RunCommand("merge --abort", ref error);
+			}
+		}
 	}
 }

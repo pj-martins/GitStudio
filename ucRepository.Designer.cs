@@ -52,6 +52,7 @@
 			this.viewExternalToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.undoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.ignoreToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.ignoreExtensionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.resolveConflictToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.stageToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.unStageToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -60,7 +61,7 @@
 			this.timDiff = new System.Windows.Forms.Timer(this.components);
 			this.panel1 = new System.Windows.Forms.Panel();
 			this.btnCommit = new System.Windows.Forms.Button();
-			this.ignoreExtensionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.abortMergeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
 			this.splitContainer1.Panel1.SuspendLayout();
 			this.splitContainer1.Panel2.SuspendLayout();
@@ -141,9 +142,10 @@
             this.pushToolStripMenuItem,
             this.deleteToolStripMenuItem,
             this.branchLocalToolStripMenuItem,
-            this.mergeFromLocalToolStripMenuItem});
+            this.mergeFromLocalToolStripMenuItem,
+            this.abortMergeToolStripMenuItem});
 			this.mnuLocal.Name = "mnuLocal";
-			this.mnuLocal.Size = new System.Drawing.Size(157, 136);
+			this.mnuLocal.Size = new System.Drawing.Size(157, 180);
 			this.mnuLocal.Opening += new System.ComponentModel.CancelEventHandler(this.mnuLocal_Opening);
 			// 
 			// checkoutToolStripMenuItem
@@ -297,7 +299,7 @@
             this.stageToolStripMenuItem,
             this.unStageToolStripMenuItem});
 			this.mnuDiffs.Name = "mnuDiffs";
-			this.mnuDiffs.Size = new System.Drawing.Size(162, 180);
+			this.mnuDiffs.Size = new System.Drawing.Size(162, 158);
 			this.mnuDiffs.Opening += new System.ComponentModel.CancelEventHandler(this.mnuDiffs_Opening);
 			// 
 			// viewExternalToolStripMenuItem
@@ -320,6 +322,13 @@
 			this.ignoreToolStripMenuItem.Size = new System.Drawing.Size(161, 22);
 			this.ignoreToolStripMenuItem.Text = "I&gnore";
 			this.ignoreToolStripMenuItem.Click += new System.EventHandler(this.ignoreToolStripMenuItem_Click);
+			// 
+			// ignoreExtensionToolStripMenuItem
+			// 
+			this.ignoreExtensionToolStripMenuItem.Name = "ignoreExtensionToolStripMenuItem";
+			this.ignoreExtensionToolStripMenuItem.Size = new System.Drawing.Size(161, 22);
+			this.ignoreExtensionToolStripMenuItem.Text = "Ignore &Extension";
+			this.ignoreExtensionToolStripMenuItem.Click += new System.EventHandler(this.ignoreExtensionToolStripMenuItem_Click);
 			// 
 			// resolveConflictToolStripMenuItem
 			// 
@@ -398,12 +407,12 @@
 			this.btnCommit.UseVisualStyleBackColor = true;
 			this.btnCommit.Click += new System.EventHandler(this.btnCommit_Click);
 			// 
-			// ignoreExtensionToolStripMenuItem
+			// abortMergeToolStripMenuItem
 			// 
-			this.ignoreExtensionToolStripMenuItem.Name = "ignoreExtensionToolStripMenuItem";
-			this.ignoreExtensionToolStripMenuItem.Size = new System.Drawing.Size(161, 22);
-			this.ignoreExtensionToolStripMenuItem.Text = "Ignore &Extension";
-			this.ignoreExtensionToolStripMenuItem.Click += new System.EventHandler(this.ignoreExtensionToolStripMenuItem_Click);
+			this.abortMergeToolStripMenuItem.Name = "abortMergeToolStripMenuItem";
+			this.abortMergeToolStripMenuItem.Size = new System.Drawing.Size(156, 22);
+			this.abortMergeToolStripMenuItem.Text = "&Abort Merge";
+			this.abortMergeToolStripMenuItem.Click += new System.EventHandler(this.abortMergeToolStripMenuItem_Click);
 			// 
 			// ucRepository
 			// 
@@ -471,5 +480,6 @@
 		private System.Windows.Forms.ToolStripMenuItem stageToolStripMenuItem;
 		private System.Windows.Forms.ToolStripMenuItem unStageToolStripMenuItem;
 		private System.Windows.Forms.ToolStripMenuItem ignoreExtensionToolStripMenuItem;
+		private System.Windows.Forms.ToolStripMenuItem abortMergeToolStripMenuItem;
 	}
 }
