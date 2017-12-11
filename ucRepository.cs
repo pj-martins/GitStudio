@@ -46,6 +46,7 @@ namespace PaJaMa.GitStudio
 			if (!_inited)
 			{
 				refreshBranches();
+				_previousDifferences = null;
 				timDiff_Tick(this, new EventArgs());
 				timDiff.Enabled = true;
 				_inited = true;
@@ -182,7 +183,7 @@ namespace PaJaMa.GitStudio
 				foreach (var s in selected)
 				{
 					string error = string.Empty;
-					_helper.RunCommand("push origin --delete " + s.BranchName, ref error);
+					_helper.RunCommand("branch -d -r " + s.BranchName, ref error);
 				}
 				refreshBranches();
 			}
@@ -281,7 +282,7 @@ namespace PaJaMa.GitStudio
 		{
 			var branch = tvLocalBranches.SelectedNode.Tag as LocalBranch;
 			string error = string.Empty;
-			_helper.RunCommand("pull origin " + branch.TracksBranch.BranchName, ref error);
+			_helper.RunCommand("pull " + branch.TracksBranch.BranchName, ref error);
 			if (!string.IsNullOrEmpty(error)) return;
 			refreshBranches();
 		}
@@ -529,7 +530,7 @@ namespace PaJaMa.GitStudio
 				MessageBoxButtons.YesNo) == DialogResult.Yes)
 			{
 				string error = string.Empty;
-				_helper.RunCommand("merge origin/" + branch.BranchName, ref error);
+				_helper.RunCommand("merge " + branch.BranchName, ref error);
 			}
 		}
 
@@ -628,6 +629,12 @@ namespace PaJaMa.GitStudio
 				txtDiffText.Text = string.Empty;
 				timDiff_Tick(this, new EventArgs());
 			}
+		}
+
+		private void btnRefresh_Click(object sender, EventArgs e)
+		{
+			_inited = false;
+			Init();
 		}
 	}
 }

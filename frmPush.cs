@@ -61,7 +61,7 @@ namespace PaJaMa.GitStudio
 			var helper = new GitHelper(Repository.LocalPath);
 			string error = string.Empty;
 			helper.RunCommand("push -u origin " + cboRemote.Text, ref error);
-			if (!string.IsNullOrEmpty(error)) return;
+			// if (!string.IsNullOrEmpty(error)) return;
 			this.DialogResult = DialogResult.OK;
 			this.Close();
 		}

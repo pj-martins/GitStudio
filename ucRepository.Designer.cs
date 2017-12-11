@@ -32,7 +32,6 @@
 			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ucRepository));
 			this.splitContainer1 = new System.Windows.Forms.SplitContainer();
 			this.splitContainer2 = new System.Windows.Forms.SplitContainer();
-			this.tvLocalBranches = new PaJaMa.WinControls.MWTreeView.MWTreeView();
 			this.mnuLocal = new System.Windows.Forms.ContextMenuStrip(this.components);
 			this.checkoutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.pullToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -42,7 +41,6 @@
 			this.mergeFromLocalToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.abortMergeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.label1 = new System.Windows.Forms.Label();
-			this.tvRemoteBranches = new PaJaMa.WinControls.MWTreeView.MWTreeView();
 			this.mnuRemote = new System.Windows.Forms.ContextMenuStrip(this.components);
 			this.branchToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.fetchToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -51,7 +49,6 @@
 			this.label2 = new System.Windows.Forms.Label();
 			this.splitContainer3 = new System.Windows.Forms.SplitContainer();
 			this.splitContainer4 = new System.Windows.Forms.SplitContainer();
-			this.tvUnStaged = new PaJaMa.WinControls.MWTreeView.MWTreeView();
 			this.mnuDiffs = new System.Windows.Forms.ContextMenuStrip(this.components);
 			this.viewExternalToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.undoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -61,13 +58,17 @@
 			this.stageToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.unStageToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.label3 = new System.Windows.Forms.Label();
-			this.tvStaged = new PaJaMa.WinControls.MWTreeView.MWTreeView();
 			this.label4 = new System.Windows.Forms.Label();
 			this.txtDiffText = new System.Windows.Forms.RichTextBox();
 			this.label5 = new System.Windows.Forms.Label();
 			this.timDiff = new System.Windows.Forms.Timer(this.components);
 			this.panel1 = new System.Windows.Forms.Panel();
 			this.btnCommit = new System.Windows.Forms.Button();
+			this.tvLocalBranches = new PaJaMa.WinControls.MWTreeView.MWTreeView();
+			this.tvRemoteBranches = new PaJaMa.WinControls.MWTreeView.MWTreeView();
+			this.tvUnStaged = new PaJaMa.WinControls.MWTreeView.MWTreeView();
+			this.tvStaged = new PaJaMa.WinControls.MWTreeView.MWTreeView();
+			this.btnRefresh = new System.Windows.Forms.Button();
 			((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
 			this.splitContainer1.Panel1.SuspendLayout();
 			this.splitContainer1.Panel2.SuspendLayout();
@@ -126,21 +127,6 @@
 			this.splitContainer2.Size = new System.Drawing.Size(303, 618);
 			this.splitContainer2.SplitterDistance = 300;
 			this.splitContainer2.TabIndex = 0;
-			// 
-			// tvLocalBranches
-			// 
-			this.tvLocalBranches.CheckedNodes = ((System.Collections.Hashtable)(resources.GetObject("tvLocalBranches.CheckedNodes")));
-			this.tvLocalBranches.ContextMenuStrip = this.mnuLocal;
-			this.tvLocalBranches.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.tvLocalBranches.DrawMode = System.Windows.Forms.TreeViewDrawMode.OwnerDrawText;
-			this.tvLocalBranches.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-			this.tvLocalBranches.Location = new System.Drawing.Point(0, 17);
-			this.tvLocalBranches.Name = "tvLocalBranches";
-			this.tvLocalBranches.RubberbandGradientBlend = new PaJaMa.WinControls.MWTreeView.MWRubberbandGradientBlend[0];
-			this.tvLocalBranches.RubberbandGradientColorBlend = new PaJaMa.WinControls.MWTreeView.MWRubberbandGradientColorBlend[0];
-			this.tvLocalBranches.Size = new System.Drawing.Size(303, 283);
-			this.tvLocalBranches.TabIndex = 2;
-			this.tvLocalBranches.DrawNode += new System.Windows.Forms.DrawTreeNodeEventHandler(this.tvLocalBranches_DrawNode);
 			// 
 			// mnuLocal
 			// 
@@ -215,18 +201,6 @@
 			this.label1.Size = new System.Drawing.Size(85, 17);
 			this.label1.TabIndex = 3;
 			this.label1.Text = "Local Branches";
-			// 
-			// tvRemoteBranches
-			// 
-			this.tvRemoteBranches.CheckedNodes = ((System.Collections.Hashtable)(resources.GetObject("tvRemoteBranches.CheckedNodes")));
-			this.tvRemoteBranches.ContextMenuStrip = this.mnuRemote;
-			this.tvRemoteBranches.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.tvRemoteBranches.Location = new System.Drawing.Point(0, 17);
-			this.tvRemoteBranches.Name = "tvRemoteBranches";
-			this.tvRemoteBranches.RubberbandGradientBlend = new PaJaMa.WinControls.MWTreeView.MWRubberbandGradientBlend[0];
-			this.tvRemoteBranches.RubberbandGradientColorBlend = new PaJaMa.WinControls.MWTreeView.MWRubberbandGradientColorBlend[0];
-			this.tvRemoteBranches.Size = new System.Drawing.Size(303, 297);
-			this.tvRemoteBranches.TabIndex = 1;
 			// 
 			// mnuRemote
 			// 
@@ -316,32 +290,6 @@
 			this.splitContainer4.SplitterDistance = 283;
 			this.splitContainer4.TabIndex = 1;
 			// 
-			// tvUnStaged
-			// 
-			this.tvUnStaged.AllowDrop = true;
-			this.tvUnStaged.CheckedNodes = ((System.Collections.Hashtable)(resources.GetObject("tvUnStaged.CheckedNodes")));
-			this.tvUnStaged.ContextMenuStrip = this.mnuDiffs;
-			this.tvUnStaged.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.tvUnStaged.DrawMode = System.Windows.Forms.TreeViewDrawMode.OwnerDrawText;
-			this.tvUnStaged.FullRowSelect = true;
-			this.tvUnStaged.Indent = 10;
-			this.tvUnStaged.Location = new System.Drawing.Point(0, 17);
-			this.tvUnStaged.Name = "tvUnStaged";
-			this.tvUnStaged.RubberbandGradientBlend = new PaJaMa.WinControls.MWTreeView.MWRubberbandGradientBlend[0];
-			this.tvUnStaged.RubberbandGradientColorBlend = new PaJaMa.WinControls.MWTreeView.MWRubberbandGradientColorBlend[0];
-			this.tvUnStaged.RubberbandSelection = PaJaMa.WinControls.MWTreeView.RubberbandSelectionMode.None;
-			this.tvUnStaged.ShowLines = false;
-			this.tvUnStaged.Size = new System.Drawing.Size(283, 319);
-			this.tvUnStaged.TabIndex = 0;
-			this.tvUnStaged.AfterCheck += new System.Windows.Forms.TreeViewEventHandler(this.tv_AfterCheck);
-			this.tvUnStaged.AfterCollapse += new System.Windows.Forms.TreeViewEventHandler(this.tv_AfterCollapse);
-			this.tvUnStaged.AfterExpand += new System.Windows.Forms.TreeViewEventHandler(this.tv_AfterExpand);
-			this.tvUnStaged.DrawNode += new System.Windows.Forms.DrawTreeNodeEventHandler(this.tv_DrawNode);
-			this.tvUnStaged.ItemDrag += new System.Windows.Forms.ItemDragEventHandler(this.tv_ItemDrag);
-			this.tvUnStaged.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.tv_AfterSelect);
-			this.tvUnStaged.DragDrop += new System.Windows.Forms.DragEventHandler(this.tv_DragDrop);
-			this.tvUnStaged.DragEnter += new System.Windows.Forms.DragEventHandler(this.tv_DragEnter);
-			// 
 			// mnuDiffs
 			// 
 			this.mnuDiffs.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
@@ -416,31 +364,6 @@
 			this.label3.TabIndex = 4;
 			this.label3.Text = "Changes";
 			// 
-			// tvStaged
-			// 
-			this.tvStaged.AllowDrop = true;
-			this.tvStaged.CheckedNodes = ((System.Collections.Hashtable)(resources.GetObject("tvStaged.CheckedNodes")));
-			this.tvStaged.ContextMenuStrip = this.mnuDiffs;
-			this.tvStaged.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.tvStaged.DrawMode = System.Windows.Forms.TreeViewDrawMode.OwnerDrawText;
-			this.tvStaged.FullRowSelect = true;
-			this.tvStaged.Indent = 10;
-			this.tvStaged.Location = new System.Drawing.Point(0, 17);
-			this.tvStaged.Name = "tvStaged";
-			this.tvStaged.RubberbandGradientBlend = new PaJaMa.WinControls.MWTreeView.MWRubberbandGradientBlend[0];
-			this.tvStaged.RubberbandGradientColorBlend = new PaJaMa.WinControls.MWTreeView.MWRubberbandGradientColorBlend[0];
-			this.tvStaged.RubberbandSelection = PaJaMa.WinControls.MWTreeView.RubberbandSelectionMode.None;
-			this.tvStaged.ShowLines = false;
-			this.tvStaged.Size = new System.Drawing.Size(315, 319);
-			this.tvStaged.TabIndex = 2;
-			this.tvStaged.AfterCheck += new System.Windows.Forms.TreeViewEventHandler(this.tv_AfterCheck);
-			this.tvStaged.AfterCollapse += new System.Windows.Forms.TreeViewEventHandler(this.tv_AfterCollapse);
-			this.tvStaged.DrawNode += new System.Windows.Forms.DrawTreeNodeEventHandler(this.tv_DrawNode);
-			this.tvStaged.ItemDrag += new System.Windows.Forms.ItemDragEventHandler(this.tv_ItemDrag);
-			this.tvStaged.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.tv_AfterSelect);
-			this.tvStaged.DragDrop += new System.Windows.Forms.DragEventHandler(this.tv_DragDrop);
-			this.tvStaged.DragEnter += new System.Windows.Forms.DragEventHandler(this.tv_DragEnter);
-			// 
 			// label4
 			// 
 			this.label4.AutoSize = true;
@@ -480,6 +403,7 @@
 			// 
 			// panel1
 			// 
+			this.panel1.Controls.Add(this.btnRefresh);
 			this.panel1.Controls.Add(this.btnCommit);
 			this.panel1.Dock = System.Windows.Forms.DockStyle.Bottom;
 			this.panel1.Location = new System.Drawing.Point(0, 618);
@@ -498,6 +422,95 @@
 			this.btnCommit.Text = "Commit";
 			this.btnCommit.UseVisualStyleBackColor = true;
 			this.btnCommit.Click += new System.EventHandler(this.btnCommit_Click);
+			// 
+			// tvLocalBranches
+			// 
+			this.tvLocalBranches.CheckedNodes = ((System.Collections.Hashtable)(resources.GetObject("tvLocalBranches.CheckedNodes")));
+			this.tvLocalBranches.ContextMenuStrip = this.mnuLocal;
+			this.tvLocalBranches.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.tvLocalBranches.DrawMode = System.Windows.Forms.TreeViewDrawMode.OwnerDrawText;
+			this.tvLocalBranches.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+			this.tvLocalBranches.Location = new System.Drawing.Point(0, 17);
+			this.tvLocalBranches.Name = "tvLocalBranches";
+			this.tvLocalBranches.RubberbandGradientBlend = new PaJaMa.WinControls.MWTreeView.MWRubberbandGradientBlend[0];
+			this.tvLocalBranches.RubberbandGradientColorBlend = new PaJaMa.WinControls.MWTreeView.MWRubberbandGradientColorBlend[0];
+			this.tvLocalBranches.Size = new System.Drawing.Size(303, 283);
+			this.tvLocalBranches.TabIndex = 2;
+			this.tvLocalBranches.DrawNode += new System.Windows.Forms.DrawTreeNodeEventHandler(this.tvLocalBranches_DrawNode);
+			// 
+			// tvRemoteBranches
+			// 
+			this.tvRemoteBranches.CheckedNodes = ((System.Collections.Hashtable)(resources.GetObject("tvRemoteBranches.CheckedNodes")));
+			this.tvRemoteBranches.ContextMenuStrip = this.mnuRemote;
+			this.tvRemoteBranches.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.tvRemoteBranches.Location = new System.Drawing.Point(0, 17);
+			this.tvRemoteBranches.Name = "tvRemoteBranches";
+			this.tvRemoteBranches.RubberbandGradientBlend = new PaJaMa.WinControls.MWTreeView.MWRubberbandGradientBlend[0];
+			this.tvRemoteBranches.RubberbandGradientColorBlend = new PaJaMa.WinControls.MWTreeView.MWRubberbandGradientColorBlend[0];
+			this.tvRemoteBranches.Size = new System.Drawing.Size(303, 297);
+			this.tvRemoteBranches.TabIndex = 1;
+			// 
+			// tvUnStaged
+			// 
+			this.tvUnStaged.AllowDrop = true;
+			this.tvUnStaged.CheckedNodes = ((System.Collections.Hashtable)(resources.GetObject("tvUnStaged.CheckedNodes")));
+			this.tvUnStaged.ContextMenuStrip = this.mnuDiffs;
+			this.tvUnStaged.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.tvUnStaged.DrawMode = System.Windows.Forms.TreeViewDrawMode.OwnerDrawText;
+			this.tvUnStaged.FullRowSelect = true;
+			this.tvUnStaged.Indent = 10;
+			this.tvUnStaged.Location = new System.Drawing.Point(0, 17);
+			this.tvUnStaged.Name = "tvUnStaged";
+			this.tvUnStaged.RubberbandGradientBlend = new PaJaMa.WinControls.MWTreeView.MWRubberbandGradientBlend[0];
+			this.tvUnStaged.RubberbandGradientColorBlend = new PaJaMa.WinControls.MWTreeView.MWRubberbandGradientColorBlend[0];
+			this.tvUnStaged.RubberbandSelection = PaJaMa.WinControls.MWTreeView.RubberbandSelectionMode.None;
+			this.tvUnStaged.ShowLines = false;
+			this.tvUnStaged.Size = new System.Drawing.Size(283, 319);
+			this.tvUnStaged.TabIndex = 0;
+			this.tvUnStaged.AfterCheck += new System.Windows.Forms.TreeViewEventHandler(this.tv_AfterCheck);
+			this.tvUnStaged.AfterCollapse += new System.Windows.Forms.TreeViewEventHandler(this.tv_AfterCollapse);
+			this.tvUnStaged.AfterExpand += new System.Windows.Forms.TreeViewEventHandler(this.tv_AfterExpand);
+			this.tvUnStaged.DrawNode += new System.Windows.Forms.DrawTreeNodeEventHandler(this.tv_DrawNode);
+			this.tvUnStaged.ItemDrag += new System.Windows.Forms.ItemDragEventHandler(this.tv_ItemDrag);
+			this.tvUnStaged.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.tv_AfterSelect);
+			this.tvUnStaged.DragDrop += new System.Windows.Forms.DragEventHandler(this.tv_DragDrop);
+			this.tvUnStaged.DragEnter += new System.Windows.Forms.DragEventHandler(this.tv_DragEnter);
+			// 
+			// tvStaged
+			// 
+			this.tvStaged.AllowDrop = true;
+			this.tvStaged.CheckedNodes = ((System.Collections.Hashtable)(resources.GetObject("tvStaged.CheckedNodes")));
+			this.tvStaged.ContextMenuStrip = this.mnuDiffs;
+			this.tvStaged.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.tvStaged.DrawMode = System.Windows.Forms.TreeViewDrawMode.OwnerDrawText;
+			this.tvStaged.FullRowSelect = true;
+			this.tvStaged.Indent = 10;
+			this.tvStaged.Location = new System.Drawing.Point(0, 17);
+			this.tvStaged.Name = "tvStaged";
+			this.tvStaged.RubberbandGradientBlend = new PaJaMa.WinControls.MWTreeView.MWRubberbandGradientBlend[0];
+			this.tvStaged.RubberbandGradientColorBlend = new PaJaMa.WinControls.MWTreeView.MWRubberbandGradientColorBlend[0];
+			this.tvStaged.RubberbandSelection = PaJaMa.WinControls.MWTreeView.RubberbandSelectionMode.None;
+			this.tvStaged.ShowLines = false;
+			this.tvStaged.Size = new System.Drawing.Size(315, 319);
+			this.tvStaged.TabIndex = 2;
+			this.tvStaged.AfterCheck += new System.Windows.Forms.TreeViewEventHandler(this.tv_AfterCheck);
+			this.tvStaged.AfterCollapse += new System.Windows.Forms.TreeViewEventHandler(this.tv_AfterCollapse);
+			this.tvStaged.DrawNode += new System.Windows.Forms.DrawTreeNodeEventHandler(this.tv_DrawNode);
+			this.tvStaged.ItemDrag += new System.Windows.Forms.ItemDragEventHandler(this.tv_ItemDrag);
+			this.tvStaged.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.tv_AfterSelect);
+			this.tvStaged.DragDrop += new System.Windows.Forms.DragEventHandler(this.tv_DragDrop);
+			this.tvStaged.DragEnter += new System.Windows.Forms.DragEventHandler(this.tv_DragEnter);
+			// 
+			// btnRefresh
+			// 
+			this.btnRefresh.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+			this.btnRefresh.Location = new System.Drawing.Point(662, 6);
+			this.btnRefresh.Name = "btnRefresh";
+			this.btnRefresh.Size = new System.Drawing.Size(119, 23);
+			this.btnRefresh.TabIndex = 2;
+			this.btnRefresh.Text = "Refresh";
+			this.btnRefresh.UseVisualStyleBackColor = true;
+			this.btnRefresh.Click += new System.EventHandler(this.btnRefresh_Click);
 			// 
 			// ucRepository
 			// 
@@ -577,5 +590,6 @@
 		private System.Windows.Forms.Label label3;
 		private System.Windows.Forms.Label label4;
 		private System.Windows.Forms.Label label5;
+		private System.Windows.Forms.Button btnRefresh;
 	}
 }
