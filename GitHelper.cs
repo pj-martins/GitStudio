@@ -39,7 +39,8 @@ namespace PaJaMa.GitStudio
 			var errorLines = new List<string>();
 			while ((line = p.StandardError.ReadLine()) != null)
 			{
-				errorLines.Add(line);
+				if (!line.Contains("Switched to a new branch"))
+					errorLines.Add(line);
 			}
 			p.WaitForExit();
 			if (errorLines.Count > 0)
@@ -60,10 +61,8 @@ namespace PaJaMa.GitStudio
 				var branchLines = RunCommand("branch " + (remote ? "-r" : "-l") + " -vv", ref error);
 				if (!string.IsNullOrEmpty(error)) return new List<Branch>();
 
-				foreach (var b in branchLines)
+				foreach (var b in branchLines.Select(bl => bl.Trim()))
 				{
-					if (b.Contains("origin/HEAD ->"))
-						continue;
 					var branchParts = b.Split(new string[] { " " }, StringSplitOptions.RemoveEmptyEntries).ToList();
 					Branch branch = remote ? (Branch)new RemoteBranch() : new LocalBranch();
 					branches.Add(branch);
@@ -73,10 +72,6 @@ namespace PaJaMa.GitStudio
 						branchParts.RemoveAt(0);
 					}
 					branch.BranchName = branchParts[0];
-					if (remote && branch.BranchName.StartsWith("origin/"))
-					{
-						branch.BranchName = branch.BranchName.Substring(7);
-					}
 					branch.BranchID = branchParts[1];
 					branchParts.RemoveRange(0, 2);
 					var remainingParts = string.Join(" ", branchParts.ToArray());
@@ -101,11 +96,7 @@ namespace PaJaMa.GitStudio
 							if (!lb.RemoteIsGone)
 							{
 								var remoteBranchName = match2.Success ? match2.Groups[1].Value : match.Groups[1].Value;
-								if (remoteBranchName.StartsWith("origin/"))
-								{
-									remoteBranchName = remoteBranchName.Substring(7);
-								}
-								lb.TracksBranch = branches.OfType<RemoteBranch>().First(rb => rb.BranchName == remoteBranchName);
+								lb.TracksBranch = branches.OfType<RemoteBranch>().FirstOrDefault(rb => rb.BranchName == remoteBranchName);
 							}
 						}
 					}
