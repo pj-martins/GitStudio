@@ -282,7 +282,7 @@ namespace PaJaMa.GitStudio
 		{
 			var branch = tvLocalBranches.SelectedNode.Tag as LocalBranch;
 			string error = string.Empty;
-			_helper.RunCommand("pull " + branch.TracksBranch.BranchName, ref error);
+			_helper.RunCommand("pull origin " + branch.TracksBranch.BranchName, ref error);
 			if (!string.IsNullOrEmpty(error)) return;
 			refreshBranches();
 		}
