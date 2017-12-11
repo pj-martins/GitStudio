@@ -21,6 +21,8 @@ namespace PaJaMa.GitStudio
 				_branchFrom = value;
 				txtFrom.Text = value.BranchName;
 				txtTo.Text = value.BranchName;
+				if (txtTo.Text.StartsWith("origin/"))
+					txtTo.Text = txtTo.Text.Substring(7);
 				chkTrack.Enabled = value is RemoteBranch;
 			}
 		}
