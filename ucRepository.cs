@@ -209,18 +209,18 @@ namespace PaJaMa.GitStudio
 
 			_previousDifferences = diffs;
 
-			var selectedDiff = tvDifferences.SelectedNode == null ? null : tvDifferences.SelectedNode.Tag as Difference;
+			var selectedDiff = tvUnStaged.SelectedNode == null ? null : tvUnStaged.SelectedNode.Tag as Difference;
 			var selectedStaged = tvStaged.SelectedNode == null ? null : tvStaged.SelectedNode.Tag as Difference;
 
-			tvDifferences.BeginUpdate();
+			tvUnStaged.BeginUpdate();
 			tvStaged.BeginUpdate();
-			tvDifferences.Nodes.Clear();
+			tvUnStaged.Nodes.Clear();
 			tvStaged.Nodes.Clear();
 			List<TreeNode> expandedNodes = new List<TreeNode>();
 			_lockCheck = true;
 			foreach (var diff in diffs.OrderBy(d => d.FileName))
 			{
-				var tv = diff.IsStaged ? tvStaged : tvDifferences;
+				var tv = diff.IsStaged ? tvStaged : tvUnStaged;
 				var parts = diff.FileName.Split(new string[] { "/" }, StringSplitOptions.RemoveEmptyEntries);
 				TreeNode node = null;
 				string runningPath = string.Empty;
@@ -248,7 +248,7 @@ namespace PaJaMa.GitStudio
 			}
 			if (_expandeds == null)
 			{
-				tvDifferences.ExpandAll();
+				tvUnStaged.ExpandAll();
 				tvStaged.ExpandAll();
 			}
 			else
@@ -258,7 +258,7 @@ namespace PaJaMa.GitStudio
 					exp.Expand();
 				}
 			}
-			tvDifferences.EndUpdate();
+			tvUnStaged.EndUpdate();
 			tvStaged.EndUpdate();
 			btnCommit.Enabled = true; // tvStaged.Nodes.Count > 0;
 			_lockCheck = false;
@@ -266,7 +266,7 @@ namespace PaJaMa.GitStudio
 
 		private void viewExternalToolStripMenuItem_Click(object sender, EventArgs e)
 		{
-			var tv = tvDifferences.Focused ? tvDifferences : tvStaged;
+			var tv = tvUnStaged.Focused ? tvUnStaged : tvStaged;
 			if (tv.SelectedNode == null) return;
 			var currFile = Path.Combine(Repository.LocalPath, (tv.SelectedNode.Tag as Difference).FileName);
 			var tmpFile = Path.GetTempFileName();
@@ -301,7 +301,7 @@ namespace PaJaMa.GitStudio
 			if (MessageBox.Show("Are you sure you want to undo selected files?", "Warning!", MessageBoxButtons.YesNo) != DialogResult.Yes)
 				return;
 
-			var tv = tvDifferences.Focused ? tvDifferences : tvStaged;
+			var tv = tvUnStaged.Focused ? tvUnStaged : tvStaged;
 			foreach (var selectedItem in getSelectedNodeTags<Difference>(tv, true))
 			{
 				string error = string.Empty;
@@ -328,7 +328,7 @@ namespace PaJaMa.GitStudio
 			if (MessageBox.Show("Are you sure you want to ignore selected files?", "Warning!", MessageBoxButtons.YesNo) != DialogResult.Yes)
 				return;
 
-			var tv = tvDifferences.Focused ? tvDifferences : tvStaged;
+			var tv = tvUnStaged.Focused ? tvUnStaged : tvStaged;
 			var nodes = tv.SelectedNodes;
 			List<string> selectedItems = new List<string>();
 			foreach (var node in nodes)
@@ -353,7 +353,7 @@ namespace PaJaMa.GitStudio
 
 		private void mnuDiffs_Opening(object sender, CancelEventArgs e)
 		{
-			var tv = tvDifferences.Focused ? tvDifferences : tvStaged;
+			var tv = tvUnStaged.Focused ? tvUnStaged : tvStaged;
 			var selectedItems = getSelectedNodeTags<Difference>(tv, false);
 			var diff = tv.SelectedNode == null ? null : tv.SelectedNode.Tag as Difference;
 			resolveConflictToolStripMenuItem.Visible = diff != null && diff.IsConflict;
@@ -535,7 +535,7 @@ namespace PaJaMa.GitStudio
 
 		private void resolveConflictToolStripMenuItem_Click(object sender, EventArgs e)
 		{
-			var tv = tvDifferences.Focused ? tvDifferences : tvStaged;
+			var tv = tvUnStaged.Focused ? tvUnStaged : tvStaged;
 			var diff = tv.SelectedNode.Tag as Difference;
 			string error = string.Empty;
 			_helper.RunCommand("add " + diff.FileName, ref error);
@@ -544,7 +544,7 @@ namespace PaJaMa.GitStudio
 
 		private void stageToolStripMenuItem_Click(object sender, EventArgs e)
 		{
-			foreach (var selectedItem in getSelectedNodeTags<Difference>(tvDifferences, true))
+			foreach (var selectedItem in getSelectedNodeTags<Difference>(tvUnStaged, true))
 			{
 				string error = string.Empty;
 				_helper.RunCommand("add " + selectedItem.FileName, ref error);
@@ -569,7 +569,7 @@ namespace PaJaMa.GitStudio
 			if (MessageBox.Show("Are you sure you want to ignore selected files?", "Warning!", MessageBoxButtons.YesNo) != DialogResult.Yes)
 				return;
 
-			var tv = tvDifferences.Focused ? tvDifferences : tvStaged;
+			var tv = tvUnStaged.Focused ? tvUnStaged : tvStaged;
 			var differences = getSelectedNodeTags<Difference>(tv, false);
 			List<string> selectedItems = new List<string>();
 			foreach (var diff in differences)
@@ -596,6 +596,37 @@ namespace PaJaMa.GitStudio
 			{
 				string error = string.Empty;
 				_helper.RunCommand("merge --abort", ref error);
+			}
+		}
+
+		private object _draggingTreeView;
+		private void tv_ItemDrag(object sender, ItemDragEventArgs e)
+		{
+			_draggingTreeView = sender;
+			DoDragDrop(getSelectedNodeTags<Difference>(sender as MWTreeView, true), DragDropEffects.Move);
+		}
+
+		private void tv_DragEnter(object sender, DragEventArgs e)
+		{
+			if (e.Data.GetDataPresent(typeof(List<Difference>).FullName) && sender != _draggingTreeView)
+			{
+				e.Effect = DragDropEffects.Move;
+			}
+		}
+
+		private void tv_DragDrop(object sender, DragEventArgs e)
+		{
+			if (e.Data.GetDataPresent(typeof(List<Difference>).FullName) && sender != _draggingTreeView)
+			{
+				var items = e.Data.GetData(typeof(List<Difference>).FullName) as List<Difference>;
+				foreach (var selectedItem in items)
+				{
+					string error = string.Empty;
+					var cmd = _draggingTreeView == tvUnStaged ? "add " : "reset -- ";
+					_helper.RunCommand(cmd + selectedItem.FileName, ref error);
+				}
+				txtDiffText.Text = string.Empty;
+				timDiff_Tick(this, new EventArgs());
 			}
 		}
 	}
