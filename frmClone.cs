@@ -37,7 +37,7 @@ namespace PaJaMa.GitStudio
 			if (cboBranches.Items.Count < 1)
 			{
 				string error = string.Empty;
-				var remotes = new GitHelper(null).RunCommand("ls-remote " + txtURL.Text, ref error);
+				var remotes = new GitHelper(null).RunCommand("ls-remote " + getUNamePwdUrl(), ref error);
 				if (!string.IsNullOrEmpty(error)) return;
 				foreach (var remote in remotes)
 				{
@@ -52,13 +52,9 @@ namespace PaJaMa.GitStudio
 
 		private void btnClone_Click(object sender, EventArgs e)
 		{
-			var parts = txtURL.Text.Split(new string[] { "//" }, StringSplitOptions.RemoveEmptyEntries);
+			var url = getUNamePwdUrl();
 			var settings = SettingsHelper.GetUserSettings<GitUserSettings>();
 			var acct = cboAccount.SelectedItem as GitAccount;
-			var pwd = acct.PasswordDecrypted;
-			var url = parts[0] + "//" + cboAccount.Text + ":" +
-				System.Web.HttpUtility.UrlEncode(pwd)
-				+ "@" + parts[1];
 
 			var inf = new ProcessStartInfo("git.exe", "clone " + url + " " + txtPath.Text);
 			inf.UseShellExecute = false;
@@ -75,6 +71,36 @@ namespace PaJaMa.GitStudio
 			settings.Repositories.Add(ClonedRepo);
 			SettingsHelper.SaveUserSettings<GitUserSettings>(settings);
 			this.DialogResult = DialogResult.OK;
+			this.Close();
+		}
+
+		private void btnBrowse_Click(object sender, EventArgs e)
+		{
+			if (dlgOpenFolder.ShowDialog() == DialogResult.OK)
+			{
+				var selectedPath = dlgOpenFolder.SelectedPath;
+				var urlparts = txtURL.Text.Split(new string[] { "/" }, StringSplitOptions.RemoveEmptyEntries);
+				if (urlparts.Any())
+					selectedPath += urlparts.Last();
+				txtPath.Text = selectedPath;
+			}
+		}
+
+		private string getUNamePwdUrl()
+		{
+			var parts = txtURL.Text.Split(new string[] { "//" }, StringSplitOptions.RemoveEmptyEntries);
+			var settings = SettingsHelper.GetUserSettings<GitUserSettings>();
+			var acct = cboAccount.SelectedItem as GitAccount;
+			var pwd = acct.PasswordDecrypted;
+			var url = parts[0] + "//" + cboAccount.Text + ":" +
+				System.Web.HttpUtility.UrlEncode(pwd)
+				+ "@" + parts[1];
+			return url;
+		}
+
+		private void btnCancel_Click(object sender, EventArgs e)
+		{
+			this.DialogResult = DialogResult.Cancel;
 			this.Close();
 		}
 	}

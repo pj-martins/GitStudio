@@ -260,13 +260,14 @@ namespace PaJaMa.GitStudio
 			}
 			tvDifferences.EndUpdate();
 			tvStaged.EndUpdate();
-			btnCommit.Enabled = tvStaged.Nodes.Count > 0;
+			btnCommit.Enabled = true; // tvStaged.Nodes.Count > 0;
 			_lockCheck = false;
 		}
 
 		private void viewExternalToolStripMenuItem_Click(object sender, EventArgs e)
 		{
 			var tv = tvDifferences.Focused ? tvDifferences : tvStaged;
+			if (tv.SelectedNode == null) return;
 			var currFile = Path.Combine(Repository.LocalPath, (tv.SelectedNode.Tag as Difference).FileName);
 			var tmpFile = Path.GetTempFileName();
 			string error = string.Empty;

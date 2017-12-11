@@ -13,6 +13,8 @@ namespace PaJaMa.GitStudio
 {
 	public partial class frmManageAccount : Form
 	{
+		public string InitialUserName { get; set; }
+
 		public frmManageAccount()
 		{
 			InitializeComponent();
@@ -20,10 +22,16 @@ namespace PaJaMa.GitStudio
 
 		private void frmManageAccount_Load(object sender, EventArgs e)
 		{
+			txtUserName.Text = InitialUserName;
 		}
 
 		private void btnOK_Click(object sender, EventArgs e)
 		{
+			if (txtPassword.Text != txtPasswordConfirm.Text)
+			{
+				MessageBox.Show("Passwords do not match!");
+				return;
+			}
 			var settings = SettingsHelper.GetUserSettings<GitUserSettings>();
 			var acct = settings.Accounts.FirstOrDefault(a => a.UserName == txtUserName.Text);
 			if (acct == null)
@@ -34,6 +42,13 @@ namespace PaJaMa.GitStudio
 
 			acct.PasswordDecrypted = txtPassword.Text;
 			SettingsHelper.SaveUserSettings<GitUserSettings>(settings);
+			this.DialogResult = DialogResult.OK;
+			this.Close();
+		}
+
+		private void btnCancel_Click(object sender, EventArgs e)
+		{
+			this.DialogResult = DialogResult.Cancel;
 			this.Close();
 		}
 	}

@@ -29,6 +29,7 @@
 		private void InitializeComponent()
 		{
 			this.components = new System.ComponentModel.Container();
+			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmMain));
 			this.menuStrip1 = new System.Windows.Forms.MenuStrip();
 			this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.openToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -46,6 +47,7 @@
 			// 
 			// menuStrip1
 			// 
+			this.menuStrip1.ImageScalingSize = new System.Drawing.Size(40, 40);
 			this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.fileToolStripMenuItem,
             this.setupToolStripMenuItem});
@@ -100,19 +102,20 @@
 			this.tabMain.Location = new System.Drawing.Point(0, 24);
 			this.tabMain.Name = "tabMain";
 			this.tabMain.SelectedIndex = 0;
-			this.tabMain.Size = new System.Drawing.Size(984, 642);
+			this.tabMain.Size = new System.Drawing.Size(984, 471);
 			this.tabMain.TabIndex = 1;
 			this.tabMain.SelectedIndexChanged += new System.EventHandler(this.tabMain_TabIndexChanged);
 			this.tabMain.TabIndexChanged += new System.EventHandler(this.tabMain_TabIndexChanged);
 			// 
 			// mnuTab
 			// 
+			this.mnuTab.ImageScalingSize = new System.Drawing.Size(40, 40);
 			this.mnuTab.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.openInExplorerToolStripMenuItem,
             this.closeToolStripMenuItem,
             this.switchAccountToolStripMenuItem});
 			this.mnuTab.Name = "mnuTab";
-			this.mnuTab.Size = new System.Drawing.Size(162, 92);
+			this.mnuTab.Size = new System.Drawing.Size(162, 70);
 			// 
 			// openInExplorerToolStripMenuItem
 			// 
@@ -139,12 +142,13 @@
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-			this.ClientSize = new System.Drawing.Size(984, 666);
+			this.ClientSize = new System.Drawing.Size(984, 495);
 			this.Controls.Add(this.tabMain);
 			this.Controls.Add(this.menuStrip1);
+			this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
 			this.MainMenuStrip = this.menuStrip1;
 			this.Name = "frmMain";
-			this.Text = "Form1";
+			this.Text = "Git Studio";
 			this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.frmMain_FormClosing);
 			this.Load += new System.EventHandler(this.frmMain_Load);
 			this.menuStrip1.ResumeLayout(false);
