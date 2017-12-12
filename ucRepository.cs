@@ -1,4 +1,4 @@
-﻿using PaJaMa.WinControls.MWTreeView;
+﻿using PaJaMa.WinControls.MultiSelectTreeView;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -225,14 +225,38 @@ namespace PaJaMa.GitStudio
 				var parts = diff.FileName.Split(new string[] { "/" }, StringSplitOptions.RemoveEmptyEntries);
 				TreeNode node = null;
 				string runningPath = string.Empty;
-				foreach (var part in parts)
+				for (int i = 0; i < parts.Length; i++)
 				{
+					var part = parts[i];
 					var nodeCollection = node == null ? tv.Nodes : node.Nodes;
 
 					var foundNode = nodeCollection.OfType<TreeNode>().FirstOrDefault(n => n.Text == part);
 					if (foundNode == null)
 					{
-						foundNode = nodeCollection.Add(part);
+						var nodeText = part;
+						bool isConflict = false;
+						if (i == parts.Length - 1)
+						{
+							switch (diff.DifferenceType)
+							{
+								case DifferenceType.Add:
+									nodeText = "A: " + nodeText;
+									break;
+								case DifferenceType.Modify:
+									nodeText = "M: " + nodeText;
+									break;
+								case DifferenceType.Delete:
+									nodeText = "D: " + nodeText;
+									break;
+							}
+							isConflict = diff.IsConflict;
+						}
+						foundNode = nodeCollection.Add(nodeText);
+						if (isConflict)
+						{
+							foundNode.NodeFont = new Font(foundNode.NodeFont ?? tv.Font, FontStyle.Bold);
+							foundNode.ForeColor = Color.Red;
+						}
 					}
 					node = foundNode;
 					if (_expandeds != null && _expandeds.Contains(part))
@@ -268,9 +292,11 @@ namespace PaJaMa.GitStudio
 		private void viewExternalToolStripMenuItem_Click(object sender, EventArgs e)
 		{
 			var tv = tvUnStaged.Focused ? tvUnStaged : tvStaged;
-			if (tv.SelectedNode == null) return;
+			if (tv.SelectedNode == null || tv.SelectedNode.Tag == null) return;
 			var currFile = Path.Combine(Repository.LocalPath, (tv.SelectedNode.Tag as Difference).FileName);
-			var tmpFile = Path.GetTempFileName();
+			var tmpDir = Path.Combine(Path.GetTempPath(), "GitStudio");
+			if (!Directory.Exists(tmpDir)) Directory.CreateDirectory(tmpDir);
+			var tmpFile = Path.Combine(tmpDir, Guid.NewGuid() + ".tmp");
 			string error = string.Empty;
 			var oldContent = _helper.RunCommand("--no-pager show " + _currentBranch + ":\"" + (tv.SelectedNode.Tag as Difference).FileName + "\"", ref error);
 			if (!string.IsNullOrEmpty(error)) return;
@@ -286,7 +312,7 @@ namespace PaJaMa.GitStudio
 			if (branchName.StartsWith("origin/"))
 				branchName = branchName.Substring(7);
 			_helper.RunCommand("pull origin " + branchName, ref error);
-			if (!string.IsNullOrEmpty(error)) return;
+			// if (!string.IsNullOrEmpty(error)) return;
 			refreshBranches();
 		}
 
@@ -422,38 +448,7 @@ namespace PaJaMa.GitStudio
 			}
 		}
 
-		private void tv_DrawNode(object sender, DrawTreeNodeEventArgs e)
-		{
-			var text = e.Node.Text;
-			var font = e.Node.NodeFont ?? (sender as TreeView).Font;
-			var color = e.Node.ForeColor;
-			if (e.Node.Tag is Difference)
-			{
-				var diff = e.Node.Tag as Difference;
-				switch (diff.DifferenceType)
-				{
-					case DifferenceType.Add:
-						text = "A: " + text;
-						break;
-					case DifferenceType.Modify:
-						text = "M: " + text;
-						break;
-					case DifferenceType.Delete:
-						text = "D: " + text;
-						break;
-				}
-				if (diff.IsConflict)
-				{
-					font = new Font(font, FontStyle.Bold);
-					color = Color.Red;
-				}
-			}
-
-			TextRenderer.DrawText(e.Graphics, text, font, new Rectangle(e.Bounds.X, e.Bounds.Y, e.Bounds.Width + 10, e.Bounds.Height),
-				color, e.Node.BackColor, TextFormatFlags.GlyphOverhangPadding);
-		}
-
-		private List<TTagType> getSelectedNodeTags<TTagType>(MWTreeView tv, bool andChildren)
+		private List<TTagType> getSelectedNodeTags<TTagType>(MultiSelectTreeView tv, bool andChildren)
 		{
 			List<TTagType> selected = new List<TTagType>();
 			List<TreeNode> nodes = new List<TreeNode>();
@@ -608,7 +603,7 @@ namespace PaJaMa.GitStudio
 		private void tv_ItemDrag(object sender, ItemDragEventArgs e)
 		{
 			_draggingTreeView = sender;
-			DoDragDrop(getSelectedNodeTags<Difference>(sender as MWTreeView, true), DragDropEffects.Move);
+			DoDragDrop(getSelectedNodeTags<Difference>(sender as MultiSelectTreeView, true), DragDropEffects.Move);
 		}
 
 		private void tv_DragEnter(object sender, DragEventArgs e)
@@ -644,6 +639,11 @@ namespace PaJaMa.GitStudio
 		private void tv_NodeMouseDoubleClick(object sender, TreeNodeMouseClickEventArgs e)
 		{
 			viewExternalToolStripMenuItem_Click(sender, e);
+		}
+
+		private void tvUnStaged_NodeMouseDoubleClick(object sender, TreeNodeMouseClickEventArgs e)
+		{
+
 		}
 	}
 }

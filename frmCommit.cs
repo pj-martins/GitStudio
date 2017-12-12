@@ -85,7 +85,7 @@ namespace PaJaMa.GitStudio
 			var helper = new GitHelper(Repository.LocalPath);
 			string error = string.Empty;
 			helper.RunCommand("commit -m \"" + txtMessage.Text + "\"", ref error);
-			if (!string.IsNullOrEmpty(error)) return;
+			if (!string.IsNullOrEmpty(error) && error.Contains("error")) return;
 			var branchName = cboRemote.Text;
 			if (branchName.StartsWith("origin/"))
 				branchName = branchName.Substring(7);

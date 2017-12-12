@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -34,6 +35,13 @@ namespace PaJaMa.GitStudio
 
 		private void frmMain_Load(object sender, EventArgs e)
 		{
+			try
+			{
+				var tmpDir = Path.Combine(Path.GetTempPath(), "GitStudio");
+				if (Directory.Exists(tmpDir))
+					Directory.Delete(tmpDir, true);
+			}
+			catch { }
 			var formSettings = SettingsHelper.GetUserSettings<FormSettings>();
 			if (formSettings != null)
 			{
@@ -114,6 +122,14 @@ namespace PaJaMa.GitStudio
 		private void frmMain_FormClosing(object sender, FormClosingEventArgs e)
 		{
 			if (this.WindowState == FormWindowState.Minimized) return;
+
+			try
+			{
+				var tmpDir = Path.Combine(Path.GetTempPath(), "GitStudio");
+				if (Directory.Exists(tmpDir))
+					Directory.Delete(tmpDir, true);
+			}
+			catch { }
 
 			var formSettings = SettingsHelper.GetUserSettings<FormSettings>() ?? new FormSettings();
 			formSettings.MainFormLeft = this.DesktopLocation.X;
