@@ -371,13 +371,20 @@ namespace PaJaMa.GitStudio
 					_helper.RunCommand("reset " + (node.Tag as Difference).FileName, ref error);
 
 				var runningNode = node;
-				var runningText = string.Empty;
-				while (runningNode != null)
+				if (node.Tag is Difference)
 				{
-					runningText = runningNode.Text + (string.IsNullOrEmpty(runningText) ? "" : "/") + runningText;
-					runningNode = runningNode.Parent;
+					selectedItems.Add((node.Tag as Difference).FileName);
 				}
-				selectedItems.Add(runningText);
+				else
+				{
+					var runningText = string.Empty;
+					while (runningNode != null)
+					{
+						runningText = runningNode.Text + (string.IsNullOrEmpty(runningText) ? "" : "/") + runningText;
+						runningNode = runningNode.Parent;
+					}
+					selectedItems.Add(runningText);
+				}
 			}
 			File.AppendAllLines(Path.Combine(Repository.LocalPath, ".gitignore"), selectedItems);
 			txtDiffText.Text = string.Empty;
