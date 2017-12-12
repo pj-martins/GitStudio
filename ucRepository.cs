@@ -60,7 +60,7 @@ namespace PaJaMa.GitStudio
 
 			_currentBranch = branches.OfType<LocalBranch>().First(b => b.IsCurrent);
 			_remoteBranches = branches.OfType<RemoteBranch>().ToList();
-			
+
 			bool remote = true;
 			while (true)
 			{
@@ -456,7 +456,7 @@ namespace PaJaMa.GitStudio
 		private List<TTagType> getSelectedNodeTags<TTagType>(MWTreeView tv, bool andChildren)
 		{
 			List<TTagType> selected = new List<TTagType>();
-			var nodes = tv.SelectedNodes.ToList();
+			List<TreeNode> nodes = new List<TreeNode>();
 			if (andChildren)
 			{
 				foreach (var n in tv.SelectedNodes)
@@ -464,6 +464,10 @@ namespace PaJaMa.GitStudio
 					nodes.AddRange(recursivelyGetChildren(n));
 				}
 				nodes = nodes.Distinct().ToList();
+			}
+			else
+			{
+				nodes = tv.SelectedNodes.ToList();
 			}
 
 			foreach (TreeNode node in nodes)
@@ -481,13 +485,10 @@ namespace PaJaMa.GitStudio
 		private List<TreeNode> recursivelyGetChildren(TreeNode parent)
 		{
 			List<TreeNode> nodes = new List<TreeNode>();
-			foreach (TreeNode node in parent.Nodes)
+			nodes.Add(parent);
+			foreach (TreeNode child in parent.Nodes)
 			{
-				nodes.Add(node);
-				foreach (TreeNode child in node.Nodes)
-				{
-					nodes.AddRange(recursivelyGetChildren(child));
-				}
+				nodes.AddRange(recursivelyGetChildren(child));
 			}
 			return nodes;
 		}
