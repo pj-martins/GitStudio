@@ -403,7 +403,7 @@ namespace PaJaMa.GitStudio
 
 			var diff = e.Node.Tag as Difference;
 			var diffs = diff == null || diff.DifferenceType != DifferenceType.Modify ? new string[0] : _helper.RunCommand("--no-pager diff " + (diff.IsStaged ? "--cached " : "") + "\"" + diff.FileName + "\"", ref error);
-			if (!string.IsNullOrEmpty(error)) return;
+			// if (!string.IsNullOrEmpty(error)) return;
 			txtDiffText.Text = string.Join("\r\n", diffs);
 		}
 
