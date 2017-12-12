@@ -52,7 +52,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="FormSettings.cs" />
     <Compile Include="frmAccount.cs">
       <SubType>Form</SubType>
     </Compile>

@@ -42,27 +42,14 @@ namespace PaJaMa.GitStudio
 					Directory.Delete(tmpDir, true);
 			}
 			catch { }
-			var formSettings = SettingsHelper.GetUserSettings<FormSettings>();
-			if (formSettings != null)
-			{
-				this.DesktopLocation = new Point(formSettings.MainFormLeft, formSettings.MainFormTop);
-				if (formSettings.MainFormMaximized)
-					this.WindowState = FormWindowState.Maximized;
-				else
-				{
-					if (formSettings.MainFormHeight > 0)
-						this.Height = formSettings.MainFormHeight;
-					if (formSettings.MainFormWidth > 0)
-						this.Width = formSettings.MainFormWidth;
-				}
-			}
+			FormSettings.LoadSettings(this);
 
 			var settings = SettingsHelper.GetUserSettings<GitUserSettings>();
 			TabPage selectedTab = null;
 			foreach (var repo in settings.Repositories)
 			{
 				var tab = createRepository(repo);
-				if (tab.Text == formSettings.FocusedRepository)
+				if (tab.Text == settings.FocusedRepository)
 					selectedTab = tab;
 			}
 			if (selectedTab != null)
@@ -131,20 +118,14 @@ namespace PaJaMa.GitStudio
 			}
 			catch { }
 
-			var formSettings = SettingsHelper.GetUserSettings<FormSettings>() ?? new FormSettings();
-			formSettings.MainFormLeft = this.DesktopLocation.X;
-			formSettings.MainFormTop = this.DesktopLocation.Y;
-			if (this.WindowState == FormWindowState.Maximized)
-				formSettings.MainFormMaximized = true;
-			else
-			{
-				formSettings.MainFormMaximized = false;
-				formSettings.MainFormWidth = this.Width;
-				formSettings.MainFormHeight = this.Height;
-			}
+			FormSettings.SaveSettings(this);
+
 			if (tabMain.SelectedTab != null)
-				formSettings.FocusedRepository = tabMain.SelectedTab.Text;
-			SettingsHelper.SaveUserSettings<FormSettings>(formSettings);
+			{
+				var settings = SettingsHelper.GetUserSettings<GitUserSettings>();
+				settings.FocusedRepository = tabMain.SelectedTab.Text;
+				SettingsHelper.SaveUserSettings<GitUserSettings>(settings);
+			}
 		}
 
 		private void closeToolStripMenuItem_Click(object sender, EventArgs e)
