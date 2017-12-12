@@ -16,8 +16,9 @@ namespace PaJaMa.GitStudio
 		public List<GitAccount> Accounts { get; set; }
 		public List<GitRepository> Repositories { get; set; }
 		public string FocusedRepository { get; set; }
+        public string LastBrowsedFolder { get; set; }
 
-		public GitUserSettings()
+        public GitUserSettings()
 		{
 			Accounts = new List<GitAccount>();
 			Repositories = new List<GitRepository>();
