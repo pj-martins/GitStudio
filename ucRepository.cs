@@ -133,6 +133,7 @@ namespace PaJaMa.GitStudio
 			pushToolStripMenuItem.Visible = branch != null;
 			mergeFromLocalToolStripMenuItem.Visible = branch != null;
 			deleteToolStripMenuItem.Visible = getSelectedNodeTags<LocalBranch>(tvLocalBranches, false).Any();
+			enableDisableCompare();
 		}
 
 
@@ -140,6 +141,13 @@ namespace PaJaMa.GitStudio
 		{
 			var branch = tvRemoteBranches.SelectedNode == null ? null : tvRemoteBranches.SelectedNode.Tag as RemoteBranch;
 			deleteToolStripMenuItem.Visible = getSelectedNodeTags<RemoteBranch>(tvRemoteBranches, false).Any();
+			enableDisableCompare();
+		}
+
+		private void enableDisableCompare()
+		{
+			compareToolStripMenuItem.Enabled = compareToolStripMenuItem1.Enabled =
+				tvLocalBranches.SelectedNodes.Count + tvRemoteBranches.SelectedNodes.Count == 2;
 		}
 
 		private void fetchToolStripMenuItem_Click(object sender, EventArgs e)
@@ -636,9 +644,27 @@ namespace PaJaMa.GitStudio
 			viewExternalToolStripMenuItem_Click(sender, e);
 		}
 
-		private void tvUnStaged_NodeMouseDoubleClick(object sender, TreeNodeMouseClickEventArgs e)
+		private void compareToolStripMenuItem_Click(object sender, EventArgs e)
 		{
+			var selectedNodes = tvLocalBranches.SelectedNodes.Union(tvRemoteBranches.SelectedNodes);
+			var branch1 = selectedNodes.First().Tag as Branch;
+			var branch2 = selectedNodes.Last().Tag as Branch;
+			var frm = new frmCompareBranches();
+			frm.Helper = _helper;
+			frm.FromBranch = branch1;
+			frm.ToBranch = branch2;
+			frm.Show();
+		}
 
+		private void historyToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+			var tv = tvLocalBranches.Focused ? tvLocalBranches : tvRemoteBranches;
+			if (tv.SelectedNode == null || tv.SelectedNode.Tag == null) return;
+			var branch = tv.SelectedNode.Tag as Branch;
+			var frm = new frmCommitHistory();
+			frm.Helper = _helper;
+			frm.Branch = branch;
+			frm.Show();
 		}
 	}
 }

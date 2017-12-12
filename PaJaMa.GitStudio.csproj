@@ -76,6 +76,18 @@
     <Compile Include="frmClone.Designer.cs">
       <DependentUpon>frmClone.cs</DependentUpon>
     </Compile>
+    <Compile Include="frmCommitHistory.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="frmCommitHistory.Designer.cs">
+      <DependentUpon>frmCommitHistory.cs</DependentUpon>
+    </Compile>
+    <Compile Include="frmCompareBranches.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="frmCompareBranches.Designer.cs">
+      <DependentUpon>frmCompareBranches.cs</DependentUpon>
+    </Compile>
     <Compile Include="frmPush.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -133,6 +145,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="frmClone.resx">
       <DependentUpon>frmClone.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="frmCommitHistory.resx">
+      <DependentUpon>frmCommitHistory.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="frmCompareBranches.resx">
+      <DependentUpon>frmCompareBranches.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="frmPush.resx">
       <DependentUpon>frmPush.cs</DependentUpon>
