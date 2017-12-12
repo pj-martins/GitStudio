@@ -81,6 +81,9 @@ namespace PaJaMa.GitStudio
 						node = foundNode;
 					}
 					node.Tag = branch;
+					if (branch == _currentBranch)
+						node.NodeFont = new Font(node.NodeFont ?? tv.Font, FontStyle.Bold);
+
 					if (!remote)
 					{
 						var lb = branch as LocalBranch;
@@ -145,14 +148,6 @@ namespace PaJaMa.GitStudio
 			_helper.RunCommand("fetch " + tvRemoteBranches.SelectedNode.Text, ref error);
 			if (!string.IsNullOrEmpty(error)) return;
 			refreshBranches();
-		}
-
-		private void tvLocalBranches_DrawNode(object sender, DrawTreeNodeEventArgs e)
-		{
-			Font font = e.Node.NodeFont ?? e.Node.TreeView.Font;
-			font = new Font(font, e.Node.Tag != null && e.Node.Tag == _currentBranch ? FontStyle.Bold : FontStyle.Regular);
-
-			TextRenderer.DrawText(e.Graphics, e.Node.Text, font, e.Bounds, e.Node.ForeColor, e.Node.BackColor, TextFormatFlags.GlyphOverhangPadding);
 		}
 
 		private void deleteToolStripMenuItem_Click(object sender, EventArgs e)

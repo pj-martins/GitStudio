@@ -29,7 +29,6 @@
 		private void InitializeComponent()
 		{
 			this.components = new System.ComponentModel.Container();
-			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ucRepository));
 			this.splitContainer1 = new System.Windows.Forms.SplitContainer();
 			this.splitContainer2 = new System.Windows.Forms.SplitContainer();
 			this.tvLocalBranches = new PaJaMa.WinControls.MultiSelectTreeView.MultiSelectTreeView();
@@ -133,12 +132,10 @@
 			this.tvLocalBranches.ContextMenuStrip = this.mnuLocal;
 			this.tvLocalBranches.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.tvLocalBranches.DrawMode = System.Windows.Forms.TreeViewDrawMode.OwnerDrawText;
-			this.tvLocalBranches.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
 			this.tvLocalBranches.Location = new System.Drawing.Point(0, 17);
 			this.tvLocalBranches.Name = "tvLocalBranches";
 			this.tvLocalBranches.Size = new System.Drawing.Size(303, 283);
 			this.tvLocalBranches.TabIndex = 2;
-			this.tvLocalBranches.DrawNode += new System.Windows.Forms.DrawTreeNodeEventHandler(this.tvLocalBranches_DrawNode);
 			// 
 			// mnuLocal
 			// 
@@ -218,6 +215,7 @@
 			// 
 			this.tvRemoteBranches.ContextMenuStrip = this.mnuRemote;
 			this.tvRemoteBranches.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.tvRemoteBranches.DrawMode = System.Windows.Forms.TreeViewDrawMode.OwnerDrawText;
 			this.tvRemoteBranches.Location = new System.Drawing.Point(0, 17);
 			this.tvRemoteBranches.Name = "tvRemoteBranches";
 			this.tvRemoteBranches.Size = new System.Drawing.Size(303, 297);
@@ -320,7 +318,6 @@
 			this.tvUnStaged.Indent = 10;
 			this.tvUnStaged.Location = new System.Drawing.Point(0, 17);
 			this.tvUnStaged.Name = "tvUnStaged";
-			this.tvUnStaged.ShowLines = false;
 			this.tvUnStaged.Size = new System.Drawing.Size(283, 319);
 			this.tvUnStaged.TabIndex = 0;
 			this.tvUnStaged.AfterCheck += new System.Windows.Forms.TreeViewEventHandler(this.tv_AfterCheck);
@@ -415,7 +412,6 @@
 			this.tvStaged.Indent = 10;
 			this.tvStaged.Location = new System.Drawing.Point(0, 17);
 			this.tvStaged.Name = "tvStaged";
-			this.tvStaged.ShowLines = false;
 			this.tvStaged.Size = new System.Drawing.Size(315, 319);
 			this.tvStaged.TabIndex = 2;
 			this.tvStaged.AfterCheck += new System.Windows.Forms.TreeViewEventHandler(this.tv_AfterCheck);
