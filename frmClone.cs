@@ -52,7 +52,7 @@ namespace PaJaMa.GitStudio
 
 		private void btnClone_Click(object sender, EventArgs e)
 		{
-			var url = getUNamePwdUrl();
+            var url = chkEmbed.Checked ? getUNamePwdUrl() : txtURL.Text;
 			var settings = SettingsHelper.GetUserSettings<GitUserSettings>();
 			var acct = cboAccount.SelectedItem as GitAccount;
 
