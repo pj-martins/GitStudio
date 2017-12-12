@@ -64,11 +64,11 @@
 			this.timDiff = new System.Windows.Forms.Timer(this.components);
 			this.panel1 = new System.Windows.Forms.Panel();
 			this.btnCommit = new System.Windows.Forms.Button();
+			this.btnRefresh = new System.Windows.Forms.Button();
 			this.tvLocalBranches = new PaJaMa.WinControls.MWTreeView.MWTreeView();
 			this.tvRemoteBranches = new PaJaMa.WinControls.MWTreeView.MWTreeView();
 			this.tvUnStaged = new PaJaMa.WinControls.MWTreeView.MWTreeView();
 			this.tvStaged = new PaJaMa.WinControls.MWTreeView.MWTreeView();
-			this.btnRefresh = new System.Windows.Forms.Button();
 			((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
 			this.splitContainer1.Panel1.SuspendLayout();
 			this.splitContainer1.Panel2.SuspendLayout();
@@ -423,6 +423,17 @@
 			this.btnCommit.UseVisualStyleBackColor = true;
 			this.btnCommit.Click += new System.EventHandler(this.btnCommit_Click);
 			// 
+			// btnRefresh
+			// 
+			this.btnRefresh.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+			this.btnRefresh.Location = new System.Drawing.Point(662, 6);
+			this.btnRefresh.Name = "btnRefresh";
+			this.btnRefresh.Size = new System.Drawing.Size(119, 23);
+			this.btnRefresh.TabIndex = 2;
+			this.btnRefresh.Text = "Refresh";
+			this.btnRefresh.UseVisualStyleBackColor = true;
+			this.btnRefresh.Click += new System.EventHandler(this.btnRefresh_Click);
+			// 
 			// tvLocalBranches
 			// 
 			this.tvLocalBranches.CheckedNodes = ((System.Collections.Hashtable)(resources.GetObject("tvLocalBranches.CheckedNodes")));
@@ -473,6 +484,7 @@
 			this.tvUnStaged.DrawNode += new System.Windows.Forms.DrawTreeNodeEventHandler(this.tv_DrawNode);
 			this.tvUnStaged.ItemDrag += new System.Windows.Forms.ItemDragEventHandler(this.tv_ItemDrag);
 			this.tvUnStaged.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.tv_AfterSelect);
+			this.tvUnStaged.NodeMouseDoubleClick += new System.Windows.Forms.TreeNodeMouseClickEventHandler(this.tv_NodeMouseDoubleClick);
 			this.tvUnStaged.DragDrop += new System.Windows.Forms.DragEventHandler(this.tv_DragDrop);
 			this.tvUnStaged.DragEnter += new System.Windows.Forms.DragEventHandler(this.tv_DragEnter);
 			// 
@@ -498,19 +510,9 @@
 			this.tvStaged.DrawNode += new System.Windows.Forms.DrawTreeNodeEventHandler(this.tv_DrawNode);
 			this.tvStaged.ItemDrag += new System.Windows.Forms.ItemDragEventHandler(this.tv_ItemDrag);
 			this.tvStaged.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.tv_AfterSelect);
+			this.tvStaged.NodeMouseDoubleClick += new System.Windows.Forms.TreeNodeMouseClickEventHandler(this.tv_NodeMouseDoubleClick);
 			this.tvStaged.DragDrop += new System.Windows.Forms.DragEventHandler(this.tv_DragDrop);
 			this.tvStaged.DragEnter += new System.Windows.Forms.DragEventHandler(this.tv_DragEnter);
-			// 
-			// btnRefresh
-			// 
-			this.btnRefresh.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-			this.btnRefresh.Location = new System.Drawing.Point(662, 6);
-			this.btnRefresh.Name = "btnRefresh";
-			this.btnRefresh.Size = new System.Drawing.Size(119, 23);
-			this.btnRefresh.TabIndex = 2;
-			this.btnRefresh.Text = "Refresh";
-			this.btnRefresh.UseVisualStyleBackColor = true;
-			this.btnRefresh.Click += new System.EventHandler(this.btnRefresh_Click);
 			// 
 			// ucRepository
 			// 

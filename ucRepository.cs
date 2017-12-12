@@ -639,5 +639,10 @@ namespace PaJaMa.GitStudio
 			_inited = false;
 			Init();
 		}
+
+		private void tv_NodeMouseDoubleClick(object sender, TreeNodeMouseClickEventArgs e)
+		{
+			viewExternalToolStripMenuItem_Click(sender, e);
+		}
 	}
 }
