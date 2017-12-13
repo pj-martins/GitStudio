@@ -37,13 +37,13 @@ namespace PaJaMa.GitStudio
 
 		private void btnBranch_Click(object sender, EventArgs e)
 		{
-			string error = string.Empty;
+			string[] lines = null;
 			if ((BranchFrom is LocalBranch) && (BranchFrom as LocalBranch).TracksBranch != null && txtFrom.Text == txtTo.Text)
-				new GitHelper(Repository.LocalPath).RunCommand("branch --unset-upstream", ref error);
+				lines = new GitHelper(Repository.LocalPath).RunCommand("branch --unset-upstream");
 			else
-				new GitHelper(Repository.LocalPath).RunCommand((chkCheckout.Checked ? "checkout -b " : "branch ") + txtTo.Text
-					+ (chkTrack.Checked ? " --track " : " --no-track ") + txtFrom.Text, ref error);
-			if (!string.IsNullOrEmpty(error)) return;
+				lines = new GitHelper(Repository.LocalPath).RunCommand((chkCheckout.Checked ? "checkout -b " : "branch ") + txtTo.Text
+					+ (chkTrack.Checked ? " --track " : " --no-track ") + txtFrom.Text);
+			if (lines.Any()) return;
 			this.DialogResult = DialogResult.OK;
 			this.Close();
 		}

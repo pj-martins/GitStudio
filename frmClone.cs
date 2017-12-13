@@ -24,16 +24,14 @@ namespace PaJaMa.GitStudio
 
 		private void frmClone_Load(object sender, EventArgs e)
 		{
-			
+
 		}
 
 		private void cboBranches_DropDown(object sender, EventArgs e)
 		{
 			if (cboBranches.Items.Count < 1)
 			{
-				string error = string.Empty;
-				var remotes = new GitHelper(null).RunCommand("ls-remote " + txtURL.Text, ref error);
-				if (!string.IsNullOrEmpty(error)) return;
+				var remotes = new GitHelper(null).RunCommand("ls-remote " + txtURL.Text);
 				foreach (var remote in remotes)
 				{
 					var repo = remote.Split('\t')[1];

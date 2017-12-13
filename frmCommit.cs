@@ -83,16 +83,22 @@ namespace PaJaMa.GitStudio
 		private void btnGo_Click(object sender, EventArgs e)
 		{
 			var helper = new GitHelper(Repository.LocalPath);
-			string error = string.Empty;
-			var lines = helper.RunCommand("commit -m \"" + txtMessage.Text + "\"", ref error).ToList();
-			if (!string.IsNullOrEmpty(error) && error.Contains("error")) return;
+			var lines = helper.RunCommand("commit -m \"" + txtMessage.Text + "\"").ToList();
+			if (lines.Any(l => l.Contains("error")))
+			{
+				MessageBox.Show(string.Join("\r\n", lines));
+				return;
+			}
+
 			var branchName = cboRemote.Text;
 			if (branchName.StartsWith("origin/"))
 				branchName = branchName.Substring(7);
 
-			if (chkPush.Checked) lines.AddRange(helper.RunCommand("push -u origin " + branchName, ref error));
-			if (lines.Count > 0)
-				MessageBox.Show(string.Join("\r\n", lines));
+			if (chkPush.Checked)
+				lines.AddRange(helper.RunCommand("push -u origin " + branchName));
+
+			MessageBox.Show(string.Join("\r\n", lines));
+
 			this.DialogResult = DialogResult.OK;
 			this.Close();
 		}

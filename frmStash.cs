@@ -22,9 +22,9 @@ namespace PaJaMa.GitStudio
 		private void btnGo_Click(object sender, EventArgs e)
 		{
 			var helper = new GitHelper(Repository.LocalPath);
-			string error = string.Empty;
-			helper.RunCommand("stash save \"" + txtMessage.Text + "\"", ref error);
-			if (!string.IsNullOrEmpty(error) && error.Contains("error")) return;
+			var lines = helper.RunCommand("stash save \"" + txtMessage.Text + "\"");
+			MessageBox.Show(string.Join("\r\n", lines));
+			if (lines.Any(l => l.Contains("error"))) return;
 			this.DialogResult = DialogResult.OK;
 			this.Close();
 		}

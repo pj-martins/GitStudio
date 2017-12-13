@@ -59,12 +59,11 @@ namespace PaJaMa.GitStudio
 		private void btnGo_Click(object sender, EventArgs e)
 		{
 			var helper = new GitHelper(Repository.LocalPath);
-			string error = string.Empty;
-			var branchName = cboRemote.Text;
+						var branchName = cboRemote.Text;
 			if (branchName.StartsWith("origin/"))
 				branchName = branchName.Substring(7);
 
-			var lines = helper.RunCommand("push -u origin " + branchName, ref error);
+			var lines = helper.RunCommand("push -u origin " + branchName);
 			if (lines.Length > 0)
 				MessageBox.Show(string.Join("\r\n", lines));
 

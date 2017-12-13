@@ -121,8 +121,7 @@ namespace PaJaMa.GitStudio
 		private void checkoutToolStripMenuItem_Click(object sender, EventArgs e)
 		{
 			if (tvLocalBranches.SelectedNode == null || tvLocalBranches.SelectedNode.Tag == null) return;
-			string error = string.Empty;
-			_helper.RunCommand("checkout " + tvLocalBranches.SelectedNode.Tag.ToString(), ref error);
+			_helper.RunCommand("checkout " + tvLocalBranches.SelectedNode.Tag.ToString());
 			refreshBranches();
 		}
 
@@ -169,8 +168,7 @@ namespace PaJaMa.GitStudio
 			{
 				foreach (var s in selected)
 				{
-					string error = string.Empty;
-					_helper.RunCommand("branch -D " + s.BranchName, ref error);
+					_helper.RunCommand("branch -D " + s.BranchName);
 				}
 				refreshBranches();
 			}
@@ -186,8 +184,7 @@ namespace PaJaMa.GitStudio
 			{
 				foreach (var s in selected)
 				{
-					string error = string.Empty;
-					_helper.RunCommand("branch -d -r " + s.BranchName, ref error);
+					_helper.RunCommand("branch -d -r " + s.BranchName);
 				}
 				refreshBranches();
 			}
@@ -315,11 +312,10 @@ namespace PaJaMa.GitStudio
 		private void pullToolStripMenuItem_Click(object sender, EventArgs e)
 		{
 			var branch = tvLocalBranches.SelectedNode.Tag as LocalBranch;
-			string error = string.Empty;
 			var branchName = branch.TracksBranch.BranchName;
 			if (branchName.StartsWith("origin/"))
 				branchName = branchName.Substring(7);
-			var lines = _helper.RunCommand("pull origin " + branchName, ref error);
+			var lines = _helper.RunCommand("pull origin " + branchName);
 			if (lines.Length > 0)
 				MessageBox.Show(string.Join("\r\n", lines));
 			// if (!string.IsNullOrEmpty(error)) return;
@@ -344,9 +340,8 @@ namespace PaJaMa.GitStudio
 			var tv = tvUnStaged.Focused ? tvUnStaged : tvStaged;
 			foreach (var selectedItem in getSelectedNodeTags<Difference>(tv))
 			{
-				string error = string.Empty;
 				if (tv == tvStaged)
-					_helper.RunCommand("reset -- " + selectedItem.FileName, ref error);
+					_helper.RunCommand("reset -- " + selectedItem.FileName);
 				if (selectedItem.DifferenceType == DifferenceType.Add)
 				{
 					if (selectedItem.FileName.EndsWith("/"))
@@ -356,7 +351,7 @@ namespace PaJaMa.GitStudio
 				}
 				else
 				{
-					_helper.RunCommand("checkout -- " + selectedItem.FileName, ref error);
+					_helper.RunCommand("checkout -- " + selectedItem.FileName);
 				}
 			}
 			txtDiffText.Text = string.Empty;
@@ -373,9 +368,8 @@ namespace PaJaMa.GitStudio
 			List<string> selectedItems = new List<string>();
 			foreach (var node in nodes)
 			{
-				string error = string.Empty;
 				if (tv == tvStaged && node.Tag is Difference)
-					_helper.RunCommand("reset " + (node.Tag as Difference).FileName, ref error);
+					_helper.RunCommand("reset " + (node.Tag as Difference).FileName);
 
 				var runningNode = node;
 				if (node.Tag is Difference)
@@ -409,7 +403,6 @@ namespace PaJaMa.GitStudio
 
 		private void tv_AfterSelect(object sender, TreeViewEventArgs e)
 		{
-			string error = string.Empty;
 			if (e.Node.Tag == null)
 			{
 				txtDiffText.Text = string.Empty;
@@ -417,7 +410,7 @@ namespace PaJaMa.GitStudio
 			}
 
 			var diff = e.Node.Tag as Difference;
-			var diffs = diff == null || diff.DifferenceType != DifferenceType.Modify ? new string[0] : _helper.RunCommand("--no-pager diff " + (diff.IsStaged ? "--cached " : "") + "\"" + diff.FileName + "\"", ref error);
+			var diffs = diff == null || diff.DifferenceType != DifferenceType.Modify ? new string[0] : _helper.RunCommand("--no-pager diff " + (diff.IsStaged ? "--cached " : "") + "\"" + diff.FileName + "\"");
 			// if (!string.IsNullOrEmpty(error)) return;
 			txtDiffText.Text = string.Join("\r\n", diffs);
 		}
@@ -505,8 +498,7 @@ namespace PaJaMa.GitStudio
 			if (MessageBox.Show("Are you sure you want to merge " + branch.BranchName + " into " + _currentBranch.BranchName + "?", "Warning!",
 				MessageBoxButtons.YesNo) == DialogResult.Yes)
 			{
-				string error = string.Empty;
-				_helper.RunCommand("merge " + branch.BranchName, ref error);
+				_helper.RunCommand("merge " + branch.BranchName);
 			}
 		}
 
@@ -516,8 +508,7 @@ namespace PaJaMa.GitStudio
 			if (MessageBox.Show("Are you sure you want to merge " + branch.BranchName + " into " + _currentBranch.BranchName + "?", "Warning!",
 				MessageBoxButtons.YesNo) == DialogResult.Yes)
 			{
-				string error = string.Empty;
-				_helper.RunCommand("merge " + branch.BranchName, ref error);
+				_helper.RunCommand("merge " + branch.BranchName);
 			}
 		}
 
@@ -525,8 +516,7 @@ namespace PaJaMa.GitStudio
 		{
 			var tv = tvUnStaged.Focused ? tvUnStaged : tvStaged;
 			var diff = tv.SelectedNode.Tag as Difference;
-			string error = string.Empty;
-			_helper.RunCommand("add " + diff.FileName, ref error);
+			_helper.RunCommand("add " + diff.FileName);
 			_previousDifferences = null;
 		}
 
@@ -534,8 +524,7 @@ namespace PaJaMa.GitStudio
 		{
 			foreach (var selectedItem in getSelectedNodeTags<Difference>(tvUnStaged))
 			{
-				string error = string.Empty;
-				_helper.RunCommand("add " + selectedItem.FileName, ref error);
+				_helper.RunCommand("add " + selectedItem.FileName);
 			}
 			txtDiffText.Text = string.Empty;
 			timDiff_Tick(this, new EventArgs());
@@ -545,8 +534,7 @@ namespace PaJaMa.GitStudio
 		{
 			foreach (var selectedItem in getSelectedNodeTags<Difference>(tvStaged))
 			{
-				string error = string.Empty;
-				_helper.RunCommand("reset -- " + selectedItem.FileName, ref error);
+				_helper.RunCommand("reset -- " + selectedItem.FileName);
 			}
 			txtDiffText.Text = string.Empty;
 			timDiff_Tick(this, new EventArgs());
@@ -562,9 +550,8 @@ namespace PaJaMa.GitStudio
 			List<string> selectedItems = new List<string>();
 			foreach (var diff in differences)
 			{
-				string error = string.Empty;
 				if (tv == tvStaged)
-					_helper.RunCommand("reset " + diff.FileName, ref error);
+					_helper.RunCommand("reset " + diff.FileName);
 
 				var finf = new FileInfo(Path.Combine(Repository.LocalPath, diff.FileName));
 				if (finf.Exists)
@@ -582,8 +569,7 @@ namespace PaJaMa.GitStudio
 			if (MessageBox.Show("Are you sure you want to abort merge for " + _currentBranch.BranchName + "?", "Warning!",
 				MessageBoxButtons.YesNo) == DialogResult.Yes)
 			{
-				string error = string.Empty;
-				_helper.RunCommand("merge --abort", ref error);
+				_helper.RunCommand("merge --abort");
 			}
 		}
 
@@ -610,9 +596,8 @@ namespace PaJaMa.GitStudio
 					.Where(d => d != null);
 				foreach (var selectedItem in items)
 				{
-					string error = string.Empty;
 					var cmd = _draggingTreeView == tvUnStaged ? "add " : "reset -- ";
-					_helper.RunCommand(cmd + selectedItem.FileName, ref error);
+					_helper.RunCommand(cmd + selectedItem.FileName);
 				}
 				txtDiffText.Text = string.Empty;
 				timDiff_Tick(this, new EventArgs());

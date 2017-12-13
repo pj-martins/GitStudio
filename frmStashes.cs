@@ -37,8 +37,7 @@ namespace PaJaMa.GitStudio
 
 		private void refreshStashes()
 		{
-			string error = string.Empty;
-			var items = Helper.RunCommand("stash list", ref error);
+			var items = Helper.RunCommand("stash list");
 			var stashes = new List<Stash>();
 			foreach (var item in items)
 			{
@@ -64,9 +63,8 @@ namespace PaJaMa.GitStudio
 
 			var stashID = (selectedRows.First().DataBoundItem as Stash).StashID;
 
-			string error = string.Empty;
 			var diffs = Helper.RunCommand("--no-pager stash show " + stashID
-				+ " --name-status", ref error);
+	+ " --name-status");
 			var details = new Dictionary<string, DifferenceType>();
 			foreach (var diff in diffs)
 			{
@@ -111,9 +109,8 @@ namespace PaJaMa.GitStudio
 				return;
 			}
 
-			string error = string.Empty;
 			var diffs = Helper.RunCommand("--no-pager diff " + (selectedStash.DataBoundItem as Stash).StashID + " -- "
-				+ selectedRow.Cells["File"].Value.ToString(), ref error);
+	+ selectedRow.Cells["File"].Value.ToString());
 			txtDifferences.Text = string.Join("\r\n", diffs);
 		}
 
@@ -160,8 +157,7 @@ namespace PaJaMa.GitStudio
 			foreach (var stashRow in stashRows)
 			{
 				var stashID = stashRow.Cells["StashID"].Value.ToString();
-				string error = string.Empty;
-				Helper.RunCommand("stash drop " + stashID, ref error);
+				Helper.RunCommand("stash drop " + stashID);
 			}
 			refreshStashes();
 		}
@@ -173,9 +169,8 @@ namespace PaJaMa.GitStudio
 			if (MessageBox.Show("Are you sure you want to apply the following stash?\r\n" +
 				stashRow.Cells["StashID"].Value.ToString(), "Warning!", MessageBoxButtons.YesNo) != DialogResult.Yes)
 				return;
-			string error = string.Empty;
 
-			Helper.RunCommand("stash apply " + stashRow.Cells["StashID"].Value.ToString(), ref error);
+			Helper.RunCommand("stash apply " + stashRow.Cells["StashID"].Value.ToString());
 			refreshStashes();
 		}
 
@@ -186,9 +181,8 @@ namespace PaJaMa.GitStudio
 			if (MessageBox.Show("Are you sure you want to pop the following stash?\r\n" +
 				stashRow.Cells["StashID"].Value.ToString(), "Warning!", MessageBoxButtons.YesNo) != DialogResult.Yes)
 				return;
-			string error = string.Empty;
 
-			Helper.RunCommand("stash pop " + stashRow.Cells["StashID"].Value.ToString(), ref error);
+			Helper.RunCommand("stash pop " + stashRow.Cells["StashID"].Value.ToString());
 			refreshStashes();
 		}
 
@@ -200,8 +194,7 @@ namespace PaJaMa.GitStudio
 			var result = InputBox.Show("Branch Name");
 			if (result.Result != DialogResult.OK) return;
 
-			string error = string.Empty;
-			Helper.RunCommand("stash branch " + result.Text + " " + stashRow.Cells["StashID"].Value.ToString(), ref error);
+			Helper.RunCommand("stash branch " + result.Text + " " + stashRow.Cells["StashID"].Value.ToString());
 
 			BranchCreated?.Invoke(this, new EventArgs());
 			refreshStashes();

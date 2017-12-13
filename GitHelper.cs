@@ -18,7 +18,7 @@ namespace PaJaMa.GitStudio
 			this.WorkingDirectory = workingDirectory;
 		}
 
-		public string[] RunCommand(string arguments, ref string errorMessage)
+		private string[] runCommand(string arguments, bool checkForErrors, ref string errors)
 		{
 			var inf = new ProcessStartInfo("git.exe", arguments);
 			inf.UseShellExecute = false;
@@ -45,10 +45,24 @@ namespace PaJaMa.GitStudio
 			p.WaitForExit();
 			if (errorLines.Count > 0)
 			{
-				errorMessage = string.Join("\r\n", errorLines.ToArray());
-				MessageBox.Show(errorMessage);
+				var errorMessage = string.Join("\r\n", errorLines.ToArray());
+				if (!checkForErrors)
+					lines.Add(errorMessage);
+				else
+					MessageBox.Show(errorMessage);
 			}
 			return lines.ToArray();
+		}
+
+		public string[] RunCommand(string arguments, ref string errors)
+		{
+			return runCommand(arguments, true, ref errors);
+		}
+
+		public string[] RunCommand(string arguments)
+		{
+			string errors = string.Empty;
+			return runCommand(arguments, false, ref errors);
 		}
 
 		public List<Branch> GetBranches()

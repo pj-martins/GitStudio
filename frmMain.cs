@@ -79,8 +79,6 @@ namespace PaJaMa.GitStudio
 				var helper = new GitHelper(dlg.SelectedPath);
 				var remote = helper.RunCommand("config --get remote.origin.url", ref error).FirstOrDefault();
 				if (!string.IsNullOrEmpty(error)) return;
-				var username = helper.RunCommand("config user.name", ref error).FirstOrDefault();
-				if (!string.IsNullOrEmpty(error)) return;
 				var repo = new GitRepository()
 				{
 					LocalPath = dlg.SelectedPath,

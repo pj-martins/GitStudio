@@ -37,8 +37,7 @@ namespace PaJaMa.GitStudio
 		private void refreshDifferences()
 		{
 			lblDirection.Text = FromBranch.BranchName + " -> " + ToBranch.BranchName;
-			string error = string.Empty;
-			var diffs = Helper.RunCommand("--no-pager diff --name-status " + FromBranch.BranchName + " " + ToBranch.BranchName, ref error);
+			var diffs = Helper.RunCommand("--no-pager diff --name-status " + FromBranch.BranchName + " " + ToBranch.BranchName);
 			gridMain.DataSource = diffs.Select(d => new
 			{
 				File = d.Split('\t')[1],
@@ -67,8 +66,7 @@ namespace PaJaMa.GitStudio
 				txtDifferences.Text = string.Empty;
 				return;
 			}
-			string error = string.Empty;
-			var diffs = Helper.RunCommand("--no-pager diff " + FromBranch.BranchName + " " + ToBranch.BranchName + " -- " + selectedRow.Cells["File"].Value.ToString(), ref error);
+			var diffs = Helper.RunCommand("--no-pager diff " + FromBranch.BranchName + " " + ToBranch.BranchName + " -- " + selectedRow.Cells["File"].Value.ToString());
 			txtDifferences.Text = string.Join("\r\n", diffs);
 		}
 
@@ -77,9 +75,8 @@ namespace PaJaMa.GitStudio
 			foreach (var selectedRow in gridMain.SelectedRows.OfType<DataGridViewRow>())
 			{
 				if (selectedRow.Cells["Action"].Value.ToString() != "Modify") continue;
-				string error = string.Empty;
-				var content1 = Helper.RunCommand("--no-pager show " + FromBranch.BranchName + ":" + selectedRow.Cells["File"].Value.ToString(), ref error);
-				var content2 = Helper.RunCommand("--no-pager show " + ToBranch.BranchName + ":" + selectedRow.Cells["File"].Value.ToString(), ref error);
+				var content1 = Helper.RunCommand("--no-pager show " + FromBranch.BranchName + ":" + selectedRow.Cells["File"].Value.ToString());
+				var content2 = Helper.RunCommand("--no-pager show " + ToBranch.BranchName + ":" + selectedRow.Cells["File"].Value.ToString());
 
 				var tmpDir = Path.Combine(Path.GetTempPath(), "GitStudio");
 				if (!Directory.Exists(tmpDir)) Directory.CreateDirectory(tmpDir);

@@ -35,8 +35,7 @@ namespace PaJaMa.GitStudio
 
 		private void refreshDifferences()
 		{
-			string error = string.Empty;
-			var logs = Helper.RunCommand("--no-pager log " + Branch.BranchName, ref error);
+			var logs = Helper.RunCommand("--no-pager log " + Branch.BranchName);
 			var commits = new List<Commit>();
 			Commit current = null;
 			foreach (var log in logs)
@@ -68,16 +67,15 @@ namespace PaJaMa.GitStudio
 				return;
 			}
 
-			string error = string.Empty;
 			var diffs = new string[0];
 			if (selectedRows.Count() == 2)
 			{
 				diffs = Helper.RunCommand("--no-pager diff --name-status " + (selectedRows.Last().DataBoundItem as Commit).CommitID
-					+ " " + (selectedRows.First().DataBoundItem as Commit).CommitID, ref error);
+					+ " " + (selectedRows.First().DataBoundItem as Commit).CommitID);
 			}
 			else
 			{
-				diffs = Helper.RunCommand("--no-pager show --name-status -r " + (selectedRows.First().DataBoundItem as Commit).CommitID, ref error);
+				diffs = Helper.RunCommand("--no-pager show --name-status -r " + (selectedRows.First().DataBoundItem as Commit).CommitID);
 			}
 			var details = new Dictionary<string, DifferenceType>();
 			foreach (var diff in diffs)
@@ -135,10 +133,9 @@ namespace PaJaMa.GitStudio
 				fromRow = gridCommits.Rows[rowIndex + 1];
 			}
 
-			string error = string.Empty;
 			var diffs = Helper.RunCommand("--no-pager diff " +
-				(selectedRows.Count() == 2 ? (toRow.DataBoundItem as Commit).CommitID + " " : "") +
-					(fromRow.DataBoundItem as Commit).CommitID + " -- " + selectedRow.Cells["File"].Value.ToString(), ref error);
+	(selectedRows.Count() == 2 ? (toRow.DataBoundItem as Commit).CommitID + " " : "") +
+		(fromRow.DataBoundItem as Commit).CommitID + " -- " + selectedRow.Cells["File"].Value.ToString());
 			txtDifferences.Text = string.Join("\r\n", diffs);
 		}
 
@@ -172,9 +169,8 @@ namespace PaJaMa.GitStudio
 					fromRow = gridCommits.Rows[rowIndex + 1];
 				}
 
-				string error = string.Empty;
-				var content1 = Helper.RunCommand("--no-pager show " + (fromRow.DataBoundItem as Commit).CommitID + ":" + selectedRow.Cells["File"].Value.ToString(), ref error);
-				var content2 = Helper.RunCommand("--no-pager show " + (toRow.DataBoundItem as Commit).CommitID + ":" + selectedRow.Cells["File"].Value.ToString(), ref error);
+				var content1 = Helper.RunCommand("--no-pager show " + (fromRow.DataBoundItem as Commit).CommitID + ":" + selectedRow.Cells["File"].Value.ToString());
+				var content2 = Helper.RunCommand("--no-pager show " + (toRow.DataBoundItem as Commit).CommitID + ":" + selectedRow.Cells["File"].Value.ToString());
 
 				var tmpDir = Path.Combine(Path.GetTempPath(), "GitStudio");
 				if (!Directory.Exists(tmpDir)) Directory.CreateDirectory(tmpDir);
