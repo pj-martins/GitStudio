@@ -132,7 +132,7 @@ namespace PaJaMa.GitStudio
 			pullToolStripMenuItem.Visible = branch != null && branch.TracksBranch != null;
 			pushToolStripMenuItem.Visible = branch != null;
 			mergeFromLocalToolStripMenuItem.Visible = branch != null;
-			deleteToolStripMenuItem.Visible = getSelectedNodeTags<LocalBranch>(tvLocalBranches, false).Any();
+			deleteToolStripMenuItem.Visible = getSelectedNodeTags<LocalBranch>(tvLocalBranches).Any();
 			enableDisableCompare();
 		}
 
@@ -140,7 +140,7 @@ namespace PaJaMa.GitStudio
 		private void mnuRemote_Opening(object sender, CancelEventArgs e)
 		{
 			var branch = tvRemoteBranches.SelectedNode == null ? null : tvRemoteBranches.SelectedNode.Tag as RemoteBranch;
-			deleteToolStripMenuItem.Visible = getSelectedNodeTags<RemoteBranch>(tvRemoteBranches, false).Any();
+			deleteToolStripMenuItem.Visible = getSelectedNodeTags<RemoteBranch>(tvRemoteBranches).Any();
 			enableDisableCompare();
 		}
 
@@ -160,7 +160,7 @@ namespace PaJaMa.GitStudio
 
 		private void deleteToolStripMenuItem_Click(object sender, EventArgs e)
 		{
-			var selected = getSelectedNodeTags<LocalBranch>(tvLocalBranches, false);
+			var selected = getSelectedNodeTags<LocalBranch>(tvLocalBranches);
 			if (MessageBox.Show("Are you sure you want to delete " +
 				string.Join("\r\n", selected.Select(s => s.ToString()).ToArray())
 				+ "?", "Warning!",
@@ -177,7 +177,7 @@ namespace PaJaMa.GitStudio
 
 		private void deleteRemoteToolStripMenuItem_Click(object sender, EventArgs e)
 		{
-			var selected = getSelectedNodeTags<RemoteBranch>(tvRemoteBranches, false);
+			var selected = getSelectedNodeTags<RemoteBranch>(tvRemoteBranches);
 			if (MessageBox.Show("Are you sure you want to delete " +
 				string.Join("\r\n", selected.Select(s => s.ToString()).ToArray())
 				+ "?", "Warning!",
@@ -335,7 +335,7 @@ namespace PaJaMa.GitStudio
 				return;
 
 			var tv = tvUnStaged.Focused ? tvUnStaged : tvStaged;
-			foreach (var selectedItem in getSelectedNodeTags<Difference>(tv, true))
+			foreach (var selectedItem in getSelectedNodeTags<Difference>(tv))
 			{
 				string error = string.Empty;
 				if (tv == tvStaged)
@@ -394,9 +394,10 @@ namespace PaJaMa.GitStudio
 		private void mnuDiffs_Opening(object sender, CancelEventArgs e)
 		{
 			var tv = tvUnStaged.Focused ? tvUnStaged : tvStaged;
-			var selectedItems = getSelectedNodeTags<Difference>(tv, false);
+			var selectedItems = getSelectedNodeTags<Difference>(tv);
 			var diff = tv.SelectedNode == null ? null : tv.SelectedNode.Tag as Difference;
-			resolveConflictToolStripMenuItem.Visible = diff != null && diff.IsConflict;
+			resolveConflictToolStripMenuItem.Enabled = diff != null && diff.IsConflict;
+			viewExternalToolStripMenuItem.Enabled = diff != null && diff.DifferenceType == DifferenceType.Modify;
 		}
 
 		private void tv_AfterSelect(object sender, TreeViewEventArgs e)
@@ -458,46 +459,6 @@ namespace PaJaMa.GitStudio
 			}
 		}
 
-		private List<TTagType> getSelectedNodeTags<TTagType>(MultiSelectTreeView tv, bool andChildren)
-		{
-			List<TTagType> selected = new List<TTagType>();
-			List<TreeNode> nodes = new List<TreeNode>();
-			if (andChildren)
-			{
-				foreach (var n in tv.SelectedNodes)
-				{
-					nodes.AddRange(recursivelyGetChildren(n));
-				}
-				nodes = nodes.Distinct().ToList();
-			}
-			else
-			{
-				nodes = tv.SelectedNodes.ToList();
-			}
-
-			foreach (TreeNode node in nodes)
-			{
-				if (node.Tag is TTagType)
-				{
-					var tag = ((TTagType)node.Tag);
-					if (!selected.Contains(tag))
-						selected.Add(tag);
-				}
-			}
-			return selected;
-		}
-
-		private List<TreeNode> recursivelyGetChildren(TreeNode parent)
-		{
-			List<TreeNode> nodes = new List<TreeNode>();
-			nodes.Add(parent);
-			foreach (TreeNode child in parent.Nodes)
-			{
-				nodes.AddRange(recursivelyGetChildren(child));
-			}
-			return nodes;
-		}
-
 		private void branchLocalToolStripMenuItem_Click(object sender, EventArgs e)
 		{
 			var frm = new frmBranch();
@@ -554,7 +515,7 @@ namespace PaJaMa.GitStudio
 
 		private void stageToolStripMenuItem_Click(object sender, EventArgs e)
 		{
-			foreach (var selectedItem in getSelectedNodeTags<Difference>(tvUnStaged, true))
+			foreach (var selectedItem in getSelectedNodeTags<Difference>(tvUnStaged))
 			{
 				string error = string.Empty;
 				_helper.RunCommand("add " + selectedItem.FileName, ref error);
@@ -565,7 +526,7 @@ namespace PaJaMa.GitStudio
 
 		private void unStageToolStripMenuItem_Click(object sender, EventArgs e)
 		{
-			foreach (var selectedItem in getSelectedNodeTags<Difference>(tvStaged, true))
+			foreach (var selectedItem in getSelectedNodeTags<Difference>(tvStaged))
 			{
 				string error = string.Empty;
 				_helper.RunCommand("reset -- " + selectedItem.FileName, ref error);
@@ -580,7 +541,7 @@ namespace PaJaMa.GitStudio
 				return;
 
 			var tv = tvUnStaged.Focused ? tvUnStaged : tvStaged;
-			var differences = getSelectedNodeTags<Difference>(tv, false);
+			var differences = getSelectedNodeTags<Difference>(tv);
 			List<string> selectedItems = new List<string>();
 			foreach (var diff in differences)
 			{
@@ -610,15 +571,14 @@ namespace PaJaMa.GitStudio
 		}
 
 		private object _draggingTreeView;
-		private void tv_ItemDrag(object sender, ItemDragEventArgs e)
+		private void tv_NodesDrag(object sender, DragEventArgs e)
 		{
 			_draggingTreeView = sender;
-			DoDragDrop(getSelectedNodeTags<Difference>(sender as MultiSelectTreeView, true), DragDropEffects.Move);
 		}
 
 		private void tv_DragEnter(object sender, DragEventArgs e)
 		{
-			if (e.Data.GetDataPresent(typeof(List<Difference>).FullName) && sender != _draggingTreeView)
+			if (e.Data.GetDataPresent(typeof(List<TreeNode>).FullName) && sender != _draggingTreeView)
 			{
 				e.Effect = DragDropEffects.Move;
 			}
@@ -626,9 +586,11 @@ namespace PaJaMa.GitStudio
 
 		private void tv_DragDrop(object sender, DragEventArgs e)
 		{
-			if (e.Data.GetDataPresent(typeof(List<Difference>).FullName) && sender != _draggingTreeView)
+			if (e.Data.GetDataPresent(typeof(List<TreeNode>).FullName) && sender != _draggingTreeView)
 			{
-				var items = e.Data.GetData(typeof(List<Difference>).FullName) as List<Difference>;
+				var items = (sender as MultiSelectTreeView).GetFlattenedNodes(e.Data.GetData(typeof(List<TreeNode>).FullName) as List<TreeNode>)
+					.Select(n => n.Tag as Difference)
+					.Where(d => d != null);
 				foreach (var selectedItem in items)
 				{
 					string error = string.Empty;
@@ -672,6 +634,12 @@ namespace PaJaMa.GitStudio
 			frm.Helper = _helper;
 			frm.Branch = branch;
 			frm.Show();
+		}
+
+		private List<TTagType> getSelectedNodeTags<TTagType>(MultiSelectTreeView tv)
+		{
+			var flattened = tv.GetSelectedFlattenedNodes();
+			return flattened.Where(f => f.Tag is TTagType).Select(f => (TTagType)f.Tag).ToList();
 		}
 	}
 }

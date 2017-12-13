@@ -40,6 +40,8 @@
 			this.branchLocalToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.mergeFromLocalToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.abortMergeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.compareToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.historyToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
 			this.label1 = new System.Windows.Forms.Label();
 			this.tvRemoteBranches = new PaJaMa.WinControls.MultiSelectTreeView.MultiSelectTreeView();
 			this.mnuRemote = new System.Windows.Forms.ContextMenuStrip(this.components);
@@ -47,6 +49,8 @@
 			this.fetchToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.mergeFromToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.deleteRemoteToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.compareToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
+			this.historyToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.label2 = new System.Windows.Forms.Label();
 			this.splitContainer3 = new System.Windows.Forms.SplitContainer();
 			this.splitContainer4 = new System.Windows.Forms.SplitContainer();
@@ -68,10 +72,6 @@
 			this.panel1 = new System.Windows.Forms.Panel();
 			this.btnRefresh = new System.Windows.Forms.Button();
 			this.btnCommit = new System.Windows.Forms.Button();
-			this.compareToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-			this.compareToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
-			this.historyToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-			this.historyToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
 			((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
 			this.splitContainer1.Panel1.SuspendLayout();
 			this.splitContainer1.Panel2.SuspendLayout();
@@ -133,6 +133,7 @@
 			// 
 			// tvLocalBranches
 			// 
+			this.tvLocalBranches.AllowDragNodes = false;
 			this.tvLocalBranches.ContextMenuStrip = this.mnuLocal;
 			this.tvLocalBranches.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.tvLocalBranches.DrawMode = System.Windows.Forms.TreeViewDrawMode.OwnerDrawText;
@@ -154,7 +155,7 @@
             this.compareToolStripMenuItem,
             this.historyToolStripMenuItem1});
 			this.mnuLocal.Name = "mnuLocal";
-			this.mnuLocal.Size = new System.Drawing.Size(153, 224);
+			this.mnuLocal.Size = new System.Drawing.Size(142, 202);
 			this.mnuLocal.Opening += new System.ComponentModel.CancelEventHandler(this.mnuLocal_Opening);
 			// 
 			// checkoutToolStripMenuItem
@@ -206,6 +207,20 @@
 			this.abortMergeToolStripMenuItem.Text = "&Abort Merge";
 			this.abortMergeToolStripMenuItem.Click += new System.EventHandler(this.abortMergeToolStripMenuItem_Click);
 			// 
+			// compareToolStripMenuItem
+			// 
+			this.compareToolStripMenuItem.Name = "compareToolStripMenuItem";
+			this.compareToolStripMenuItem.Size = new System.Drawing.Size(141, 22);
+			this.compareToolStripMenuItem.Text = "&Compare";
+			this.compareToolStripMenuItem.Click += new System.EventHandler(this.compareToolStripMenuItem_Click);
+			// 
+			// historyToolStripMenuItem1
+			// 
+			this.historyToolStripMenuItem1.Name = "historyToolStripMenuItem1";
+			this.historyToolStripMenuItem1.Size = new System.Drawing.Size(141, 22);
+			this.historyToolStripMenuItem1.Text = "&History";
+			this.historyToolStripMenuItem1.Click += new System.EventHandler(this.historyToolStripMenuItem_Click);
+			// 
 			// label1
 			// 
 			this.label1.AutoSize = true;
@@ -219,6 +234,7 @@
 			// 
 			// tvRemoteBranches
 			// 
+			this.tvRemoteBranches.AllowDragNodes = false;
 			this.tvRemoteBranches.ContextMenuStrip = this.mnuRemote;
 			this.tvRemoteBranches.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.tvRemoteBranches.DrawMode = System.Windows.Forms.TreeViewDrawMode.OwnerDrawText;
@@ -243,30 +259,44 @@
 			// branchToolStripMenuItem
 			// 
 			this.branchToolStripMenuItem.Name = "branchToolStripMenuItem";
-			this.branchToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+			this.branchToolStripMenuItem.Size = new System.Drawing.Size(139, 22);
 			this.branchToolStripMenuItem.Text = "&Branch";
 			this.branchToolStripMenuItem.Click += new System.EventHandler(this.branchToolStripMenuItem_Click);
 			// 
 			// fetchToolStripMenuItem
 			// 
 			this.fetchToolStripMenuItem.Name = "fetchToolStripMenuItem";
-			this.fetchToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+			this.fetchToolStripMenuItem.Size = new System.Drawing.Size(139, 22);
 			this.fetchToolStripMenuItem.Text = "&Fetch";
 			this.fetchToolStripMenuItem.Click += new System.EventHandler(this.fetchToolStripMenuItem_Click);
 			// 
 			// mergeFromToolStripMenuItem
 			// 
 			this.mergeFromToolStripMenuItem.Name = "mergeFromToolStripMenuItem";
-			this.mergeFromToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+			this.mergeFromToolStripMenuItem.Size = new System.Drawing.Size(139, 22);
 			this.mergeFromToolStripMenuItem.Text = "&Merge From";
 			this.mergeFromToolStripMenuItem.Click += new System.EventHandler(this.mergeFromToolStripMenuItem_Click);
 			// 
 			// deleteRemoteToolStripMenuItem
 			// 
 			this.deleteRemoteToolStripMenuItem.Name = "deleteRemoteToolStripMenuItem";
-			this.deleteRemoteToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+			this.deleteRemoteToolStripMenuItem.Size = new System.Drawing.Size(139, 22);
 			this.deleteRemoteToolStripMenuItem.Text = "&Delete";
 			this.deleteRemoteToolStripMenuItem.Click += new System.EventHandler(this.deleteRemoteToolStripMenuItem_Click);
+			// 
+			// compareToolStripMenuItem1
+			// 
+			this.compareToolStripMenuItem1.Name = "compareToolStripMenuItem1";
+			this.compareToolStripMenuItem1.Size = new System.Drawing.Size(139, 22);
+			this.compareToolStripMenuItem1.Text = "&Compare";
+			this.compareToolStripMenuItem1.Click += new System.EventHandler(this.compareToolStripMenuItem_Click);
+			// 
+			// historyToolStripMenuItem
+			// 
+			this.historyToolStripMenuItem.Name = "historyToolStripMenuItem";
+			this.historyToolStripMenuItem.Size = new System.Drawing.Size(139, 22);
+			this.historyToolStripMenuItem.Text = "&History";
+			this.historyToolStripMenuItem.Click += new System.EventHandler(this.historyToolStripMenuItem_Click);
 			// 
 			// label2
 			// 
@@ -319,6 +349,7 @@
 			// 
 			// tvUnStaged
 			// 
+			this.tvUnStaged.AllowDragNodes = true;
 			this.tvUnStaged.AllowDrop = true;
 			this.tvUnStaged.ContextMenuStrip = this.mnuDiffs;
 			this.tvUnStaged.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -328,10 +359,10 @@
 			this.tvUnStaged.Name = "tvUnStaged";
 			this.tvUnStaged.Size = new System.Drawing.Size(283, 319);
 			this.tvUnStaged.TabIndex = 0;
+			this.tvUnStaged.NodesDrag += new System.Windows.Forms.DragEventHandler(this.tv_NodesDrag);
 			this.tvUnStaged.AfterCheck += new System.Windows.Forms.TreeViewEventHandler(this.tv_AfterCheck);
 			this.tvUnStaged.AfterCollapse += new System.Windows.Forms.TreeViewEventHandler(this.tv_AfterCollapse);
 			this.tvUnStaged.AfterExpand += new System.Windows.Forms.TreeViewEventHandler(this.tv_AfterExpand);
-			this.tvUnStaged.ItemDrag += new System.Windows.Forms.ItemDragEventHandler(this.tv_ItemDrag);
 			this.tvUnStaged.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.tv_AfterSelect);
 			this.tvUnStaged.NodeMouseDoubleClick += new System.Windows.Forms.TreeNodeMouseClickEventHandler(this.tv_NodeMouseDoubleClick);
 			this.tvUnStaged.DragDrop += new System.Windows.Forms.DragEventHandler(this.tv_DragDrop);
@@ -413,6 +444,7 @@
 			// 
 			// tvStaged
 			// 
+			this.tvStaged.AllowDragNodes = true;
 			this.tvStaged.AllowDrop = true;
 			this.tvStaged.ContextMenuStrip = this.mnuDiffs;
 			this.tvStaged.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -422,9 +454,9 @@
 			this.tvStaged.Name = "tvStaged";
 			this.tvStaged.Size = new System.Drawing.Size(315, 319);
 			this.tvStaged.TabIndex = 2;
+			this.tvStaged.NodesDrag += new System.Windows.Forms.DragEventHandler(this.tv_NodesDrag);
 			this.tvStaged.AfterCheck += new System.Windows.Forms.TreeViewEventHandler(this.tv_AfterCheck);
 			this.tvStaged.AfterCollapse += new System.Windows.Forms.TreeViewEventHandler(this.tv_AfterCollapse);
-			this.tvStaged.ItemDrag += new System.Windows.Forms.ItemDragEventHandler(this.tv_ItemDrag);
 			this.tvStaged.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.tv_AfterSelect);
 			this.tvStaged.NodeMouseDoubleClick += new System.Windows.Forms.TreeNodeMouseClickEventHandler(this.tv_NodeMouseDoubleClick);
 			this.tvStaged.DragDrop += new System.Windows.Forms.DragEventHandler(this.tv_DragDrop);
@@ -499,34 +531,6 @@
 			this.btnCommit.Text = "Commit";
 			this.btnCommit.UseVisualStyleBackColor = true;
 			this.btnCommit.Click += new System.EventHandler(this.btnCommit_Click);
-			// 
-			// compareToolStripMenuItem
-			// 
-			this.compareToolStripMenuItem.Name = "compareToolStripMenuItem";
-			this.compareToolStripMenuItem.Size = new System.Drawing.Size(141, 22);
-			this.compareToolStripMenuItem.Text = "&Compare";
-			this.compareToolStripMenuItem.Click += new System.EventHandler(this.compareToolStripMenuItem_Click);
-			// 
-			// compareToolStripMenuItem1
-			// 
-			this.compareToolStripMenuItem1.Name = "compareToolStripMenuItem1";
-			this.compareToolStripMenuItem1.Size = new System.Drawing.Size(152, 22);
-			this.compareToolStripMenuItem1.Text = "&Compare";
-			this.compareToolStripMenuItem1.Click += new System.EventHandler(this.compareToolStripMenuItem_Click);
-			// 
-			// historyToolStripMenuItem
-			// 
-			this.historyToolStripMenuItem.Name = "historyToolStripMenuItem";
-			this.historyToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
-			this.historyToolStripMenuItem.Text = "&History";
-			this.historyToolStripMenuItem.Click += new System.EventHandler(this.historyToolStripMenuItem_Click);
-			// 
-			// historyToolStripMenuItem1
-			// 
-			this.historyToolStripMenuItem1.Name = "historyToolStripMenuItem1";
-			this.historyToolStripMenuItem1.Size = new System.Drawing.Size(152, 22);
-			this.historyToolStripMenuItem1.Text = "&History";
-			this.historyToolStripMenuItem1.Click += new System.EventHandler(this.historyToolStripMenuItem_Click);
 			// 
 			// ucRepository
 			// 
