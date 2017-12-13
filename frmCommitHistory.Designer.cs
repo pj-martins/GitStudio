@@ -33,9 +33,9 @@
 			this.splitContainer1 = new System.Windows.Forms.SplitContainer();
 			this.splitContainer2 = new System.Windows.Forms.SplitContainer();
 			this.gridDetails = new System.Windows.Forms.DataGridView();
-			this.txtDifferences = new System.Windows.Forms.TextBox();
 			this.mnuDetails = new System.Windows.Forms.ContextMenuStrip(this.components);
 			this.externalCompareToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.txtDifferences = new System.Windows.Forms.TextBox();
 			((System.ComponentModel.ISupportInitialize)(this.gridCommits)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
 			this.splitContainer1.Panel1.SuspendLayout();
@@ -115,6 +115,20 @@
 			this.gridDetails.SelectionChanged += new System.EventHandler(this.gridDetails_SelectionChanged);
 			this.gridDetails.DoubleClick += new System.EventHandler(this.gridDetails_DoubleClick);
 			// 
+			// mnuDetails
+			// 
+			this.mnuDetails.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.externalCompareToolStripMenuItem});
+			this.mnuDetails.Name = "mnuDetails";
+			this.mnuDetails.Size = new System.Drawing.Size(168, 48);
+			// 
+			// externalCompareToolStripMenuItem
+			// 
+			this.externalCompareToolStripMenuItem.Name = "externalCompareToolStripMenuItem";
+			this.externalCompareToolStripMenuItem.Size = new System.Drawing.Size(167, 22);
+			this.externalCompareToolStripMenuItem.Text = "&External Compare";
+			this.externalCompareToolStripMenuItem.Click += new System.EventHandler(this.externalCompareToolStripMenuItem_Click);
+			// 
 			// txtDifferences
 			// 
 			this.txtDifferences.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -124,20 +138,6 @@
 			this.txtDifferences.ReadOnly = true;
 			this.txtDifferences.Size = new System.Drawing.Size(329, 640);
 			this.txtDifferences.TabIndex = 0;
-			// 
-			// mnuDetails
-			// 
-			this.mnuDetails.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.externalCompareToolStripMenuItem});
-			this.mnuDetails.Name = "mnuDetails";
-			this.mnuDetails.Size = new System.Drawing.Size(168, 26);
-			// 
-			// externalCompareToolStripMenuItem
-			// 
-			this.externalCompareToolStripMenuItem.Name = "externalCompareToolStripMenuItem";
-			this.externalCompareToolStripMenuItem.Size = new System.Drawing.Size(167, 22);
-			this.externalCompareToolStripMenuItem.Text = "&External Compare";
-			this.externalCompareToolStripMenuItem.Click += new System.EventHandler(this.externalCompareToolStripMenuItem_Click);
 			// 
 			// frmCommitHistory
 			// 

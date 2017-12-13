@@ -37,6 +37,14 @@ namespace PaJaMa.GitStudio
 		{
 			var logs = Helper.RunCommand("--no-pager log " + Branch.BranchName);
 			var commits = new List<Commit>();
+			commits.Add(new Commit()
+			{
+				CommitID = "HEAD",
+				Author = "HEAD",
+				Index = 1,
+			});
+
+			int index = 2;
 			Commit current = null;
 			foreach (var log in logs)
 			{
@@ -44,6 +52,7 @@ namespace PaJaMa.GitStudio
 				{
 					if (current != null) current.Comment = current.Comment.Trim();
 					current = new Commit();
+					current.Index = index++;
 					commits.Add(current);
 					current.CommitID = log.Substring(7);
 				}
@@ -59,8 +68,10 @@ namespace PaJaMa.GitStudio
 
 		private void gridCommits_SelectionChanged(object sender, EventArgs e)
 		{
-			var selectedRows = gridCommits.SelectedRows.OfType<DataGridViewRow>();
-			if (selectedRows.Count() < 1)
+			var selectedCommits = gridCommits.SelectedRows.OfType<DataGridViewRow>()
+				.Select(r => r.DataBoundItem as Commit)
+				.OrderBy(c => c.Index);
+			if (selectedCommits.Count() < 1)
 			{
 				gridDetails.DataSource = null;
 				txtDifferences.Text = string.Empty;
@@ -68,14 +79,14 @@ namespace PaJaMa.GitStudio
 			}
 
 			var diffs = new string[0];
-			if (selectedRows.Count() == 2)
+			if (selectedCommits.Count() == 2)
 			{
-				diffs = Helper.RunCommand("--no-pager diff --name-status " + (selectedRows.Last().DataBoundItem as Commit).CommitID
-					+ " " + (selectedRows.First().DataBoundItem as Commit).CommitID);
+				diffs = Helper.RunCommand("--no-pager diff --name-status " + selectedCommits.Last().CommitID
+					+ " " + selectedCommits.First().CommitID);
 			}
 			else
 			{
-				diffs = Helper.RunCommand("--no-pager show --name-status -r " + (selectedRows.First().DataBoundItem as Commit).CommitID);
+				diffs = Helper.RunCommand("--no-pager show --name-status -r " + selectedCommits.First().CommitID);
 			}
 			var details = new Dictionary<string, DifferenceType>();
 			foreach (var diff in diffs)
@@ -106,7 +117,8 @@ namespace PaJaMa.GitStudio
 
 		private void gridDetails_SelectionChanged(object sender, EventArgs e)
 		{
-			var selectedRows = gridCommits.SelectedRows.OfType<DataGridViewRow>();
+			var selectedRows = gridCommits.SelectedRows.OfType<DataGridViewRow>()
+				.OrderBy(c => (c.DataBoundItem as Commit).Index);
 			if (selectedRows.Count() < 1)
 			{
 				txtDifferences.Text = string.Empty;
@@ -134,8 +146,8 @@ namespace PaJaMa.GitStudio
 			}
 
 			var diffs = Helper.RunCommand("--no-pager diff " +
-	(selectedRows.Count() == 2 ? (toRow.DataBoundItem as Commit).CommitID + " " : "") +
-		(fromRow.DataBoundItem as Commit).CommitID + " -- " + selectedRow.Cells["File"].Value.ToString());
+				(selectedRows.Count() == 2 ? (toRow.DataBoundItem as Commit).CommitID + " " : "") +
+				(fromRow.DataBoundItem as Commit).CommitID + " -- " + selectedRow.Cells["File"].Value.ToString());
 			txtDifferences.Text = string.Join("\r\n", diffs);
 		}
 
@@ -155,7 +167,8 @@ namespace PaJaMa.GitStudio
 			foreach (var selectedRow in gridDetails.SelectedRows.OfType<DataGridViewRow>())
 			{
 				if (selectedRow.Cells["Action"].Value.ToString() != "Modify") continue;
-				var selectedRows = gridCommits.SelectedRows.OfType<DataGridViewRow>();
+				var selectedRows = gridCommits.SelectedRows.OfType<DataGridViewRow>()
+					.OrderBy(c => (c.DataBoundItem as Commit).Index);
 				if (selectedRows.Count() < 1)
 				{
 					txtDifferences.Text = string.Empty;
@@ -196,6 +209,7 @@ namespace PaJaMa.GitStudio
 		public string Author { get; set; }
 		public string Date { get; set; }
 		public string Comment { get; set; }
+		public int Index { get; set; }
 
 		public Commit()
 		{
