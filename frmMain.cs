@@ -19,11 +19,6 @@ namespace PaJaMa.GitStudio
 			InitializeComponent();
 		}
 
-		private void accountsToolStripMenuItem_Click(object sender, EventArgs e)
-		{
-			new frmAccounts().Show();
-		}
-
 		private void cloneToolStripMenuItem_Click(object sender, EventArgs e)
 		{
 			var frm = new frmClone();
@@ -89,8 +84,7 @@ namespace PaJaMa.GitStudio
 				var repo = new GitRepository()
 				{
 					LocalPath = dlg.SelectedPath,
-					RemoteURLDecrypted = remote,
-					UserName = username
+					RemoteURL = remote,
 				};
 				var tab = createRepository(repo);
 				settings.Repositories.Add(repo);
@@ -136,21 +130,6 @@ namespace PaJaMa.GitStudio
 			settings.Repositories.Remove(repo);
 			tabMain.TabPages.Remove(tab);
 			SettingsHelper.SaveUserSettings<GitUserSettings>(settings);
-		}
-
-		private void switchAccountToolStripMenuItem_Click(object sender, EventArgs e)
-		{
-			var settings = SettingsHelper.GetUserSettings<GitUserSettings>();
-			var frm = new frmAccount();
-			if (frm.ShowDialog() == DialogResult.OK)
-			{
-				var account = frm.SelectedAccount;
-				var repo = (tabMain.SelectedTab.Controls[0] as ucRepository).Repository;
-				settings.Repositories.First(r => r.LocalPath == repo.LocalPath).UserName = account.UserName;
-				SettingsHelper.SaveUserSettings<GitUserSettings>(settings);
-				var error = string.Empty;
-				new GitHelper(repo.LocalPath).RunCommand("config user.name \"" + account.UserName + "\"", ref error);
-			}
 		}
 	}
 }

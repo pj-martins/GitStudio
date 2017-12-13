@@ -52,18 +52,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="frmAccount.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="frmAccount.Designer.cs">
-      <DependentUpon>frmAccount.cs</DependentUpon>
-    </Compile>
-    <Compile Include="frmAccounts.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="frmAccounts.Designer.cs">
-      <DependentUpon>frmAccounts.cs</DependentUpon>
-    </Compile>
     <Compile Include="frmBranch.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -106,18 +94,6 @@
     <Compile Include="frmMain.Designer.cs">
       <DependentUpon>frmMain.cs</DependentUpon>
     </Compile>
-    <Compile Include="frmManageAccount.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="frmManageAccount.Designer.cs">
-      <DependentUpon>frmManageAccount.cs</DependentUpon>
-    </Compile>
-    <Compile Include="frmSelectAccount.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="frmSelectAccount.Designer.cs">
-      <DependentUpon>frmSelectAccount.cs</DependentUpon>
-    </Compile>
     <Compile Include="GitClasses.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -134,12 +110,6 @@
     <Compile Include="GitUserSettings.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <EmbeddedResource Include="frmAccount.resx">
-      <DependentUpon>frmAccount.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="frmAccounts.resx">
-      <DependentUpon>frmAccounts.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="frmBranch.resx">
       <DependentUpon>frmBranch.cs</DependentUpon>
     </EmbeddedResource>
@@ -160,12 +130,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="frmMain.resx">
       <DependentUpon>frmMain.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="frmManageAccount.resx">
-      <DependentUpon>frmManageAccount.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="frmSelectAccount.resx">
-      <DependentUpon>frmSelectAccount.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="ucRepository.resx">
       <DependentUpon>ucRepository.cs</DependentUpon>

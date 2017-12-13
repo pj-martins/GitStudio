@@ -34,13 +34,10 @@
 			this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.openToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.cloneToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-			this.setupToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-			this.accountsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.tabMain = new System.Windows.Forms.TabControl();
 			this.mnuTab = new System.Windows.Forms.ContextMenuStrip(this.components);
 			this.openInExplorerToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.closeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-			this.switchAccountToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.menuStrip1.SuspendLayout();
 			this.mnuTab.SuspendLayout();
 			this.SuspendLayout();
@@ -49,8 +46,7 @@
 			// 
 			this.menuStrip1.ImageScalingSize = new System.Drawing.Size(40, 40);
 			this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.fileToolStripMenuItem,
-            this.setupToolStripMenuItem});
+            this.fileToolStripMenuItem});
 			this.menuStrip1.Location = new System.Drawing.Point(0, 0);
 			this.menuStrip1.Name = "menuStrip1";
 			this.menuStrip1.Size = new System.Drawing.Size(984, 24);
@@ -80,21 +76,6 @@
 			this.cloneToolStripMenuItem.Text = "&Clone";
 			this.cloneToolStripMenuItem.Click += new System.EventHandler(this.cloneToolStripMenuItem_Click);
 			// 
-			// setupToolStripMenuItem
-			// 
-			this.setupToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.accountsToolStripMenuItem});
-			this.setupToolStripMenuItem.Name = "setupToolStripMenuItem";
-			this.setupToolStripMenuItem.Size = new System.Drawing.Size(49, 20);
-			this.setupToolStripMenuItem.Text = "&Setup";
-			// 
-			// accountsToolStripMenuItem
-			// 
-			this.accountsToolStripMenuItem.Name = "accountsToolStripMenuItem";
-			this.accountsToolStripMenuItem.Size = new System.Drawing.Size(124, 22);
-			this.accountsToolStripMenuItem.Text = "&Accounts";
-			this.accountsToolStripMenuItem.Click += new System.EventHandler(this.accountsToolStripMenuItem_Click);
-			// 
 			// tabMain
 			// 
 			this.tabMain.ContextMenuStrip = this.mnuTab;
@@ -112,8 +93,7 @@
 			this.mnuTab.ImageScalingSize = new System.Drawing.Size(40, 40);
 			this.mnuTab.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.openInExplorerToolStripMenuItem,
-            this.closeToolStripMenuItem,
-            this.switchAccountToolStripMenuItem});
+            this.closeToolStripMenuItem});
 			this.mnuTab.Name = "mnuTab";
 			this.mnuTab.Size = new System.Drawing.Size(162, 70);
 			// 
@@ -130,13 +110,6 @@
 			this.closeToolStripMenuItem.Size = new System.Drawing.Size(161, 22);
 			this.closeToolStripMenuItem.Text = "&Close";
 			this.closeToolStripMenuItem.Click += new System.EventHandler(this.closeToolStripMenuItem_Click);
-			// 
-			// switchAccountToolStripMenuItem
-			// 
-			this.switchAccountToolStripMenuItem.Name = "switchAccountToolStripMenuItem";
-			this.switchAccountToolStripMenuItem.Size = new System.Drawing.Size(161, 22);
-			this.switchAccountToolStripMenuItem.Text = "&Switch Account";
-			this.switchAccountToolStripMenuItem.Click += new System.EventHandler(this.switchAccountToolStripMenuItem_Click);
 			// 
 			// frmMain
 			// 
@@ -164,14 +137,11 @@
 		private System.Windows.Forms.MenuStrip menuStrip1;
 		private System.Windows.Forms.ToolStripMenuItem fileToolStripMenuItem;
 		private System.Windows.Forms.ToolStripMenuItem cloneToolStripMenuItem;
-		private System.Windows.Forms.ToolStripMenuItem setupToolStripMenuItem;
-		private System.Windows.Forms.ToolStripMenuItem accountsToolStripMenuItem;
 		private System.Windows.Forms.TabControl tabMain;
 		private System.Windows.Forms.ToolStripMenuItem openToolStripMenuItem;
 		private System.Windows.Forms.ContextMenuStrip mnuTab;
 		private System.Windows.Forms.ToolStripMenuItem openInExplorerToolStripMenuItem;
 		private System.Windows.Forms.ToolStripMenuItem closeToolStripMenuItem;
-		private System.Windows.Forms.ToolStripMenuItem switchAccountToolStripMenuItem;
 	}
 }
 

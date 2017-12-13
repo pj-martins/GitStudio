@@ -24,12 +24,7 @@ namespace PaJaMa.GitStudio
 
 		private void frmClone_Load(object sender, EventArgs e)
 		{
-			var settings = SettingsHelper.GetUserSettings<GitUserSettings>();
-			foreach (var acct in settings.Accounts)
-			{
-				cboAccount.Items.Add(acct);
-			}
-			cboAccount.SelectedIndex = 0;
+			
 		}
 
 		private void cboBranches_DropDown(object sender, EventArgs e)
@@ -37,7 +32,7 @@ namespace PaJaMa.GitStudio
 			if (cboBranches.Items.Count < 1)
 			{
 				string error = string.Empty;
-				var remotes = new GitHelper(null).RunCommand("ls-remote " + getUNamePwdUrl(), ref error);
+				var remotes = new GitHelper(null).RunCommand("ls-remote " + txtURL.Text, ref error);
 				if (!string.IsNullOrEmpty(error)) return;
 				foreach (var remote in remotes)
 				{
@@ -52,11 +47,9 @@ namespace PaJaMa.GitStudio
 
 		private void btnClone_Click(object sender, EventArgs e)
 		{
-            var url = chkEmbed.Checked ? getUNamePwdUrl() : txtURL.Text;
 			var settings = SettingsHelper.GetUserSettings<GitUserSettings>();
-			var acct = cboAccount.SelectedItem as GitAccount;
 
-			var inf = new ProcessStartInfo("git.exe", "clone " + url + " " + txtPath.Text);
+			var inf = new ProcessStartInfo("git.exe", "clone " + txtURL.Text + " " + txtPath.Text);
 			inf.UseShellExecute = false;
 			inf.RedirectStandardOutput = true;
 			var p = Process.Start(inf);
@@ -64,9 +57,8 @@ namespace PaJaMa.GitStudio
 
 			ClonedRepo = new GitRepository()
 			{
-				UserName = acct.UserName,
 				LocalPath = txtPath.Text,
-				RemoteURLDecrypted = txtURL.Text
+				RemoteURL = txtURL.Text
 			};
 			settings.Repositories.Add(ClonedRepo);
 			SettingsHelper.SaveUserSettings<GitUserSettings>(settings);
@@ -79,23 +71,13 @@ namespace PaJaMa.GitStudio
 			if (dlgOpenFolder.ShowDialog() == DialogResult.OK)
 			{
 				var selectedPath = dlgOpenFolder.SelectedPath;
+				if (!selectedPath.EndsWith("\\"))
+					selectedPath += "\\";
 				var urlparts = txtURL.Text.Split(new string[] { "/" }, StringSplitOptions.RemoveEmptyEntries);
 				if (urlparts.Any())
 					selectedPath += urlparts.Last();
 				txtPath.Text = selectedPath;
 			}
-		}
-
-		private string getUNamePwdUrl()
-		{
-			var parts = txtURL.Text.Split(new string[] { "//" }, StringSplitOptions.RemoveEmptyEntries);
-			var settings = SettingsHelper.GetUserSettings<GitUserSettings>();
-			var acct = cboAccount.SelectedItem as GitAccount;
-			var pwd = acct.PasswordDecrypted;
-			var url = parts[0] + "//" + cboAccount.Text + ":" +
-				System.Web.HttpUtility.UrlEncode(pwd)
-				+ "@" + parts[1];
-			return url;
 		}
 
 		private void btnCancel_Click(object sender, EventArgs e)
