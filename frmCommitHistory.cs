@@ -58,53 +58,6 @@ namespace PaJaMa.GitStudio
 			gridCommits.DataSource = commits;
 		}
 
-		private void gridMain_DoubleClick(object sender, EventArgs e)
-		{
-			btnCompare_Click(sender, e);
-		}
-
-		private void btnCompare_Click(object sender, EventArgs e)
-		{
-			var selectedRow = gridDetails.SelectedRows.OfType<DataGridViewRow>().FirstOrDefault();
-			if (selectedRow == null)
-			{
-				txtDifferences.Text = string.Empty;
-				return;
-			}
-
-			var selectedRows = gridCommits.SelectedRows.OfType<DataGridViewRow>();
-			if (selectedRows.Count() < 1)
-			{
-				txtDifferences.Text = string.Empty;
-				return;
-			}
-
-			var toRow = selectedRows.First();
-			DataGridViewRow fromRow = null;
-			if (selectedRows.Count() > 1)
-			{
-				fromRow = selectedRows.Last();
-			}
-			else
-			{
-				var rowIndex = gridCommits.Rows.IndexOf(toRow);
-				if (rowIndex >= gridCommits.Rows.Count) return;
-				fromRow = gridCommits.Rows[rowIndex];
-			}
-
-			string error = string.Empty;
-			var content1 = Helper.RunCommand("--no-pager show " + (fromRow.DataBoundItem as Commit).CommitID + ":" + selectedRow.Cells["File"].Value.ToString(), ref error);
-			var content2 = Helper.RunCommand("--no-pager show " + (toRow.DataBoundItem as Commit).CommitID + ":" + selectedRow.Cells["File"].Value.ToString(), ref error);
-
-			var tmpDir = Path.Combine(Path.GetTempPath(), "GitStudio");
-			if (!Directory.Exists(tmpDir)) Directory.CreateDirectory(tmpDir);
-			var tmpFile1 = Path.Combine(tmpDir, Guid.NewGuid() + ".tmp");
-			var tmpFile2 = Path.Combine(tmpDir, Guid.NewGuid() + ".tmp");
-			File.WriteAllLines(tmpFile1, content1);
-			File.WriteAllLines(tmpFile2, content2);
-			Process.Start("WinMerge", tmpFile1 + " " + tmpFile2);
-		}
-
 		private void gridCommits_SelectionChanged(object sender, EventArgs e)
 		{
 			var selectedRows = gridCommits.SelectedRows.OfType<DataGridViewRow>();
@@ -169,16 +122,68 @@ namespace PaJaMa.GitStudio
 				return;
 			}
 
+			var toRow = selectedRows.First();
+			DataGridViewRow fromRow = null;
+			if (selectedRows.Count() > 1)
+			{
+				fromRow = selectedRows.Last();
+			}
+			else
+			{
+				var rowIndex = gridCommits.Rows.IndexOf(toRow);
+				if (rowIndex + 1 >= gridCommits.Rows.Count) return;
+				fromRow = gridCommits.Rows[rowIndex + 1];
+			}
+
 			string error = string.Empty;
 			var diffs = Helper.RunCommand("--no-pager diff " +
-				(selectedRows.Count() == 2 ? (selectedRows.Last().DataBoundItem as Commit).CommitID + " " : "") +
-					(selectedRows.First().DataBoundItem as Commit).CommitID + " -- " + selectedRow.Cells["File"].Value.ToString(), ref error);
+				(selectedRows.Count() == 2 ? (toRow.DataBoundItem as Commit).CommitID + " " : "") +
+					(fromRow.DataBoundItem as Commit).CommitID + " -- " + selectedRow.Cells["File"].Value.ToString(), ref error);
 			txtDifferences.Text = string.Join("\r\n", diffs);
 		}
 
 		private void gridDetails_DoubleClick(object sender, EventArgs e)
 		{
-			btnCompare_Click(sender, e);
+			externalCompareToolStripMenuItem_Click(sender, e);
+		}
+
+		private void externalCompareToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+			foreach (var selectedRow in gridDetails.SelectedRows.OfType<DataGridViewRow>())
+			{
+				if (selectedRow.Cells["Action"].Value.ToString() != "Modify") continue;
+				var selectedRows = gridCommits.SelectedRows.OfType<DataGridViewRow>();
+				if (selectedRows.Count() < 1)
+				{
+					txtDifferences.Text = string.Empty;
+					return;
+				}
+
+				var toRow = selectedRows.First();
+				DataGridViewRow fromRow = null;
+				if (selectedRows.Count() > 1)
+				{
+					fromRow = selectedRows.Last();
+				}
+				else
+				{
+					var rowIndex = gridCommits.Rows.IndexOf(toRow);
+					if (rowIndex + 1 >= gridCommits.Rows.Count) return;
+					fromRow = gridCommits.Rows[rowIndex + 1];
+				}
+
+				string error = string.Empty;
+				var content1 = Helper.RunCommand("--no-pager show " + (fromRow.DataBoundItem as Commit).CommitID + ":" + selectedRow.Cells["File"].Value.ToString(), ref error);
+				var content2 = Helper.RunCommand("--no-pager show " + (toRow.DataBoundItem as Commit).CommitID + ":" + selectedRow.Cells["File"].Value.ToString(), ref error);
+
+				var tmpDir = Path.Combine(Path.GetTempPath(), "GitStudio");
+				if (!Directory.Exists(tmpDir)) Directory.CreateDirectory(tmpDir);
+				var tmpFile1 = Path.Combine(tmpDir, Guid.NewGuid() + ".tmp");
+				var tmpFile2 = Path.Combine(tmpDir, Guid.NewGuid() + ".tmp");
+				File.WriteAllLines(tmpFile1, content1);
+				File.WriteAllLines(tmpFile2, content2);
+				Process.Start("WinMerge", tmpFile1 + " " + tmpFile2);
+			}
 		}
 	}
 

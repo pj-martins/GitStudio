@@ -56,23 +56,7 @@ namespace PaJaMa.GitStudio
 
 		private void gridMain_DoubleClick(object sender, EventArgs e)
 		{
-			btnCompare_Click(sender, e);
-		}
-
-		private void btnCompare_Click(object sender, EventArgs e)
-		{
-			var selectedRow = gridMain.SelectedRows.OfType<DataGridViewRow>().FirstOrDefault();
-			string error = string.Empty;
-			var content1 = Helper.RunCommand("--no-pager show " + FromBranch.BranchName + ":" + selectedRow.Cells["File"].Value.ToString(), ref error);
-			var content2 = Helper.RunCommand("--no-pager show " + ToBranch.BranchName + ":" + selectedRow.Cells["File"].Value.ToString(), ref error);
-			
-			var tmpDir = Path.Combine(Path.GetTempPath(), "GitStudio");
-			if (!Directory.Exists(tmpDir)) Directory.CreateDirectory(tmpDir);
-			var tmpFile1 = Path.Combine(tmpDir, Guid.NewGuid() + ".tmp");
-			var tmpFile2 = Path.Combine(tmpDir, Guid.NewGuid() + ".tmp");
-			File.WriteAllLines(tmpFile1, content1);
-			File.WriteAllLines(tmpFile2, content2);
-			Process.Start("WinMerge", tmpFile1 + " " + tmpFile2);
+			externalCompareToolStripMenuItem_Click(sender, e);
 		}
 
 		private void gridMain_SelectionChanged(object sender, EventArgs e)
@@ -80,15 +64,31 @@ namespace PaJaMa.GitStudio
 			var selectedRow = gridMain.SelectedRows.OfType<DataGridViewRow>().FirstOrDefault();
 			if (selectedRow == null)
 			{
-				btnCompare.Enabled = false;
 				txtDifferences.Text = string.Empty;
 				return;
 			}
-
-			btnCompare.Enabled = selectedRow.Cells["Action"].Value.ToString() == "Modify";
 			string error = string.Empty;
 			var diffs = Helper.RunCommand("--no-pager diff " + FromBranch.BranchName + " " + ToBranch.BranchName + " -- " + selectedRow.Cells["File"].Value.ToString(), ref error);
 			txtDifferences.Text = string.Join("\r\n", diffs);
+		}
+
+		private void externalCompareToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+			foreach (var selectedRow in gridMain.SelectedRows.OfType<DataGridViewRow>())
+			{
+				if (selectedRow.Cells["Action"].Value.ToString() != "Modify") continue;
+				string error = string.Empty;
+				var content1 = Helper.RunCommand("--no-pager show " + FromBranch.BranchName + ":" + selectedRow.Cells["File"].Value.ToString(), ref error);
+				var content2 = Helper.RunCommand("--no-pager show " + ToBranch.BranchName + ":" + selectedRow.Cells["File"].Value.ToString(), ref error);
+
+				var tmpDir = Path.Combine(Path.GetTempPath(), "GitStudio");
+				if (!Directory.Exists(tmpDir)) Directory.CreateDirectory(tmpDir);
+				var tmpFile1 = Path.Combine(tmpDir, Guid.NewGuid() + ".tmp");
+				var tmpFile2 = Path.Combine(tmpDir, Guid.NewGuid() + ".tmp");
+				File.WriteAllLines(tmpFile1, content1);
+				File.WriteAllLines(tmpFile2, content2);
+				Process.Start("WinMerge", tmpFile1 + " " + tmpFile2);
+			}
 		}
 	}
 }

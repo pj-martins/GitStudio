@@ -28,15 +28,15 @@
 		/// </summary>
 		private void InitializeComponent()
 		{
+			this.components = new System.ComponentModel.Container();
 			this.gridCommits = new System.Windows.Forms.DataGridView();
-			this.panel2 = new System.Windows.Forms.Panel();
-			this.btnCompare = new System.Windows.Forms.Button();
 			this.splitContainer1 = new System.Windows.Forms.SplitContainer();
 			this.splitContainer2 = new System.Windows.Forms.SplitContainer();
 			this.gridDetails = new System.Windows.Forms.DataGridView();
 			this.txtDifferences = new System.Windows.Forms.TextBox();
+			this.mnuDetails = new System.Windows.Forms.ContextMenuStrip(this.components);
+			this.externalCompareToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			((System.ComponentModel.ISupportInitialize)(this.gridCommits)).BeginInit();
-			this.panel2.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
 			this.splitContainer1.Panel1.SuspendLayout();
 			this.splitContainer1.Panel2.SuspendLayout();
@@ -46,6 +46,7 @@
 			this.splitContainer2.Panel2.SuspendLayout();
 			this.splitContainer2.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.gridDetails)).BeginInit();
+			this.mnuDetails.SuspendLayout();
 			this.SuspendLayout();
 			// 
 			// gridCommits
@@ -59,29 +60,9 @@
 			this.gridCommits.Name = "gridCommits";
 			this.gridCommits.ReadOnly = true;
 			this.gridCommits.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-			this.gridCommits.Size = new System.Drawing.Size(437, 609);
+			this.gridCommits.Size = new System.Drawing.Size(437, 640);
 			this.gridCommits.TabIndex = 0;
 			this.gridCommits.SelectionChanged += new System.EventHandler(this.gridCommits_SelectionChanged);
-			// 
-			// panel2
-			// 
-			this.panel2.Controls.Add(this.btnCompare);
-			this.panel2.Dock = System.Windows.Forms.DockStyle.Bottom;
-			this.panel2.Location = new System.Drawing.Point(0, 609);
-			this.panel2.Name = "panel2";
-			this.panel2.Size = new System.Drawing.Size(1060, 31);
-			this.panel2.TabIndex = 2;
-			// 
-			// btnCompare
-			// 
-			this.btnCompare.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-			this.btnCompare.Location = new System.Drawing.Point(908, 5);
-			this.btnCompare.Name = "btnCompare";
-			this.btnCompare.Size = new System.Drawing.Size(149, 23);
-			this.btnCompare.TabIndex = 0;
-			this.btnCompare.Text = "External Compare";
-			this.btnCompare.UseVisualStyleBackColor = true;
-			this.btnCompare.Click += new System.EventHandler(this.btnCompare_Click);
 			// 
 			// splitContainer1
 			// 
@@ -96,7 +77,7 @@
 			// splitContainer1.Panel2
 			// 
 			this.splitContainer1.Panel2.Controls.Add(this.txtDifferences);
-			this.splitContainer1.Size = new System.Drawing.Size(1060, 609);
+			this.splitContainer1.Size = new System.Drawing.Size(1060, 640);
 			this.splitContainer1.SplitterDistance = 727;
 			this.splitContainer1.TabIndex = 3;
 			// 
@@ -113,7 +94,7 @@
 			// splitContainer2.Panel2
 			// 
 			this.splitContainer2.Panel2.Controls.Add(this.gridDetails);
-			this.splitContainer2.Size = new System.Drawing.Size(727, 609);
+			this.splitContainer2.Size = new System.Drawing.Size(727, 640);
 			this.splitContainer2.SplitterDistance = 437;
 			this.splitContainer2.TabIndex = 4;
 			// 
@@ -123,12 +104,13 @@
 			this.gridDetails.AllowUserToDeleteRows = false;
 			this.gridDetails.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.AllCells;
 			this.gridDetails.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+			this.gridDetails.ContextMenuStrip = this.mnuDetails;
 			this.gridDetails.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.gridDetails.Location = new System.Drawing.Point(0, 0);
 			this.gridDetails.Name = "gridDetails";
 			this.gridDetails.ReadOnly = true;
 			this.gridDetails.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-			this.gridDetails.Size = new System.Drawing.Size(286, 609);
+			this.gridDetails.Size = new System.Drawing.Size(286, 640);
 			this.gridDetails.TabIndex = 1;
 			this.gridDetails.SelectionChanged += new System.EventHandler(this.gridDetails_SelectionChanged);
 			this.gridDetails.DoubleClick += new System.EventHandler(this.gridDetails_DoubleClick);
@@ -140,8 +122,22 @@
 			this.txtDifferences.Multiline = true;
 			this.txtDifferences.Name = "txtDifferences";
 			this.txtDifferences.ReadOnly = true;
-			this.txtDifferences.Size = new System.Drawing.Size(329, 609);
+			this.txtDifferences.Size = new System.Drawing.Size(329, 640);
 			this.txtDifferences.TabIndex = 0;
+			// 
+			// mnuDetails
+			// 
+			this.mnuDetails.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.externalCompareToolStripMenuItem});
+			this.mnuDetails.Name = "mnuDetails";
+			this.mnuDetails.Size = new System.Drawing.Size(168, 26);
+			// 
+			// externalCompareToolStripMenuItem
+			// 
+			this.externalCompareToolStripMenuItem.Name = "externalCompareToolStripMenuItem";
+			this.externalCompareToolStripMenuItem.Size = new System.Drawing.Size(167, 22);
+			this.externalCompareToolStripMenuItem.Text = "&External Compare";
+			this.externalCompareToolStripMenuItem.Click += new System.EventHandler(this.externalCompareToolStripMenuItem_Click);
 			// 
 			// frmCommitHistory
 			// 
@@ -149,14 +145,12 @@
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.ClientSize = new System.Drawing.Size(1060, 640);
 			this.Controls.Add(this.splitContainer1);
-			this.Controls.Add(this.panel2);
 			this.Name = "frmCommitHistory";
 			this.ShowIcon = false;
 			this.Text = "Commit History";
 			this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.frmCompareBranches_FormClosing);
 			this.Load += new System.EventHandler(this.frmCompareBranches_Load);
 			((System.ComponentModel.ISupportInitialize)(this.gridCommits)).EndInit();
-			this.panel2.ResumeLayout(false);
 			this.splitContainer1.Panel1.ResumeLayout(false);
 			this.splitContainer1.Panel2.ResumeLayout(false);
 			this.splitContainer1.Panel2.PerformLayout();
@@ -167,6 +161,7 @@
 			((System.ComponentModel.ISupportInitialize)(this.splitContainer2)).EndInit();
 			this.splitContainer2.ResumeLayout(false);
 			((System.ComponentModel.ISupportInitialize)(this.gridDetails)).EndInit();
+			this.mnuDetails.ResumeLayout(false);
 			this.ResumeLayout(false);
 
 		}
@@ -174,11 +169,11 @@
 		#endregion
 
 		private System.Windows.Forms.DataGridView gridCommits;
-		private System.Windows.Forms.Panel panel2;
-		private System.Windows.Forms.Button btnCompare;
 		private System.Windows.Forms.SplitContainer splitContainer1;
 		private System.Windows.Forms.TextBox txtDifferences;
 		private System.Windows.Forms.SplitContainer splitContainer2;
 		private System.Windows.Forms.DataGridView gridDetails;
+		private System.Windows.Forms.ContextMenuStrip mnuDetails;
+		private System.Windows.Forms.ToolStripMenuItem externalCompareToolStripMenuItem;
 	}
 }

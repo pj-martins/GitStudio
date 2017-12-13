@@ -28,19 +28,22 @@
 		/// </summary>
 		private void InitializeComponent()
 		{
+			this.components = new System.ComponentModel.Container();
 			this.gridMain = new System.Windows.Forms.DataGridView();
 			this.panel2 = new System.Windows.Forms.Panel();
-			this.btnCompare = new System.Windows.Forms.Button();
-			this.btnSwitch = new System.Windows.Forms.Button();
 			this.lblDirection = new System.Windows.Forms.Label();
+			this.btnSwitch = new System.Windows.Forms.Button();
 			this.splitContainer1 = new System.Windows.Forms.SplitContainer();
 			this.txtDifferences = new System.Windows.Forms.TextBox();
+			this.mnuGrid = new System.Windows.Forms.ContextMenuStrip(this.components);
+			this.externalCompareToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			((System.ComponentModel.ISupportInitialize)(this.gridMain)).BeginInit();
 			this.panel2.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
 			this.splitContainer1.Panel1.SuspendLayout();
 			this.splitContainer1.Panel2.SuspendLayout();
 			this.splitContainer1.SuspendLayout();
+			this.mnuGrid.SuspendLayout();
 			this.SuspendLayout();
 			// 
 			// gridMain
@@ -49,6 +52,7 @@
 			this.gridMain.AllowUserToDeleteRows = false;
 			this.gridMain.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.AllCells;
 			this.gridMain.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+			this.gridMain.ContextMenuStrip = this.mnuGrid;
 			this.gridMain.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.gridMain.Location = new System.Drawing.Point(0, 0);
 			this.gridMain.Name = "gridMain";
@@ -63,34 +67,11 @@
 			// 
 			this.panel2.Controls.Add(this.lblDirection);
 			this.panel2.Controls.Add(this.btnSwitch);
-			this.panel2.Controls.Add(this.btnCompare);
 			this.panel2.Dock = System.Windows.Forms.DockStyle.Bottom;
 			this.panel2.Location = new System.Drawing.Point(0, 505);
 			this.panel2.Name = "panel2";
 			this.panel2.Size = new System.Drawing.Size(740, 31);
 			this.panel2.TabIndex = 2;
-			// 
-			// btnCompare
-			// 
-			this.btnCompare.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-			this.btnCompare.Location = new System.Drawing.Point(588, 5);
-			this.btnCompare.Name = "btnCompare";
-			this.btnCompare.Size = new System.Drawing.Size(149, 23);
-			this.btnCompare.TabIndex = 0;
-			this.btnCompare.Text = "External Compare";
-			this.btnCompare.UseVisualStyleBackColor = true;
-			this.btnCompare.Click += new System.EventHandler(this.btnCompare_Click);
-			// 
-			// btnSwitch
-			// 
-			this.btnSwitch.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-			this.btnSwitch.Location = new System.Drawing.Point(507, 5);
-			this.btnSwitch.Name = "btnSwitch";
-			this.btnSwitch.Size = new System.Drawing.Size(75, 23);
-			this.btnSwitch.TabIndex = 1;
-			this.btnSwitch.Text = "Switch";
-			this.btnSwitch.UseVisualStyleBackColor = true;
-			this.btnSwitch.Click += new System.EventHandler(this.btnSwitch_Click);
 			// 
 			// lblDirection
 			// 
@@ -100,6 +81,17 @@
 			this.lblDirection.Size = new System.Drawing.Size(35, 13);
 			this.lblDirection.TabIndex = 2;
 			this.lblDirection.Text = "label1";
+			// 
+			// btnSwitch
+			// 
+			this.btnSwitch.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+			this.btnSwitch.Location = new System.Drawing.Point(662, 3);
+			this.btnSwitch.Name = "btnSwitch";
+			this.btnSwitch.Size = new System.Drawing.Size(75, 23);
+			this.btnSwitch.TabIndex = 1;
+			this.btnSwitch.Text = "Switch";
+			this.btnSwitch.UseVisualStyleBackColor = true;
+			this.btnSwitch.Click += new System.EventHandler(this.btnSwitch_Click);
 			// 
 			// splitContainer1
 			// 
@@ -128,6 +120,20 @@
 			this.txtDifferences.Size = new System.Drawing.Size(363, 505);
 			this.txtDifferences.TabIndex = 0;
 			// 
+			// mnuGrid
+			// 
+			this.mnuGrid.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.externalCompareToolStripMenuItem});
+			this.mnuGrid.Name = "mnuDetails";
+			this.mnuGrid.Size = new System.Drawing.Size(168, 48);
+			// 
+			// externalCompareToolStripMenuItem
+			// 
+			this.externalCompareToolStripMenuItem.Name = "externalCompareToolStripMenuItem";
+			this.externalCompareToolStripMenuItem.Size = new System.Drawing.Size(167, 22);
+			this.externalCompareToolStripMenuItem.Text = "&External Compare";
+			this.externalCompareToolStripMenuItem.Click += new System.EventHandler(this.externalCompareToolStripMenuItem_Click);
+			// 
 			// frmCompareBranches
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -148,6 +154,7 @@
 			this.splitContainer1.Panel2.PerformLayout();
 			((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
 			this.splitContainer1.ResumeLayout(false);
+			this.mnuGrid.ResumeLayout(false);
 			this.ResumeLayout(false);
 
 		}
@@ -156,10 +163,11 @@
 
 		private System.Windows.Forms.DataGridView gridMain;
 		private System.Windows.Forms.Panel panel2;
-		private System.Windows.Forms.Button btnCompare;
 		private System.Windows.Forms.Button btnSwitch;
 		private System.Windows.Forms.Label lblDirection;
 		private System.Windows.Forms.SplitContainer splitContainer1;
 		private System.Windows.Forms.TextBox txtDifferences;
+		private System.Windows.Forms.ContextMenuStrip mnuGrid;
+		private System.Windows.Forms.ToolStripMenuItem externalCompareToolStripMenuItem;
 	}
 }

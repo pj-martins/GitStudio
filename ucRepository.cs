@@ -297,16 +297,19 @@ namespace PaJaMa.GitStudio
 		private void viewExternalToolStripMenuItem_Click(object sender, EventArgs e)
 		{
 			var tv = tvUnStaged.Focused ? tvUnStaged : tvStaged;
-			if (tv.SelectedNode == null || tv.SelectedNode.Tag == null) return;
-			var currFile = Path.Combine(Repository.LocalPath, (tv.SelectedNode.Tag as Difference).FileName);
-			var tmpDir = Path.Combine(Path.GetTempPath(), "GitStudio");
-			if (!Directory.Exists(tmpDir)) Directory.CreateDirectory(tmpDir);
-			var tmpFile = Path.Combine(tmpDir, Guid.NewGuid() + ".tmp");
-			string error = string.Empty;
-			var oldContent = _helper.RunCommand("--no-pager show " + _currentBranch + ":\"" + (tv.SelectedNode.Tag as Difference).FileName + "\"", ref error);
-			if (!string.IsNullOrEmpty(error)) return;
-			File.WriteAllLines(tmpFile, oldContent);
-			Process.Start("WinMerge", currFile + " " + tmpFile);
+			foreach (var node in tv.GetSelectedFlattenedNodes())
+			{
+				if (node.Tag == null) return;
+				var currFile = Path.Combine(Repository.LocalPath, (node.Tag as Difference).FileName);
+				var tmpDir = Path.Combine(Path.GetTempPath(), "GitStudio");
+				if (!Directory.Exists(tmpDir)) Directory.CreateDirectory(tmpDir);
+				var tmpFile = Path.Combine(tmpDir, Guid.NewGuid() + ".tmp");
+				string error = string.Empty;
+				var oldContent = _helper.RunCommand("--no-pager show " + _currentBranch + ":\"" + (node.Tag as Difference).FileName + "\"", ref error);
+				if (!string.IsNullOrEmpty(error)) return;
+				File.WriteAllLines(tmpFile, oldContent);
+				Process.Start("WinMerge", currFile + " " + tmpFile);
+			}
 		}
 
 		private void pullToolStripMenuItem_Click(object sender, EventArgs e)
@@ -669,6 +672,11 @@ namespace PaJaMa.GitStudio
 		private void tvLocalBranches_DoubleClick(object sender, EventArgs e)
 		{
 			checkoutToolStripMenuItem_Click(sender, e);
+		}
+
+		private void tv_DoubleClick(object sender, EventArgs e)
+		{
+			viewExternalToolStripMenuItem_Click(sender, e);
 		}
 	}
 }
