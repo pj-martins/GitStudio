@@ -146,6 +146,12 @@ namespace PaJaMa.GitStudio
 
 		private void externalCompareToolStripMenuItem_Click(object sender, EventArgs e)
 		{
+			var settings = Common.SettingsHelper.GetUserSettings<GitUserSettings>();
+			if (string.IsNullOrEmpty(settings.ExternalDiffApplication))
+			{
+				MessageBox.Show("No external diff application has been setup!");
+				return;
+			}
 			foreach (var selectedRow in gridDetails.SelectedRows.OfType<DataGridViewRow>())
 			{
 				if (selectedRow.Cells["Action"].Value.ToString() != "Modify") continue;
@@ -178,7 +184,7 @@ namespace PaJaMa.GitStudio
 				var tmpFile2 = Path.Combine(tmpDir, Guid.NewGuid() + ".tmp");
 				File.WriteAllLines(tmpFile1, content1);
 				File.WriteAllLines(tmpFile2, content2);
-				Process.Start("WinMerge", tmpFile1 + " " + tmpFile2);
+				Process.Start(settings.ExternalDiffApplication, string.Format(settings.ExternalDiffArgumentsFormat, tmpFile1, tmpFile2));
 			}
 		}
 	}

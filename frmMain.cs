@@ -149,5 +149,10 @@ namespace PaJaMa.GitStudio
 			tabMain.TabPages.Remove(tab);
 			SettingsHelper.SaveUserSettings<GitUserSettings>(settings);
 		}
+
+		private void setupToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+			new frmSetup().ShowDialog();
+		}
 	}
 }

@@ -367,7 +367,6 @@
 			this.tvUnStaged.AfterCollapse += new System.Windows.Forms.TreeViewEventHandler(this.tv_AfterCollapse);
 			this.tvUnStaged.AfterExpand += new System.Windows.Forms.TreeViewEventHandler(this.tv_AfterExpand);
 			this.tvUnStaged.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.tv_AfterSelect);
-			this.tvUnStaged.NodeMouseDoubleClick += new System.Windows.Forms.TreeNodeMouseClickEventHandler(this.tv_NodeMouseDoubleClick);
 			this.tvUnStaged.DragDrop += new System.Windows.Forms.DragEventHandler(this.tv_DragDrop);
 			this.tvUnStaged.DragEnter += new System.Windows.Forms.DragEventHandler(this.tv_DragEnter);
 			this.tvUnStaged.DoubleClick += new System.EventHandler(this.tv_DoubleClick);
@@ -462,7 +461,6 @@
 			this.tvStaged.AfterCheck += new System.Windows.Forms.TreeViewEventHandler(this.tv_AfterCheck);
 			this.tvStaged.AfterCollapse += new System.Windows.Forms.TreeViewEventHandler(this.tv_AfterCollapse);
 			this.tvStaged.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.tv_AfterSelect);
-			this.tvStaged.NodeMouseDoubleClick += new System.Windows.Forms.TreeNodeMouseClickEventHandler(this.tv_NodeMouseDoubleClick);
 			this.tvStaged.DragDrop += new System.Windows.Forms.DragEventHandler(this.tv_DragDrop);
 			this.tvStaged.DragEnter += new System.Windows.Forms.DragEventHandler(this.tv_DragEnter);
 			this.tvStaged.DoubleClick += new System.EventHandler(this.tv_DoubleClick);

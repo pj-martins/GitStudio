@@ -13,10 +13,13 @@ namespace PaJaMa.GitStudio
 		public List<GitRepository> Repositories { get; set; }
 		public string FocusedRepository { get; set; }
         public string LastBrowsedFolder { get; set; }
+		public string ExternalDiffApplication { get; set; }
+		public string ExternalDiffArgumentsFormat { get; set; }
 
         public GitUserSettings()
 		{
 			Repositories = new List<GitRepository>();
+			ExternalDiffArgumentsFormat = "{0} {1}";
 		}
 	}
 

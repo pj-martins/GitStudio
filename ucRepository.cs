@@ -301,6 +301,13 @@ namespace PaJaMa.GitStudio
 
 		private void viewExternalToolStripMenuItem_Click(object sender, EventArgs e)
 		{
+			var settings = Common.SettingsHelper.GetUserSettings<GitUserSettings>();
+			if (string.IsNullOrEmpty(settings.ExternalDiffApplication))
+			{
+				MessageBox.Show("No external diff application has been setup!");
+				return;
+			}
+
 			var tv = tvUnStaged.Focused ? tvUnStaged : tvStaged;
 			foreach (var node in tv.GetSelectedFlattenedNodes())
 			{
@@ -313,7 +320,7 @@ namespace PaJaMa.GitStudio
 				var oldContent = _helper.RunCommand("--no-pager show " + _currentBranch + ":\"" + (node.Tag as Difference).FileName + "\"", ref error);
 				if (error) return;
 				File.WriteAllLines(tmpFile, oldContent);
-				Process.Start("WinMerge", currFile + " " + tmpFile);
+				Process.Start(settings.ExternalDiffApplication, string.Format(settings.ExternalDiffArgumentsFormat, currFile, tmpFile));
 			}
 		}
 
@@ -622,11 +629,6 @@ namespace PaJaMa.GitStudio
 		{
 			_inited = false;
 			Init();
-		}
-
-		private void tv_NodeMouseDoubleClick(object sender, TreeNodeMouseClickEventArgs e)
-		{
-			viewExternalToolStripMenuItem_Click(sender, e);
 		}
 
 		private void compareToolStripMenuItem_Click(object sender, EventArgs e)
