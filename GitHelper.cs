@@ -39,8 +39,7 @@ namespace PaJaMa.GitStudio
 			var errorLines = new List<string>();
 			while ((line = p.StandardError.ReadLine()) != null)
 			{
-				if (!line.Contains("Switched to a new branch"))
-					errorLines.Add(line);
+				errorLines.Add(line);
 			}
 			p.WaitForExit();
 			if (errorLines.Count > 0)
