@@ -45,7 +45,7 @@ namespace PaJaMa.GitStudio
 					+ (chkTrack.Checked ? " --track " : " --no-track ") + txtFrom.Text);
 			//if (lines.Any(l => !l.StartsWith("Switched to")))
 			//{
-				MessageBox.Show(string.Join("\r\n", lines));
+			if (lines.Any()) MessageBox.Show(string.Join("\r\n", lines));
 			//	return;
 			//}
 			this.DialogResult = DialogResult.OK;
