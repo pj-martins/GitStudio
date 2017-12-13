@@ -41,12 +41,32 @@ namespace PaJaMa.GitStudio
 
 			var settings = SettingsHelper.GetUserSettings<GitUserSettings>();
 			TabPage selectedTab = null;
+			List<GitRepository> missing = new List<GitRepository>();
 			foreach (var repo in settings.Repositories)
 			{
+				if (!Directory.Exists(repo.LocalPath))
+				{
+					missing.Add(repo);
+					continue;
+				}
 				var tab = createRepository(repo);
 				if (tab.Text == settings.FocusedRepository)
 					selectedTab = tab;
 			}
+			if (missing.Any())
+			{
+				var result = MessageBox.Show("The following repositories are missing:\r\n" +
+					string.Join("\r\n", missing.Select(m => m.LocalPath)) + "\r\n\r\nWould you like to remove them?", "Error!", MessageBoxButtons.YesNo);
+				if (result == DialogResult.Yes)
+				{
+					foreach (var m in missing)
+					{
+						settings.Repositories.Remove(m);
+					}
+					SettingsHelper.SaveUserSettings<GitUserSettings>(settings);
+				}
+			}
+
 			if (selectedTab != null)
 				tabMain.SelectedTab = selectedTab;
 			if (tabMain.SelectedTab != null)
