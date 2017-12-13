@@ -14,6 +14,7 @@ namespace PaJaMa.GitStudio
 		[STAThread]
 		static void Main()
 		{
+			// TEST
 			Application.EnableVisualStyles();
 			Application.SetCompatibleTextRenderingDefault(false);
 			Application.Run(new frmMain());
