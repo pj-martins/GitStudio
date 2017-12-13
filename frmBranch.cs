@@ -43,11 +43,11 @@ namespace PaJaMa.GitStudio
 			else
 				lines = new GitHelper(Repository.LocalPath).RunCommand((chkCheckout.Checked ? "checkout -b " : "branch ") + txtTo.Text
 					+ (chkTrack.Checked ? " --track " : " --no-track ") + txtFrom.Text);
-			if (lines.Any(l => !l.StartsWith("Switched to")))
-			{
+			//if (lines.Any(l => !l.StartsWith("Switched to")))
+			//{
 				MessageBox.Show(string.Join("\r\n", lines));
-				return;
-			}
+			//	return;
+			//}
 			this.DialogResult = DialogResult.OK;
 			this.Close();
 		}
