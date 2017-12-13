@@ -120,6 +120,7 @@ namespace PaJaMa.GitStudio
 
 		private void checkoutToolStripMenuItem_Click(object sender, EventArgs e)
 		{
+			if (tvLocalBranches.SelectedNode == null || tvLocalBranches.SelectedNode.Tag == null) return;
 			string error = string.Empty;
 			_helper.RunCommand("checkout " + tvLocalBranches.SelectedNode.Tag.ToString(), ref error);
 			refreshBranches();
@@ -288,7 +289,8 @@ namespace PaJaMa.GitStudio
 			}
 			tvUnStaged.EndUpdate();
 			tvStaged.EndUpdate();
-			btnCommit.Enabled = true; // tvStaged.Nodes.Count > 0;
+			btnCommit.Enabled = true; // TODO: tvStaged.Nodes.Count > 0;
+			btnStash.Enabled = true; // TODO: conditional
 			_lockCheck = false;
 		}
 
@@ -482,6 +484,16 @@ namespace PaJaMa.GitStudio
 			timDiff_Tick(this, new EventArgs());
 		}
 
+		private void btnStash_Click(object sender, EventArgs e)
+		{
+			var frm = new frmStash();
+			frm.Repository = _repository;
+			frm.ShowDialog();
+			refreshBranches();
+			_previousDifferences = null;
+			timDiff_Tick(this, new EventArgs());
+		}
+
 		private void mergeFromLocalToolStripMenuItem_Click(object sender, EventArgs e)
 		{
 			var branch = tvLocalBranches.SelectedNode.Tag as LocalBranch;
@@ -640,6 +652,23 @@ namespace PaJaMa.GitStudio
 		{
 			var flattened = tv.GetSelectedFlattenedNodes();
 			return flattened.Where(f => f.Tag is TTagType).Select(f => (TTagType)f.Tag).ToList();
+		}
+
+		private void btnViewStashes_Click(object sender, EventArgs e)
+		{
+			var frm = new frmStashes();
+			frm.Helper = _helper;
+			frm.Repository = Repository;
+			frm.BranchCreated += (sender2, e2) =>
+			{
+				this.refreshBranches();
+			};
+			frm.Show();
+		}
+
+		private void tvLocalBranches_DoubleClick(object sender, EventArgs e)
+		{
+			checkoutToolStripMenuItem_Click(sender, e);
 		}
 	}
 }

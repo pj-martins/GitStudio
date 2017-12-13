@@ -64,6 +64,18 @@
     <Compile Include="frmClone.Designer.cs">
       <DependentUpon>frmClone.cs</DependentUpon>
     </Compile>
+    <Compile Include="frmStashes.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="frmStashes.Designer.cs">
+      <DependentUpon>frmStashes.cs</DependentUpon>
+    </Compile>
+    <Compile Include="frmStash.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="frmStash.Designer.cs">
+      <DependentUpon>frmStash.cs</DependentUpon>
+    </Compile>
     <Compile Include="frmCommitHistory.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -115,6 +127,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="frmClone.resx">
       <DependentUpon>frmClone.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="frmStashes.resx">
+      <DependentUpon>frmStashes.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="frmStash.resx">
+      <DependentUpon>frmStash.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="frmCommitHistory.resx">
       <DependentUpon>frmCommitHistory.cs</DependentUpon>
