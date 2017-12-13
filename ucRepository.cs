@@ -154,8 +154,10 @@ namespace PaJaMa.GitStudio
 
 		private void enableDisableCompare()
 		{
+			var tv = tvLocalBranches.Focused ? tvLocalBranches : tvRemoteBranches;
 			compareToolStripMenuItem.Enabled = compareToolStripMenuItem1.Enabled =
-				tvLocalBranches.SelectedNodes.Count + tvRemoteBranches.SelectedNodes.Count == 2;
+				tvLocalBranches.SelectedNodes.Count + tvRemoteBranches.SelectedNodes.Count == 2 ||
+				tv.SelectedNodes.Count == 2;
 		}
 
 		private void fetchToolStripMenuItem_Click(object sender, EventArgs e)
@@ -633,9 +635,20 @@ namespace PaJaMa.GitStudio
 
 		private void compareToolStripMenuItem_Click(object sender, EventArgs e)
 		{
-			var selectedNodes = tvLocalBranches.SelectedNodes.Union(tvRemoteBranches.SelectedNodes);
-			var branch1 = selectedNodes.First().Tag as Branch;
-			var branch2 = selectedNodes.Last().Tag as Branch;
+			var tv = tvLocalBranches.Focused ? tvLocalBranches : tvRemoteBranches;
+			Branch branch1 = null;
+			Branch branch2 = null;
+			if (tv.SelectedNodes.Count == 2)
+			{
+				branch1 = tv.SelectedNodes.First().Tag as Branch;
+				branch2 = tv.SelectedNodes.Last().Tag as Branch;
+			}
+			else
+			{
+				var selectedNodes = tvLocalBranches.SelectedNodes.Union(tvRemoteBranches.SelectedNodes);
+				branch1 = selectedNodes.First().Tag as Branch;
+				branch2 = selectedNodes.Last().Tag as Branch;
+			}
 			var frm = new frmCompareBranches();
 			frm.Helper = _helper;
 			frm.FromBranch = branch1;
