@@ -45,7 +45,7 @@ namespace PaJaMa.GitStudio
 		{
 			if (!_inited)
 			{
-				refreshBranches();
+				refreshBranches(true);
 				_previousDifferences = null;
 				timDiff_Tick(this, new EventArgs());
 				timDiff.Enabled = true;
@@ -53,7 +53,7 @@ namespace PaJaMa.GitStudio
 			}
 		}
 
-		private void refreshBranches()
+		private void refreshBranches(bool initial = false)
 		{
 			var branches = _helper.GetBranches();
 			if (branches.Count < 1) return;
@@ -64,6 +64,7 @@ namespace PaJaMa.GitStudio
 			bool remote = true;
 			while (true)
 			{
+				bool nodeSelected = false;
 				var tv = remote ? tvRemoteBranches : tvLocalBranches;
 				tv.BeginUpdate();
 				tv.Nodes.Clear();
@@ -81,6 +82,12 @@ namespace PaJaMa.GitStudio
 						node = foundNode;
 					}
 					node.Tag = branch;
+					if (!nodeSelected)
+					{
+						tv.SelectedNode = node;
+						tv.SelectedNodes.Add(node);
+						nodeSelected = true;
+					}
 					if (branch == _currentBranch)
 						node.NodeFont = new Font(node.NodeFont ?? tv.Font, FontStyle.Bold);
 
