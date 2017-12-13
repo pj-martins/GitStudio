@@ -46,10 +46,10 @@ namespace PaJaMa.GitStudio
 		private void btnClone_Click(object sender, EventArgs e)
 		{
 			var settings = SettingsHelper.GetUserSettings<GitUserSettings>();
-			string error = string.Empty;
+			bool error = false;
 			new GitHelper(null).RunCommand("clone " + txtURL.Text + " " + txtPath.Text +
 			(string.IsNullOrEmpty(cboBranches.Text) ? "" : " -b " + cboBranches.Text), ref error);
-			if (!string.IsNullOrEmpty(error)) return;
+			if (error) return;
 
 			ClonedRepo = new GitRepository()
 			{

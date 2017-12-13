@@ -67,7 +67,7 @@ namespace PaJaMa.GitStudio
 			if (lines.Length > 0)
 				MessageBox.Show(string.Join("\r\n", lines));
 
-			// if (!string.IsNullOrEmpty(error)) return;
+			// if (error) return;
 			this.DialogResult = DialogResult.OK;
 			this.Close();
 		}

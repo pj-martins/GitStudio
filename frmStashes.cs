@@ -137,9 +137,9 @@ namespace PaJaMa.GitStudio
 				var tmpDir = Path.Combine(Path.GetTempPath(), "GitStudio");
 				if (!Directory.Exists(tmpDir)) Directory.CreateDirectory(tmpDir);
 				var tmpFile = Path.Combine(tmpDir, Guid.NewGuid() + ".tmp");
-				string error = string.Empty;
+				bool error = false;
 				var oldContent = Helper.RunCommand("--no-pager show " + stashID + ":\"" + fileName + "\"", ref error);
-				if (!string.IsNullOrEmpty(error)) return;
+				if (error) return;
 				File.WriteAllLines(tmpFile, oldContent);
 				Process.Start("WinMerge", currFile + " " + tmpFile);
 			}

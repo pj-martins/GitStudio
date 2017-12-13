@@ -18,7 +18,7 @@ namespace PaJaMa.GitStudio
 			this.WorkingDirectory = workingDirectory;
 		}
 
-		private string[] runCommand(string arguments, bool checkForErrors, ref string errors)
+		private string[] runCommand(string arguments, bool checkForErrors, ref bool hasError)
 		{
 			var inf = new ProcessStartInfo("git.exe", arguments);
 			inf.UseShellExecute = false;
@@ -48,20 +48,23 @@ namespace PaJaMa.GitStudio
 				if (!checkForErrors)
 					lines.Add(errorMessage);
 				else
+				{
+					hasError = true;
 					MessageBox.Show(errorMessage);
+				}
 			}
 			return lines.ToArray();
 		}
 
-		public string[] RunCommand(string arguments, ref string errors)
+		public string[] RunCommand(string arguments, ref bool hasError)
 		{
-			return runCommand(arguments, true, ref errors);
+			return runCommand(arguments, true, ref hasError);
 		}
 
 		public string[] RunCommand(string arguments)
 		{
-			string errors = string.Empty;
-			return runCommand(arguments, false, ref errors);
+			bool hasError = false;
+			return runCommand(arguments, false, ref hasError);
 		}
 
 		public List<Branch> GetBranches()
@@ -70,9 +73,9 @@ namespace PaJaMa.GitStudio
 			List<Branch> branches = new List<Branch>();
 			while (true)
 			{
-				string error = string.Empty;
+				bool error = false;
 				var branchLines = RunCommand("branch " + (remote ? "-r" : "-l") + " -vv", ref error);
-				if (!string.IsNullOrEmpty(error)) return new List<Branch>();
+				if (error) return new List<Branch>();
 
 				foreach (var b in branchLines.Select(bl => bl.Trim()))
 				{
@@ -123,9 +126,9 @@ namespace PaJaMa.GitStudio
 
 		public List<Difference> GetDifferences()
 		{
-			string error = string.Empty;
+			bool error = false;
 			var diffLines = RunCommand("status --short", ref error);
-			if (!string.IsNullOrEmpty(error)) return null;
+			if (error) return null;
 
 			var diffs = new List<Difference>();
 

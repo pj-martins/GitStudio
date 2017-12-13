@@ -121,7 +121,8 @@ namespace PaJaMa.GitStudio
 		private void checkoutToolStripMenuItem_Click(object sender, EventArgs e)
 		{
 			if (tvLocalBranches.SelectedNode == null || tvLocalBranches.SelectedNode.Tag == null) return;
-			_helper.RunCommand("checkout " + tvLocalBranches.SelectedNode.Tag.ToString());
+			bool error = false;
+			_helper.RunCommand("checkout " + tvLocalBranches.SelectedNode.Tag.ToString(), ref error);
 			refreshBranches();
 		}
 
@@ -152,9 +153,9 @@ namespace PaJaMa.GitStudio
 
 		private void fetchToolStripMenuItem_Click(object sender, EventArgs e)
 		{
-			string error = string.Empty;
+			bool error = false;
 			_helper.RunCommand("fetch " + tvRemoteBranches.SelectedNode.Text, ref error);
-			if (!string.IsNullOrEmpty(error)) return;
+			if (error) return;
 			refreshBranches();
 		}
 
@@ -301,9 +302,9 @@ namespace PaJaMa.GitStudio
 				var tmpDir = Path.Combine(Path.GetTempPath(), "GitStudio");
 				if (!Directory.Exists(tmpDir)) Directory.CreateDirectory(tmpDir);
 				var tmpFile = Path.Combine(tmpDir, Guid.NewGuid() + ".tmp");
-				string error = string.Empty;
+				bool error = false;
 				var oldContent = _helper.RunCommand("--no-pager show " + _currentBranch + ":\"" + (node.Tag as Difference).FileName + "\"", ref error);
-				if (!string.IsNullOrEmpty(error)) return;
+				if (error) return;
 				File.WriteAllLines(tmpFile, oldContent);
 				Process.Start("WinMerge", currFile + " " + tmpFile);
 			}
@@ -318,7 +319,7 @@ namespace PaJaMa.GitStudio
 			var lines = _helper.RunCommand("pull origin " + branchName);
 			if (lines.Length > 0)
 				MessageBox.Show(string.Join("\r\n", lines));
-			// if (!string.IsNullOrEmpty(error)) return;
+			// if (error) return;
 			refreshBranches();
 		}
 
@@ -411,7 +412,7 @@ namespace PaJaMa.GitStudio
 
 			var diff = e.Node.Tag as Difference;
 			var diffs = diff == null || diff.DifferenceType != DifferenceType.Modify ? new string[0] : _helper.RunCommand("--no-pager diff " + (diff.IsStaged ? "--cached " : "") + "\"" + diff.FileName + "\"");
-			// if (!string.IsNullOrEmpty(error)) return;
+			// if (error) return;
 			txtDiffText.Text = string.Join("\r\n", diffs);
 		}
 
@@ -500,7 +501,8 @@ namespace PaJaMa.GitStudio
 			if (MessageBox.Show("Are you sure you want to merge " + branch.BranchName + " into " + _currentBranch.BranchName + "?", "Warning!",
 				MessageBoxButtons.YesNo) == DialogResult.Yes)
 			{
-				_helper.RunCommand("merge " + branch.BranchName);
+				bool error = false;
+				_helper.RunCommand("merge " + branch.BranchName, ref error);
 			}
 		}
 
@@ -510,7 +512,8 @@ namespace PaJaMa.GitStudio
 			if (MessageBox.Show("Are you sure you want to merge " + branch.BranchName + " into " + _currentBranch.BranchName + "?", "Warning!",
 				MessageBoxButtons.YesNo) == DialogResult.Yes)
 			{
-				_helper.RunCommand("merge " + branch.BranchName);
+				bool error = false;
+				_helper.RunCommand("merge " + branch.BranchName, ref error);
 			}
 		}
 
@@ -518,7 +521,8 @@ namespace PaJaMa.GitStudio
 		{
 			var tv = tvUnStaged.Focused ? tvUnStaged : tvStaged;
 			var diff = tv.SelectedNode.Tag as Difference;
-			_helper.RunCommand("add " + diff.FileName);
+			bool error = false;
+			_helper.RunCommand("add " + diff.FileName, ref error);
 			_previousDifferences = null;
 			txtDiffText.Text = string.Empty;
 		}

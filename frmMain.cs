@@ -95,10 +95,10 @@ namespace PaJaMa.GitStudio
 			if (dlg.ShowDialog() == DialogResult.OK)
 			{
 				settings.LastBrowsedFolder = dlg.SelectedPath;
-				string error = string.Empty;
+				bool error = false;
 				var helper = new GitHelper(dlg.SelectedPath);
 				var remote = helper.RunCommand("config --get remote.origin.url", ref error).FirstOrDefault();
-				if (!string.IsNullOrEmpty(error)) return;
+				if (error) return;
 				var repo = new GitRepository()
 				{
 					LocalPath = dlg.SelectedPath,
