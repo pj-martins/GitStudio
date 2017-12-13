@@ -84,7 +84,7 @@ namespace PaJaMa.GitStudio
 		{
 			var helper = new GitHelper(Repository.LocalPath);
 			var lines = helper.RunCommand("commit -m \"" + txtMessage.Text + "\"").ToList();
-			if (lines.Any(l => l.Contains("error")))
+			if (lines.Any(l => l.StartsWith("error")))
 			{
 				MessageBox.Show(string.Join("\r\n", lines));
 				return;
