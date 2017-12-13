@@ -319,7 +319,9 @@ namespace PaJaMa.GitStudio
 			var branchName = branch.TracksBranch.BranchName;
 			if (branchName.StartsWith("origin/"))
 				branchName = branchName.Substring(7);
-			_helper.RunCommand("pull origin " + branchName, ref error);
+			var lines = _helper.RunCommand("pull origin " + branchName, ref error);
+			if (lines.Length > 0)
+				MessageBox.Show(string.Join("\r\n", lines));
 			// if (!string.IsNullOrEmpty(error)) return;
 			refreshBranches();
 		}

@@ -84,13 +84,15 @@ namespace PaJaMa.GitStudio
 		{
 			var helper = new GitHelper(Repository.LocalPath);
 			string error = string.Empty;
-			helper.RunCommand("commit -m \"" + txtMessage.Text + "\"", ref error);
+			var lines = helper.RunCommand("commit -m \"" + txtMessage.Text + "\"", ref error).ToList();
 			if (!string.IsNullOrEmpty(error) && error.Contains("error")) return;
 			var branchName = cboRemote.Text;
 			if (branchName.StartsWith("origin/"))
 				branchName = branchName.Substring(7);
 
-			if (chkPush.Checked) helper.RunCommand("push -u origin " + branchName, ref error);
+			if (chkPush.Checked) lines.AddRange(helper.RunCommand("push -u origin " + branchName, ref error));
+			if (lines.Count > 0)
+				MessageBox.Show(string.Join("\r\n", lines));
 			this.DialogResult = DialogResult.OK;
 			this.Close();
 		}

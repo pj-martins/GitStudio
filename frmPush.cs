@@ -64,7 +64,10 @@ namespace PaJaMa.GitStudio
 			if (branchName.StartsWith("origin/"))
 				branchName = branchName.Substring(7);
 
-			helper.RunCommand("push -u origin " + branchName, ref error);
+			var lines = helper.RunCommand("push -u origin " + branchName, ref error);
+			if (lines.Length > 0)
+				MessageBox.Show(string.Join("\r\n", lines));
+
 			// if (!string.IsNullOrEmpty(error)) return;
 			this.DialogResult = DialogResult.OK;
 			this.Close();
