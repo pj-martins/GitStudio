@@ -478,6 +478,7 @@ namespace PaJaMa.GitStudio
 			frm.Repository = _repository;
 			frm.ShowDialog();
 			refreshBranches();
+			txtDiffText.Text = string.Empty;
 			_previousDifferences = null;
 			timDiff_Tick(this, new EventArgs());
 		}
@@ -488,6 +489,7 @@ namespace PaJaMa.GitStudio
 			frm.Repository = _repository;
 			frm.ShowDialog();
 			refreshBranches();
+			txtDiffText.Text = string.Empty;
 			_previousDifferences = null;
 			timDiff_Tick(this, new EventArgs());
 		}
@@ -518,6 +520,7 @@ namespace PaJaMa.GitStudio
 			var diff = tv.SelectedNode.Tag as Difference;
 			_helper.RunCommand("add " + diff.FileName);
 			_previousDifferences = null;
+			txtDiffText.Text = string.Empty;
 		}
 
 		private void stageToolStripMenuItem_Click(object sender, EventArgs e)
