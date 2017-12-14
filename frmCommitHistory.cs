@@ -112,11 +112,13 @@ namespace PaJaMa.GitStudio
 
 			if (commitsToCompare.Item1 != null)
 			{
+				lblCommits.Text = commitsToCompare.Item1.CommitID + " - " + commitsToCompare.Item2.CommitID;
 				diffs = Helper.RunCommand("--no-pager diff --name-status " + commitsToCompare.Item1.CommitID
 					+ " " + commitsToCompare.Item2.CommitID);
 			}
 			else
 			{
+				lblCommits.Text = commitsToCompare.Item2.CommitID;
 				diffs = Helper.RunCommand("--no-pager show --name-status -r " + commitsToCompare.Item2.CommitID);
 			}
 			var details = new Dictionary<string, DifferenceType>();

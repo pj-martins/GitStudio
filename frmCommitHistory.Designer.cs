@@ -35,9 +35,9 @@
 			this.gridDetails = new System.Windows.Forms.DataGridView();
 			this.mnuDetails = new System.Windows.Forms.ContextMenuStrip(this.components);
 			this.externalCompareToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-			this.txtDifferences = new System.Windows.Forms.TextBox();
 			this.panel1 = new System.Windows.Forms.Panel();
-			this.lblBranches = new System.Windows.Forms.Label();
+			this.lblCommits = new System.Windows.Forms.Label();
+			this.txtDifferences = new System.Windows.Forms.TextBox();
 			((System.ComponentModel.ISupportInitialize)(this.gridCommits)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
 			this.splitContainer1.Panel1.SuspendLayout();
@@ -133,6 +133,23 @@
 			this.externalCompareToolStripMenuItem.Text = "&External Compare";
 			this.externalCompareToolStripMenuItem.Click += new System.EventHandler(this.externalCompareToolStripMenuItem_Click);
 			// 
+			// panel1
+			// 
+			this.panel1.Controls.Add(this.lblCommits);
+			this.panel1.Dock = System.Windows.Forms.DockStyle.Top;
+			this.panel1.Location = new System.Drawing.Point(0, 0);
+			this.panel1.Name = "panel1";
+			this.panel1.Size = new System.Drawing.Size(286, 28);
+			this.panel1.TabIndex = 2;
+			// 
+			// lblCommits
+			// 
+			this.lblCommits.AutoSize = true;
+			this.lblCommits.Location = new System.Drawing.Point(3, 9);
+			this.lblCommits.Name = "lblCommits";
+			this.lblCommits.Size = new System.Drawing.Size(0, 13);
+			this.lblCommits.TabIndex = 0;
+			// 
 			// txtDifferences
 			// 
 			this.txtDifferences.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -142,23 +159,6 @@
 			this.txtDifferences.ReadOnly = true;
 			this.txtDifferences.Size = new System.Drawing.Size(329, 640);
 			this.txtDifferences.TabIndex = 0;
-			// 
-			// panel1
-			// 
-			this.panel1.Controls.Add(this.lblBranches);
-			this.panel1.Dock = System.Windows.Forms.DockStyle.Top;
-			this.panel1.Location = new System.Drawing.Point(0, 0);
-			this.panel1.Name = "panel1";
-			this.panel1.Size = new System.Drawing.Size(286, 28);
-			this.panel1.TabIndex = 2;
-			// 
-			// lblBranches
-			// 
-			this.lblBranches.AutoSize = true;
-			this.lblBranches.Location = new System.Drawing.Point(3, 9);
-			this.lblBranches.Name = "lblBranches";
-			this.lblBranches.Size = new System.Drawing.Size(0, 13);
-			this.lblBranches.TabIndex = 0;
 			// 
 			// frmCommitHistory
 			// 
@@ -199,6 +199,6 @@
 		private System.Windows.Forms.ContextMenuStrip mnuDetails;
 		private System.Windows.Forms.ToolStripMenuItem externalCompareToolStripMenuItem;
 		private System.Windows.Forms.Panel panel1;
-		private System.Windows.Forms.Label lblBranches;
+		private System.Windows.Forms.Label lblCommits;
 	}
 }
