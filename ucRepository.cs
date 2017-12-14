@@ -165,6 +165,7 @@ namespace PaJaMa.GitStudio
 			bool error = false;
 			_helper.RunCommand("fetch " + tvRemoteBranches.SelectedNode.Text, ref error);
 			if (error) return;
+			System.Threading.Thread.Sleep(200);
 			refreshBranches();
 		}
 
@@ -416,6 +417,8 @@ namespace PaJaMa.GitStudio
 			var diff = tv.SelectedNode == null ? null : tv.SelectedNode.Tag as Difference;
 			resolveConflictToolStripMenuItem.Enabled = diff != null && diff.IsConflict;
 			viewExternalToolStripMenuItem.Enabled = diff != null && diff.DifferenceType == DifferenceType.Modify;
+			stageAllToolStripMenuItem.Visible = stageToolStripMenuItem.Visible = tvUnStaged.Focused;
+			unstageAllToolStripMenuItem.Visible = unStageToolStripMenuItem.Visible = tvStaged.Focused;
 		}
 
 		private void tv_AfterSelect(object sender, TreeViewEventArgs e)
@@ -614,7 +617,7 @@ namespace PaJaMa.GitStudio
 		{
 			if (e.Data.GetDataPresent(typeof(List<TreeNode>).FullName) && sender != _draggingTreeView)
 			{
-				var items = (sender as MultiSelectTreeView).GetFlattenedNodes(e.Data.GetData(typeof(List<TreeNode>).FullName) as List<TreeNode>)
+				var items = MultiSelectTreeView.GetFlattenedNodes(e.Data.GetData(typeof(List<TreeNode>).FullName) as List<TreeNode>)
 					.Select(n => n.Tag as Difference)
 					.Where(d => d != null);
 				foreach (var selectedItem in items)
@@ -693,6 +696,28 @@ namespace PaJaMa.GitStudio
 		private void tv_DoubleClick(object sender, EventArgs e)
 		{
 			viewExternalToolStripMenuItem_Click(sender, e);
+		}
+
+		private void stageAllToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+			var flattened = MultiSelectTreeView.GetFlattenedNodes(tvUnStaged.Nodes.OfType<TreeNode>());
+			foreach (var flat in flattened.Where(f => f.Tag is Difference).Select(f => f.Tag as Difference))
+			{
+				_helper.RunCommand("add " + flat.FileName);
+			}
+			txtDiffText.Text = string.Empty;
+			timDiff_Tick(this, new EventArgs());
+		}
+
+		private void unstageAllToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+			var flattened = MultiSelectTreeView.GetFlattenedNodes(tvStaged.Nodes.OfType<TreeNode>());
+			foreach (var flat in flattened.Where(f => f.Tag is Difference).Select(f => f.Tag as Difference))
+			{
+				_helper.RunCommand("reset -- " + flat.FileName);
+			}
+			txtDiffText.Text = string.Empty;
+			timDiff_Tick(this, new EventArgs());
 		}
 	}
 }
