@@ -728,5 +728,13 @@ namespace PaJaMa.GitStudio
 			txtDiffText.Text = string.Empty;
 			timDiff_Tick(this, new EventArgs());
 		}
+
+		private void pruneToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+			bool error = false;
+			_helper.RunCommand("remote prune " + tvRemoteBranches.SelectedNode.Text, ref error);
+			// if (error) return;
+			refreshBranches();
+		}
 	}
 }
