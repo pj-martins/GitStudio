@@ -164,8 +164,7 @@ namespace PaJaMa.GitStudio
 		{
 			bool error = false;
 			_helper.RunCommand("fetch " + tvRemoteBranches.SelectedNode.Text, ref error);
-			if (error) return;
-			System.Threading.Thread.Sleep(200);
+			// if (error) return;
 			refreshBranches();
 		}
 
@@ -177,10 +176,13 @@ namespace PaJaMa.GitStudio
 				+ "?", "Warning!",
 				MessageBoxButtons.YesNo) == DialogResult.Yes)
 			{
+				List<string> lines = new List<string>();
 				foreach (var s in selected)
 				{
-					_helper.RunCommand("branch -D " + s.BranchName);
+					lines.AddRange(_helper.RunCommand("branch -D " + s.BranchName));
 				}
+				if (lines.Any())
+					MessageBox.Show(string.Join("\r\n", lines));
 				refreshBranches();
 			}
 		}
@@ -193,10 +195,17 @@ namespace PaJaMa.GitStudio
 				+ "?", "Warning!",
 				MessageBoxButtons.YesNo) == DialogResult.Yes)
 			{
+				List<string> lines = new List<string>();
 				foreach (var s in selected)
 				{
-					_helper.RunCommand("branch -d -r " + s.BranchName);
+					var branchName = s.BranchName;
+					if (branchName.StartsWith("origin/"))
+						branchName = branchName.Substring(7);
+
+					lines.AddRange(_helper.RunCommand("push -d origin " + branchName));
 				}
+				if (lines.Any())
+					MessageBox.Show(string.Join("\r\n", lines));
 				refreshBranches();
 			}
 		}
