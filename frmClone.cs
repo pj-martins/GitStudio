@@ -31,7 +31,8 @@ namespace PaJaMa.GitStudio
 		{
 			if (cboBranches.Items.Count < 1)
 			{
-				var remotes = new GitHelper(null).RunCommand("ls-remote " + txtURL.Text);
+				bool error = false;
+				var remotes = new GitHelper(null).RunCommand("ls-remote " + txtURL.Text, ref error);
 				foreach (var remote in remotes)
 				{
 					var repo = remote.Split('\t')[1];
@@ -46,20 +47,26 @@ namespace PaJaMa.GitStudio
 		private void btnClone_Click(object sender, EventArgs e)
 		{
 			var settings = SettingsHelper.GetUserSettings<GitUserSettings>();
-			bool error = false;
-			new GitHelper(null).RunCommand("clone " + txtURL.Text + " " + txtPath.Text +
-			(string.IsNullOrEmpty(cboBranches.Text) ? "" : " -b " + cboBranches.Text), ref error);
-			if (error) return;
+			var lines = new GitHelper(null).RunCommand("clone " + txtURL.Text + " " + txtPath.Text +
+			(string.IsNullOrEmpty(cboBranches.Text) ? "" : " -b " + cboBranches.Text));
 
-			ClonedRepo = new GitRepository()
+			if (lines.Length == 1 && lines[0].StartsWith("Cloning into"))
 			{
-				LocalPath = txtPath.Text,
-				RemoteURL = txtURL.Text
-			};
-			settings.Repositories.Add(ClonedRepo);
-			SettingsHelper.SaveUserSettings<GitUserSettings>(settings);
-			this.DialogResult = DialogResult.OK;
-			this.Close();
+				ClonedRepo = new GitRepository()
+				{
+					LocalPath = txtPath.Text,
+					RemoteURL = txtURL.Text
+				};
+				settings.Repositories.Add(ClonedRepo);
+				SettingsHelper.SaveUserSettings<GitUserSettings>(settings);
+				this.DialogResult = DialogResult.OK;
+				this.Close();
+			}
+			else
+			{
+				MessageBox.Show(string.Join("\r\n", lines), "ERROR!");
+			}
+
 		}
 
 		private void btnBrowse_Click(object sender, EventArgs e)
