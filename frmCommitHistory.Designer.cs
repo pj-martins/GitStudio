@@ -63,7 +63,7 @@
 			this.gridCommits.Name = "gridCommits";
 			this.gridCommits.ReadOnly = true;
 			this.gridCommits.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-			this.gridCommits.Size = new System.Drawing.Size(437, 640);
+			this.gridCommits.Size = new System.Drawing.Size(577, 640);
 			this.gridCommits.TabIndex = 0;
 			this.gridCommits.SelectionChanged += new System.EventHandler(this.gridCommits_SelectionChanged);
 			// 
@@ -81,7 +81,7 @@
 			// 
 			this.splitContainer1.Panel2.Controls.Add(this.txtDifferences);
 			this.splitContainer1.Size = new System.Drawing.Size(1060, 640);
-			this.splitContainer1.SplitterDistance = 727;
+			this.splitContainer1.SplitterDistance = 787;
 			this.splitContainer1.TabIndex = 3;
 			// 
 			// splitContainer2
@@ -98,8 +98,8 @@
 			// 
 			this.splitContainer2.Panel2.Controls.Add(this.gridDetails);
 			this.splitContainer2.Panel2.Controls.Add(this.panel1);
-			this.splitContainer2.Size = new System.Drawing.Size(727, 640);
-			this.splitContainer2.SplitterDistance = 437;
+			this.splitContainer2.Size = new System.Drawing.Size(787, 640);
+			this.splitContainer2.SplitterDistance = 577;
 			this.splitContainer2.TabIndex = 4;
 			// 
 			// gridDetails
@@ -114,7 +114,7 @@
 			this.gridDetails.Name = "gridDetails";
 			this.gridDetails.ReadOnly = true;
 			this.gridDetails.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-			this.gridDetails.Size = new System.Drawing.Size(286, 612);
+			this.gridDetails.Size = new System.Drawing.Size(206, 612);
 			this.gridDetails.TabIndex = 1;
 			this.gridDetails.SelectionChanged += new System.EventHandler(this.gridDetails_SelectionChanged);
 			this.gridDetails.DoubleClick += new System.EventHandler(this.gridDetails_DoubleClick);
@@ -139,7 +139,7 @@
 			this.panel1.Dock = System.Windows.Forms.DockStyle.Top;
 			this.panel1.Location = new System.Drawing.Point(0, 0);
 			this.panel1.Name = "panel1";
-			this.panel1.Size = new System.Drawing.Size(286, 28);
+			this.panel1.Size = new System.Drawing.Size(206, 28);
 			this.panel1.TabIndex = 2;
 			// 
 			// lblCommits
@@ -157,7 +157,7 @@
 			this.txtDifferences.Multiline = true;
 			this.txtDifferences.Name = "txtDifferences";
 			this.txtDifferences.ReadOnly = true;
-			this.txtDifferences.Size = new System.Drawing.Size(329, 640);
+			this.txtDifferences.Size = new System.Drawing.Size(269, 640);
 			this.txtDifferences.TabIndex = 0;
 			// 
 			// frmCommitHistory
