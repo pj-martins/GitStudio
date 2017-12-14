@@ -37,14 +37,15 @@ namespace PaJaMa.GitStudio
 		{
 			var logs = Helper.RunCommand("--no-pager log " + Branch.BranchName);
 			var commits = new List<Commit>();
-			commits.Add(new Commit()
-			{
-				CommitID = "HEAD",
-				Author = "HEAD",
-				Index = 1,
-			});
+			//commits.Add(new Commit()
+			//{
+			//	CommitID = "HEAD",
+			//	Author = "HEAD",
+			//	Index = 1,
+			//});
 
-			int index = 2;
+			// int index = 2;
+			int index = 1;
 			Commit current = null;
 			foreach (var log in logs)
 			{
@@ -63,15 +64,44 @@ namespace PaJaMa.GitStudio
 				else if (log.StartsWith("    "))
 					current.Comment += log.Trim() + "\r\n";
 			}
+			_refreshing = true;
 			gridCommits.DataSource = commits;
+			_refreshing = false;
+			gridCommits_SelectionChanged(gridCommits, new EventArgs());
 		}
 
+		private Tuple<Commit, Commit> getCommitsToCompare(bool includeNext)
+		{
+			var selectedRows = gridCommits.SelectedRows.OfType<DataGridViewRow>()
+					.OrderBy(c => (c.DataBoundItem as Commit).Index);
+			if (selectedRows.Count() < 1)
+			{
+				return null;
+			}
+
+			var toRow = selectedRows.First();
+			DataGridViewRow fromRow = null;
+			if (selectedRows.Count() > 1)
+			{
+				fromRow = selectedRows.Last();
+			}
+			else if (includeNext)
+			{
+				var rowIndex = gridCommits.Rows.IndexOf(toRow);
+				if (rowIndex + 1 < gridCommits.Rows.Count)
+					fromRow = gridCommits.Rows[rowIndex + 1];
+			}
+
+			return new Tuple<Commit, Commit>(fromRow == null ? null : fromRow.DataBoundItem as Commit, toRow.DataBoundItem as Commit);
+		}
+
+		private bool _refreshing = false;
 		private void gridCommits_SelectionChanged(object sender, EventArgs e)
 		{
-			var selectedCommits = gridCommits.SelectedRows.OfType<DataGridViewRow>()
-				.Select(r => r.DataBoundItem as Commit)
-				.OrderBy(c => c.Index);
-			if (selectedCommits.Count() < 1)
+			if (_refreshing) return;
+
+			var commitsToCompare = getCommitsToCompare(false);
+			if (commitsToCompare == null)
 			{
 				gridDetails.DataSource = null;
 				txtDifferences.Text = string.Empty;
@@ -79,14 +109,15 @@ namespace PaJaMa.GitStudio
 			}
 
 			var diffs = new string[0];
-			if (selectedCommits.Count() == 2)
+
+			if (commitsToCompare.Item1 != null)
 			{
-				diffs = Helper.RunCommand("--no-pager diff --name-status " + selectedCommits.Last().CommitID
-					+ " " + selectedCommits.First().CommitID);
+				diffs = Helper.RunCommand("--no-pager diff --name-status " + commitsToCompare.Item1.CommitID
+					+ " " + commitsToCompare.Item2.CommitID);
 			}
 			else
 			{
-				diffs = Helper.RunCommand("--no-pager show --name-status -r " + selectedCommits.First().CommitID);
+				diffs = Helper.RunCommand("--no-pager show --name-status -r " + commitsToCompare.Item2.CommitID);
 			}
 			var details = new Dictionary<string, DifferenceType>();
 			foreach (var diff in diffs)
@@ -117,9 +148,8 @@ namespace PaJaMa.GitStudio
 
 		private void gridDetails_SelectionChanged(object sender, EventArgs e)
 		{
-			var selectedRows = gridCommits.SelectedRows.OfType<DataGridViewRow>()
-				.OrderBy(c => (c.DataBoundItem as Commit).Index);
-			if (selectedRows.Count() < 1)
+			var commitsToCompare = getCommitsToCompare(false);
+			if (commitsToCompare == null)
 			{
 				txtDifferences.Text = string.Empty;
 				return;
@@ -132,22 +162,9 @@ namespace PaJaMa.GitStudio
 				return;
 			}
 
-			var toRow = selectedRows.First();
-			DataGridViewRow fromRow = null;
-			if (selectedRows.Count() > 1)
-			{
-				fromRow = selectedRows.Last();
-			}
-			else
-			{
-				var rowIndex = gridCommits.Rows.IndexOf(toRow);
-				if (rowIndex + 1 >= gridCommits.Rows.Count) return;
-				fromRow = gridCommits.Rows[rowIndex + 1];
-			}
-
 			var diffs = Helper.RunCommand("--no-pager diff " +
-				(selectedRows.Count() == 2 ? (toRow.DataBoundItem as Commit).CommitID + " " : "") +
-				(fromRow.DataBoundItem as Commit).CommitID + " -- " + selectedRow.Cells["File"].Value.ToString());
+				(commitsToCompare.Item1 != null ? commitsToCompare.Item1.CommitID + " " : "") +
+				commitsToCompare.Item2.CommitID + " -- " + selectedRow.Cells["File"].Value.ToString());
 			txtDifferences.Text = string.Join("\r\n", diffs);
 		}
 
@@ -167,29 +184,16 @@ namespace PaJaMa.GitStudio
 			foreach (var selectedRow in gridDetails.SelectedRows.OfType<DataGridViewRow>())
 			{
 				if (selectedRow.Cells["Action"].Value.ToString() != "Modify") continue;
-				var selectedRows = gridCommits.SelectedRows.OfType<DataGridViewRow>()
-					.OrderBy(c => (c.DataBoundItem as Commit).Index);
-				if (selectedRows.Count() < 1)
+
+				var commitsToCompare = getCommitsToCompare(true);
+				if (commitsToCompare == null || commitsToCompare.Item1 == null)
 				{
 					txtDifferences.Text = string.Empty;
 					return;
 				}
-
-				var toRow = selectedRows.First();
-				DataGridViewRow fromRow = null;
-				if (selectedRows.Count() > 1)
-				{
-					fromRow = selectedRows.Last();
-				}
-				else
-				{
-					var rowIndex = gridCommits.Rows.IndexOf(toRow);
-					if (rowIndex + 1 >= gridCommits.Rows.Count) return;
-					fromRow = gridCommits.Rows[rowIndex + 1];
-				}
-
-				var content1 = Helper.RunCommand("--no-pager show " + (fromRow.DataBoundItem as Commit).CommitID + ":" + selectedRow.Cells["File"].Value.ToString());
-				var content2 = Helper.RunCommand("--no-pager show " + (toRow.DataBoundItem as Commit).CommitID + ":" + selectedRow.Cells["File"].Value.ToString());
+				
+				var content1 = Helper.RunCommand("--no-pager show " + commitsToCompare.Item2.CommitID + ":" + selectedRow.Cells["File"].Value.ToString());
+				var content2 = Helper.RunCommand("--no-pager show " + commitsToCompare.Item1.CommitID + ":" + selectedRow.Cells["File"].Value.ToString());
 
 				var tmpDir = Path.Combine(Path.GetTempPath(), "GitStudio");
 				if (!Directory.Exists(tmpDir)) Directory.CreateDirectory(tmpDir);
@@ -204,11 +208,12 @@ namespace PaJaMa.GitStudio
 
 	public class Commit
 	{
-		[Browsable(false)]
 		public string CommitID { get; set; }
 		public string Author { get; set; }
 		public string Date { get; set; }
 		public string Comment { get; set; }
+
+		[Browsable(false)]
 		public int Index { get; set; }
 
 		public Commit()
