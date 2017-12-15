@@ -112,6 +112,8 @@ namespace PaJaMa.GitStudio
 				if (remote) remote = false;
 				else break;
 			}
+
+			btnPull.Enabled = _currentBranch.TracksBranch != null;
 		}
 
 		private void branchToolStripMenuItem_Click(object sender, EventArgs e)
@@ -137,10 +139,8 @@ namespace PaJaMa.GitStudio
 		{
 			// checkoutToolStripMenuItem.Enabled = lstLocalBranches.SelectedItems.Count == 1;
 			var branch = tvLocalBranches.SelectedNode == null ? null : tvLocalBranches.SelectedNode.Tag as LocalBranch;
-			pullToolStripMenuItem.Visible = branch != null && branch.TracksBranch != null;
-			pushToolStripMenuItem.Visible = branch != null;
-			mergeFromLocalToolStripMenuItem.Visible = branch != null;
-			deleteToolStripMenuItem.Visible = getSelectedNodeTags<LocalBranch>(tvLocalBranches).Any();
+			mergeFromLocalToolStripMenuItem.Enabled = branch != null;
+			deleteToolStripMenuItem.Enabled = getSelectedNodeTags<LocalBranch>(tvLocalBranches).Any();
 			enableDisableCompare();
 		}
 
@@ -148,7 +148,8 @@ namespace PaJaMa.GitStudio
 		private void mnuRemote_Opening(object sender, CancelEventArgs e)
 		{
 			var branch = tvRemoteBranches.SelectedNode == null ? null : tvRemoteBranches.SelectedNode.Tag as RemoteBranch;
-			deleteToolStripMenuItem.Visible = getSelectedNodeTags<RemoteBranch>(tvRemoteBranches).Any();
+			pullIntoToolStripMenuItem.Enabled = branch != null;
+			deleteToolStripMenuItem.Enabled = getSelectedNodeTags<RemoteBranch>(tvRemoteBranches).Any();
 			enableDisableCompare();
 		}
 
@@ -336,29 +337,6 @@ namespace PaJaMa.GitStudio
 			}
 		}
 
-		private void pullToolStripMenuItem_Click(object sender, EventArgs e)
-		{
-			var branch = tvLocalBranches.SelectedNode.Tag as LocalBranch;
-			var branchName = branch.TracksBranch.BranchName;
-			if (branchName.StartsWith("origin/"))
-				branchName = branchName.Substring(7);
-			var lines = _helper.RunCommand("pull origin " + branchName);
-			if (lines.Length > 0)
-				MessageBox.Show(string.Join("\r\n", lines));
-			// if (error) return;
-			refreshBranches();
-		}
-
-		private void pushToolStripMenuItem_Click(object sender, EventArgs e)
-		{
-			var frm = new frmPush();
-			frm.RemoteBranches = _remoteBranches;
-			frm.LocalBranch = _currentBranch;
-			frm.Repository = _repository;
-			frm.ShowDialog();
-			refreshBranches();
-		}
-
 		private void undoToolStripMenuItem_Click(object sender, EventArgs e)
 		{
 			if (MessageBox.Show("Are you sure you want to undo selected files?", "Warning!", MessageBoxButtons.YesNo) != DialogResult.Yes)
@@ -426,8 +404,8 @@ namespace PaJaMa.GitStudio
 			var diff = tv.SelectedNode == null ? null : tv.SelectedNode.Tag as Difference;
 			resolveConflictToolStripMenuItem.Enabled = diff != null && diff.IsConflict;
 			viewExternalToolStripMenuItem.Enabled = diff != null && diff.DifferenceType == DifferenceType.Modify;
-			stageAllToolStripMenuItem.Visible = stageToolStripMenuItem.Visible = tvUnStaged.Focused;
-			unstageAllToolStripMenuItem.Visible = unStageToolStripMenuItem.Visible = tvStaged.Focused;
+			stageAllToolStripMenuItem.Enabled = stageToolStripMenuItem.Enabled = tvUnStaged.Focused;
+			unstageAllToolStripMenuItem.Enabled = unStageToolStripMenuItem.Enabled = tvStaged.Focused;
 		}
 
 		private void tv_AfterSelect(object sender, TreeViewEventArgs e)
@@ -736,5 +714,41 @@ namespace PaJaMa.GitStudio
 			// if (error) return;
 			refreshBranches();
 		}
+
+		private void btnPull_Click(object sender, EventArgs e)
+		{
+			var branchName = _currentBranch.TracksBranch.BranchName;
+			if (branchName.StartsWith("origin/"))
+				branchName = branchName.Substring(7);
+			var lines = _helper.RunCommand("pull origin " + branchName);
+			if (lines.Length > 0)
+				MessageBox.Show(string.Join("\r\n", lines));
+			// if (error) return;
+			refreshBranches();
+		}
+
+		private void btnPush_Click(object sender, EventArgs e)
+		{
+			var frm = new frmPush();
+			frm.RemoteBranches = _remoteBranches;
+			frm.LocalBranch = _currentBranch;
+			frm.Repository = _repository;
+			frm.ShowDialog();
+			refreshBranches();
+		}
+
+		private void pullIntoToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+			var branch = tvRemoteBranches.SelectedNode.Tag as RemoteBranch;
+			var branchName = branch.BranchName;
+			if (branchName.StartsWith("origin/"))
+				branchName = branchName.Substring(7);
+			var lines = _helper.RunCommand("pull origin " + branchName);
+			if (lines.Length > 0)
+				MessageBox.Show(string.Join("\r\n", lines));
+			// if (error) return;
+			refreshBranches();
+		}
+		
 	}
 }

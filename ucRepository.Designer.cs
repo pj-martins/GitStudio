@@ -34,8 +34,6 @@
 			this.tvLocalBranches = new PaJaMa.WinControls.MultiSelectTreeView.MultiSelectTreeView();
 			this.mnuLocal = new System.Windows.Forms.ContextMenuStrip(this.components);
 			this.checkoutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-			this.pullToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-			this.pushToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.deleteToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.branchLocalToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.mergeFromLocalToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -47,6 +45,8 @@
 			this.mnuRemote = new System.Windows.Forms.ContextMenuStrip(this.components);
 			this.branchToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.fetchToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.pullIntoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.pruneToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.mergeFromToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.deleteRemoteToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.compareToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
@@ -72,11 +72,12 @@
 			this.label5 = new System.Windows.Forms.Label();
 			this.timDiff = new System.Windows.Forms.Timer(this.components);
 			this.panel1 = new System.Windows.Forms.Panel();
+			this.btnPush = new System.Windows.Forms.Button();
+			this.btnPull = new System.Windows.Forms.Button();
 			this.btnViewStashes = new System.Windows.Forms.Button();
 			this.btnStash = new System.Windows.Forms.Button();
 			this.btnRefresh = new System.Windows.Forms.Button();
 			this.btnCommit = new System.Windows.Forms.Button();
-			this.pruneToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
 			this.splitContainer1.Panel1.SuspendLayout();
 			this.splitContainer1.Panel2.SuspendLayout();
@@ -152,8 +153,6 @@
 			// 
 			this.mnuLocal.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.checkoutToolStripMenuItem,
-            this.pullToolStripMenuItem,
-            this.pushToolStripMenuItem,
             this.deleteToolStripMenuItem,
             this.branchLocalToolStripMenuItem,
             this.mergeFromLocalToolStripMenuItem,
@@ -161,7 +160,7 @@
             this.compareToolStripMenuItem,
             this.historyToolStripMenuItem1});
 			this.mnuLocal.Name = "mnuLocal";
-			this.mnuLocal.Size = new System.Drawing.Size(142, 202);
+			this.mnuLocal.Size = new System.Drawing.Size(142, 158);
 			this.mnuLocal.Opening += new System.ComponentModel.CancelEventHandler(this.mnuLocal_Opening);
 			// 
 			// checkoutToolStripMenuItem
@@ -170,20 +169,6 @@
 			this.checkoutToolStripMenuItem.Size = new System.Drawing.Size(141, 22);
 			this.checkoutToolStripMenuItem.Text = "&Checkout";
 			this.checkoutToolStripMenuItem.Click += new System.EventHandler(this.checkoutToolStripMenuItem_Click);
-			// 
-			// pullToolStripMenuItem
-			// 
-			this.pullToolStripMenuItem.Name = "pullToolStripMenuItem";
-			this.pullToolStripMenuItem.Size = new System.Drawing.Size(141, 22);
-			this.pullToolStripMenuItem.Text = "&Pull";
-			this.pullToolStripMenuItem.Click += new System.EventHandler(this.pullToolStripMenuItem_Click);
-			// 
-			// pushToolStripMenuItem
-			// 
-			this.pushToolStripMenuItem.Name = "pushToolStripMenuItem";
-			this.pushToolStripMenuItem.Size = new System.Drawing.Size(141, 22);
-			this.pushToolStripMenuItem.Text = "&Push";
-			this.pushToolStripMenuItem.Click += new System.EventHandler(this.pushToolStripMenuItem_Click);
 			// 
 			// deleteToolStripMenuItem
 			// 
@@ -254,54 +239,69 @@
 			this.mnuRemote.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.branchToolStripMenuItem,
             this.fetchToolStripMenuItem,
+            this.pullIntoToolStripMenuItem,
             this.pruneToolStripMenuItem,
             this.mergeFromToolStripMenuItem,
             this.deleteRemoteToolStripMenuItem,
             this.compareToolStripMenuItem1,
             this.historyToolStripMenuItem});
 			this.mnuRemote.Name = "mnuRemote";
-			this.mnuRemote.Size = new System.Drawing.Size(153, 180);
+			this.mnuRemote.Size = new System.Drawing.Size(162, 180);
 			this.mnuRemote.Opening += new System.ComponentModel.CancelEventHandler(this.mnuRemote_Opening);
 			// 
 			// branchToolStripMenuItem
 			// 
 			this.branchToolStripMenuItem.Name = "branchToolStripMenuItem";
-			this.branchToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+			this.branchToolStripMenuItem.Size = new System.Drawing.Size(161, 22);
 			this.branchToolStripMenuItem.Text = "&Branch";
 			this.branchToolStripMenuItem.Click += new System.EventHandler(this.branchToolStripMenuItem_Click);
 			// 
 			// fetchToolStripMenuItem
 			// 
 			this.fetchToolStripMenuItem.Name = "fetchToolStripMenuItem";
-			this.fetchToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+			this.fetchToolStripMenuItem.Size = new System.Drawing.Size(161, 22);
 			this.fetchToolStripMenuItem.Text = "&Fetch";
 			this.fetchToolStripMenuItem.Click += new System.EventHandler(this.fetchToolStripMenuItem_Click);
+			// 
+			// pullIntoToolStripMenuItem
+			// 
+			this.pullIntoToolStripMenuItem.Name = "pullIntoToolStripMenuItem";
+			this.pullIntoToolStripMenuItem.Size = new System.Drawing.Size(161, 22);
+			this.pullIntoToolStripMenuItem.Text = "&Pull Into Current";
+			this.pullIntoToolStripMenuItem.Click += new System.EventHandler(this.pullIntoToolStripMenuItem_Click);
+			// 
+			// pruneToolStripMenuItem
+			// 
+			this.pruneToolStripMenuItem.Name = "pruneToolStripMenuItem";
+			this.pruneToolStripMenuItem.Size = new System.Drawing.Size(161, 22);
+			this.pruneToolStripMenuItem.Text = "&Prune";
+			this.pruneToolStripMenuItem.Click += new System.EventHandler(this.pruneToolStripMenuItem_Click);
 			// 
 			// mergeFromToolStripMenuItem
 			// 
 			this.mergeFromToolStripMenuItem.Name = "mergeFromToolStripMenuItem";
-			this.mergeFromToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+			this.mergeFromToolStripMenuItem.Size = new System.Drawing.Size(161, 22);
 			this.mergeFromToolStripMenuItem.Text = "&Merge From";
 			this.mergeFromToolStripMenuItem.Click += new System.EventHandler(this.mergeFromToolStripMenuItem_Click);
 			// 
 			// deleteRemoteToolStripMenuItem
 			// 
 			this.deleteRemoteToolStripMenuItem.Name = "deleteRemoteToolStripMenuItem";
-			this.deleteRemoteToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+			this.deleteRemoteToolStripMenuItem.Size = new System.Drawing.Size(161, 22);
 			this.deleteRemoteToolStripMenuItem.Text = "&Delete";
 			this.deleteRemoteToolStripMenuItem.Click += new System.EventHandler(this.deleteRemoteToolStripMenuItem_Click);
 			// 
 			// compareToolStripMenuItem1
 			// 
 			this.compareToolStripMenuItem1.Name = "compareToolStripMenuItem1";
-			this.compareToolStripMenuItem1.Size = new System.Drawing.Size(152, 22);
+			this.compareToolStripMenuItem1.Size = new System.Drawing.Size(161, 22);
 			this.compareToolStripMenuItem1.Text = "&Compare";
 			this.compareToolStripMenuItem1.Click += new System.EventHandler(this.compareToolStripMenuItem_Click);
 			// 
 			// historyToolStripMenuItem
 			// 
 			this.historyToolStripMenuItem.Name = "historyToolStripMenuItem";
-			this.historyToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+			this.historyToolStripMenuItem.Size = new System.Drawing.Size(161, 22);
 			this.historyToolStripMenuItem.Text = "&History";
 			this.historyToolStripMenuItem.Click += new System.EventHandler(this.historyToolStripMenuItem_Click);
 			// 
@@ -524,6 +524,8 @@
 			// 
 			// panel1
 			// 
+			this.panel1.Controls.Add(this.btnPush);
+			this.panel1.Controls.Add(this.btnPull);
 			this.panel1.Controls.Add(this.btnViewStashes);
 			this.panel1.Controls.Add(this.btnStash);
 			this.panel1.Controls.Add(this.btnRefresh);
@@ -534,10 +536,33 @@
 			this.panel1.Size = new System.Drawing.Size(909, 34);
 			this.panel1.TabIndex = 4;
 			// 
+			// btnPush
+			// 
+			this.btnPush.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+			this.btnPush.Location = new System.Drawing.Point(662, 6);
+			this.btnPush.Name = "btnPush";
+			this.btnPush.Size = new System.Drawing.Size(119, 23);
+			this.btnPush.TabIndex = 6;
+			this.btnPush.Text = "Push";
+			this.btnPush.UseVisualStyleBackColor = true;
+			this.btnPush.Click += new System.EventHandler(this.btnPush_Click);
+			// 
+			// btnPull
+			// 
+			this.btnPull.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+			this.btnPull.Enabled = false;
+			this.btnPull.Location = new System.Drawing.Point(537, 6);
+			this.btnPull.Name = "btnPull";
+			this.btnPull.Size = new System.Drawing.Size(119, 23);
+			this.btnPull.TabIndex = 5;
+			this.btnPull.Text = "Pull";
+			this.btnPull.UseVisualStyleBackColor = true;
+			this.btnPull.Click += new System.EventHandler(this.btnPull_Click);
+			// 
 			// btnViewStashes
 			// 
 			this.btnViewStashes.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-			this.btnViewStashes.Location = new System.Drawing.Point(538, 6);
+			this.btnViewStashes.Location = new System.Drawing.Point(288, 6);
 			this.btnViewStashes.Name = "btnViewStashes";
 			this.btnViewStashes.Size = new System.Drawing.Size(119, 23);
 			this.btnViewStashes.TabIndex = 4;
@@ -549,7 +574,7 @@
 			// 
 			this.btnStash.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
 			this.btnStash.Enabled = false;
-			this.btnStash.Location = new System.Drawing.Point(662, 6);
+			this.btnStash.Location = new System.Drawing.Point(412, 6);
 			this.btnStash.Name = "btnStash";
 			this.btnStash.Size = new System.Drawing.Size(119, 23);
 			this.btnStash.TabIndex = 3;
@@ -560,7 +585,7 @@
 			// btnRefresh
 			// 
 			this.btnRefresh.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-			this.btnRefresh.Location = new System.Drawing.Point(413, 6);
+			this.btnRefresh.Location = new System.Drawing.Point(163, 6);
 			this.btnRefresh.Name = "btnRefresh";
 			this.btnRefresh.Size = new System.Drawing.Size(119, 23);
 			this.btnRefresh.TabIndex = 2;
@@ -579,13 +604,6 @@
 			this.btnCommit.Text = "Commit";
 			this.btnCommit.UseVisualStyleBackColor = true;
 			this.btnCommit.Click += new System.EventHandler(this.btnCommit_Click);
-			// 
-			// pruneToolStripMenuItem
-			// 
-			this.pruneToolStripMenuItem.Name = "pruneToolStripMenuItem";
-			this.pruneToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
-			this.pruneToolStripMenuItem.Text = "&Prune";
-			this.pruneToolStripMenuItem.Click += new System.EventHandler(this.pruneToolStripMenuItem_Click);
 			// 
 			// ucRepository
 			// 
@@ -643,12 +661,10 @@
 		private System.Windows.Forms.RichTextBox txtDiffText;
 		private System.Windows.Forms.ContextMenuStrip mnuDiffs;
 		private System.Windows.Forms.ToolStripMenuItem viewExternalToolStripMenuItem;
-		private System.Windows.Forms.ToolStripMenuItem pullToolStripMenuItem;
 		private System.Windows.Forms.SplitContainer splitContainer4;
 		private PaJaMa.WinControls.MultiSelectTreeView.MultiSelectTreeView tvStaged;
 		private System.Windows.Forms.Panel panel1;
 		private System.Windows.Forms.Button btnCommit;
-		private System.Windows.Forms.ToolStripMenuItem pushToolStripMenuItem;
 		private System.Windows.Forms.ToolStripMenuItem undoToolStripMenuItem;
 		private System.Windows.Forms.ToolStripMenuItem ignoreToolStripMenuItem;
 		private System.Windows.Forms.ToolStripMenuItem branchLocalToolStripMenuItem;
@@ -675,5 +691,8 @@
 		private System.Windows.Forms.ToolStripMenuItem stageAllToolStripMenuItem;
 		private System.Windows.Forms.ToolStripMenuItem unstageAllToolStripMenuItem;
 		private System.Windows.Forms.ToolStripMenuItem pruneToolStripMenuItem;
+		private System.Windows.Forms.Button btnPull;
+		private System.Windows.Forms.Button btnPush;
+		private System.Windows.Forms.ToolStripMenuItem pullIntoToolStripMenuItem;
 	}
 }
