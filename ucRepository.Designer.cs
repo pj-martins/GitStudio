@@ -78,6 +78,7 @@
 			this.btnStash = new System.Windows.Forms.Button();
 			this.btnRefresh = new System.Windows.Forms.Button();
 			this.btnCommit = new System.Windows.Forms.Button();
+			this.renameToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
 			this.splitContainer1.Panel1.SuspendLayout();
 			this.splitContainer1.Panel2.SuspendLayout();
@@ -158,57 +159,58 @@
             this.mergeFromLocalToolStripMenuItem,
             this.abortMergeToolStripMenuItem,
             this.compareToolStripMenuItem,
-            this.historyToolStripMenuItem1});
+            this.historyToolStripMenuItem1,
+            this.renameToolStripMenuItem});
 			this.mnuLocal.Name = "mnuLocal";
-			this.mnuLocal.Size = new System.Drawing.Size(142, 158);
+			this.mnuLocal.Size = new System.Drawing.Size(153, 202);
 			this.mnuLocal.Opening += new System.ComponentModel.CancelEventHandler(this.mnuLocal_Opening);
 			// 
 			// checkoutToolStripMenuItem
 			// 
 			this.checkoutToolStripMenuItem.Name = "checkoutToolStripMenuItem";
-			this.checkoutToolStripMenuItem.Size = new System.Drawing.Size(141, 22);
+			this.checkoutToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
 			this.checkoutToolStripMenuItem.Text = "&Checkout";
 			this.checkoutToolStripMenuItem.Click += new System.EventHandler(this.checkoutToolStripMenuItem_Click);
 			// 
 			// deleteToolStripMenuItem
 			// 
 			this.deleteToolStripMenuItem.Name = "deleteToolStripMenuItem";
-			this.deleteToolStripMenuItem.Size = new System.Drawing.Size(141, 22);
+			this.deleteToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
 			this.deleteToolStripMenuItem.Text = "&Delete";
 			this.deleteToolStripMenuItem.Click += new System.EventHandler(this.deleteToolStripMenuItem_Click);
 			// 
 			// branchLocalToolStripMenuItem
 			// 
 			this.branchLocalToolStripMenuItem.Name = "branchLocalToolStripMenuItem";
-			this.branchLocalToolStripMenuItem.Size = new System.Drawing.Size(141, 22);
+			this.branchLocalToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
 			this.branchLocalToolStripMenuItem.Text = "&Branch";
 			this.branchLocalToolStripMenuItem.Click += new System.EventHandler(this.branchLocalToolStripMenuItem_Click);
 			// 
 			// mergeFromLocalToolStripMenuItem
 			// 
 			this.mergeFromLocalToolStripMenuItem.Name = "mergeFromLocalToolStripMenuItem";
-			this.mergeFromLocalToolStripMenuItem.Size = new System.Drawing.Size(141, 22);
+			this.mergeFromLocalToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
 			this.mergeFromLocalToolStripMenuItem.Text = "&Merge From";
 			this.mergeFromLocalToolStripMenuItem.Click += new System.EventHandler(this.mergeFromLocalToolStripMenuItem_Click);
 			// 
 			// abortMergeToolStripMenuItem
 			// 
 			this.abortMergeToolStripMenuItem.Name = "abortMergeToolStripMenuItem";
-			this.abortMergeToolStripMenuItem.Size = new System.Drawing.Size(141, 22);
+			this.abortMergeToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
 			this.abortMergeToolStripMenuItem.Text = "&Abort Merge";
 			this.abortMergeToolStripMenuItem.Click += new System.EventHandler(this.abortMergeToolStripMenuItem_Click);
 			// 
 			// compareToolStripMenuItem
 			// 
 			this.compareToolStripMenuItem.Name = "compareToolStripMenuItem";
-			this.compareToolStripMenuItem.Size = new System.Drawing.Size(141, 22);
+			this.compareToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
 			this.compareToolStripMenuItem.Text = "&Compare";
 			this.compareToolStripMenuItem.Click += new System.EventHandler(this.compareToolStripMenuItem_Click);
 			// 
 			// historyToolStripMenuItem1
 			// 
 			this.historyToolStripMenuItem1.Name = "historyToolStripMenuItem1";
-			this.historyToolStripMenuItem1.Size = new System.Drawing.Size(141, 22);
+			this.historyToolStripMenuItem1.Size = new System.Drawing.Size(152, 22);
 			this.historyToolStripMenuItem1.Text = "&History";
 			this.historyToolStripMenuItem1.Click += new System.EventHandler(this.historyToolStripMenuItem_Click);
 			// 
@@ -367,7 +369,6 @@
 			this.tvUnStaged.Size = new System.Drawing.Size(283, 319);
 			this.tvUnStaged.TabIndex = 0;
 			this.tvUnStaged.NodesDrag += new System.Windows.Forms.DragEventHandler(this.tv_NodesDrag);
-			this.tvUnStaged.AfterCheck += new System.Windows.Forms.TreeViewEventHandler(this.tv_AfterCheck);
 			this.tvUnStaged.AfterCollapse += new System.Windows.Forms.TreeViewEventHandler(this.tv_AfterCollapse);
 			this.tvUnStaged.AfterExpand += new System.Windows.Forms.TreeViewEventHandler(this.tv_AfterExpand);
 			this.tvUnStaged.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.tv_AfterSelect);
@@ -478,7 +479,6 @@
 			this.tvStaged.Size = new System.Drawing.Size(315, 319);
 			this.tvStaged.TabIndex = 2;
 			this.tvStaged.NodesDrag += new System.Windows.Forms.DragEventHandler(this.tv_NodesDrag);
-			this.tvStaged.AfterCheck += new System.Windows.Forms.TreeViewEventHandler(this.tv_AfterCheck);
 			this.tvStaged.AfterCollapse += new System.Windows.Forms.TreeViewEventHandler(this.tv_AfterCollapse);
 			this.tvStaged.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.tv_AfterSelect);
 			this.tvStaged.DragDrop += new System.Windows.Forms.DragEventHandler(this.tv_DragDrop);
@@ -605,6 +605,13 @@
 			this.btnCommit.UseVisualStyleBackColor = true;
 			this.btnCommit.Click += new System.EventHandler(this.btnCommit_Click);
 			// 
+			// renameToolStripMenuItem
+			// 
+			this.renameToolStripMenuItem.Name = "renameToolStripMenuItem";
+			this.renameToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+			this.renameToolStripMenuItem.Text = "&Rename";
+			this.renameToolStripMenuItem.Click += new System.EventHandler(this.renameToolStripMenuItem_Click);
+			// 
 			// ucRepository
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -694,5 +701,6 @@
 		private System.Windows.Forms.Button btnPull;
 		private System.Windows.Forms.Button btnPush;
 		private System.Windows.Forms.ToolStripMenuItem pullIntoToolStripMenuItem;
+		private System.Windows.Forms.ToolStripMenuItem renameToolStripMenuItem;
 	}
 }

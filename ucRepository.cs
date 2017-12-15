@@ -32,12 +32,9 @@ namespace PaJaMa.GitStudio
 		}
 
 		private bool _inited = false;
-		private Dictionary<bool, List<string>> _checkedNodes = new Dictionary<bool, List<string>>();
 
 		public ucRepository()
 		{
-			_checkedNodes.Add(false, new List<string>());
-			_checkedNodes.Add(true, new List<string>());
 			InitializeComponent();
 		}
 
@@ -138,7 +135,7 @@ namespace PaJaMa.GitStudio
 
 		private void mnuLocal_Opening(object sender, CancelEventArgs e)
 		{
-			// checkoutToolStripMenuItem.Enabled = lstLocalBranches.SelectedItems.Count == 1;
+			checkoutToolStripMenuItem.Enabled = renameToolStripMenuItem.Enabled = tvLocalBranches.SelectedNodes.Count == 1;
 			var branch = tvLocalBranches.SelectedNode == null ? null : tvLocalBranches.SelectedNode.Tag as LocalBranch;
 			mergeFromLocalToolStripMenuItem.Enabled = branch != null;
 			deleteToolStripMenuItem.Enabled = getSelectedNodeTags<LocalBranch>(tvLocalBranches).Any();
@@ -175,7 +172,7 @@ namespace PaJaMa.GitStudio
 			var selected = getSelectedNodeTags<LocalBranch>(tvLocalBranches);
 			if (MessageBox.Show("Are you sure you want to delete the following branches?\r\n" +
 				string.Join("\r\n", selected.Select(s => s.ToString()).ToArray())
-				+ "?", "Warning!",
+				, "Warning!",
 				MessageBoxButtons.YesNo) == DialogResult.Yes)
 			{
 				List<string> lines = new List<string>();
@@ -194,7 +191,7 @@ namespace PaJaMa.GitStudio
 			var selected = getSelectedNodeTags<RemoteBranch>(tvRemoteBranches);
 			if (MessageBox.Show("Are you sure you want to delete the following remote branches?\r\n" +
 				string.Join("\r\n", selected.Select(s => s.ToString()).ToArray())
-				+ "?", "Warning!",
+				, "Warning!",
 				MessageBoxButtons.YesNo) == DialogResult.Yes)
 			{
 				List<string> lines = new List<string>();
@@ -241,7 +238,6 @@ namespace PaJaMa.GitStudio
 			tvUnStaged.Nodes.Clear();
 			tvStaged.Nodes.Clear();
 			List<TreeNode> expandedNodes = new List<TreeNode>();
-			_lockCheck = true;
 			foreach (var diff in diffs.OrderBy(d => d.FileName))
 			{
 				var tv = diff.IsStaged ? tvStaged : tvUnStaged;
@@ -282,11 +278,9 @@ namespace PaJaMa.GitStudio
 						}
 					}
 					node = foundNode;
-					if (_expandeds != null && _expandeds.Contains(part))
+					runningPath = node.Text + runningPath;
+					if (_collapsed == null || !_collapsed.Contains(runningPath))
 						expandedNodes.Add(node);
-					runningPath += node.Text;
-					if (_checkedNodes[diff.IsStaged].Contains(runningPath))
-						node.Checked = true;
 				}
 				node.Tag = diff;
 				if (selectedDiff != null && diff.FileName == selectedDiff.FileName)
@@ -294,23 +288,22 @@ namespace PaJaMa.GitStudio
 				if (selectedStaged != null && diff.FileName == selectedStaged.FileName)
 					tv.SelectedNode = node;
 			}
-			if (_expandeds == null)
-			{
-				tvUnStaged.ExpandAll();
-				tvStaged.ExpandAll();
-			}
-			else
-			{
+			//if (_expandeds == null)
+			//{
+			//	tvUnStaged.ExpandAll();
+			//	tvStaged.ExpandAll();
+			//}
+			//else
+			//{
 				foreach (var exp in expandedNodes)
 				{
 					exp.Expand();
 				}
-			}
+			//}
 			tvUnStaged.EndUpdate();
 			tvStaged.EndUpdate();
 			btnCommit.Enabled = true; // TODO: tvStaged.Nodes.Count > 0;
 			btnStash.Enabled = true; // TODO: conditional
-			_lockCheck = false;
 		}
 
 		private void viewExternalToolStripMenuItem_Click(object sender, EventArgs e)
@@ -423,48 +416,35 @@ namespace PaJaMa.GitStudio
 			txtDiffText.Text = string.Join("\r\n", diffs);
 		}
 
-		private List<string> _expandeds = null;
+		private List<string> _collapsed = null;
 		private void tv_AfterCollapse(object sender, TreeViewEventArgs e)
 		{
-			_expandeds.Remove(e.Node.Text);
+			if (_collapsed == null) _collapsed = new List<string>();
+			var running = string.Empty;
+			var node = e.Node;
+			while (node != null)
+			{
+				running += node.Text;
+				node = node.Parent;
+			}
+
+			if (!_collapsed.Contains(running))
+				_collapsed.Add(running);
 		}
 
 		private void tv_AfterExpand(object sender, TreeViewEventArgs e)
 		{
-			if (_expandeds == null) _expandeds = new List<string>();
-			if (!_expandeds.Contains(e.Node.Text))
-				_expandeds.Add(e.Node.Text);
-		}
+			if (_collapsed == null) _collapsed = new List<string>();
+			var running = string.Empty;
+			var node = e.Node;
+			while (node != null)
+			{
+				running += node.Text;
+				node = node.Parent;
+			}
 
-		private bool _lockCheck = false;
-		private void tv_AfterCheck(object sender, TreeViewEventArgs e)
-		{
-			if (_lockCheck) return;
-			string runningPath = string.Empty;
-			var runningNode = e.Node;
-			while (runningNode != null)
-			{
-				runningPath = runningNode.Text + runningPath;
-				runningNode = runningNode.Parent;
-			}
-			bool isStaged = sender == tvStaged;
-			if (e.Node.Checked)
-			{
-				if (!_checkedNodes[isStaged].Contains(runningPath)) _checkedNodes[isStaged].Add(runningPath);
-				foreach (TreeNode node in e.Node.Nodes)
-				{
-					node.Checked = true;
-				}
-			}
-			else
-			{
-				if (e.Node.Parent != null && e.Node.Parent.Checked)
-					e.Node.Parent.Checked = false;
-				if (_checkedNodes[isStaged].Contains(runningPath))
-				{
-					_checkedNodes[isStaged].Remove(runningPath);
-				}
-			}
+			if (_collapsed.Contains(running))
+				_collapsed.Remove(running);
 		}
 
 		private void branchLocalToolStripMenuItem_Click(object sender, EventArgs e)
@@ -750,6 +730,16 @@ namespace PaJaMa.GitStudio
 			// if (error) return;
 			refreshBranches();
 		}
-		
+
+		private void renameToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+			var branch = tvLocalBranches.SelectedNodes[0].Tag as LocalBranch;
+			var result = WinControls.InputBox.Show("Enter new branch name:", "Rename Branch");
+			if (result.Result == DialogResult.OK)
+			{
+				_helper.RunCommand("branch -m " + branch.BranchName + " " + result.Text);
+				refreshBranches();
+			}
+		}
 	}
 }
