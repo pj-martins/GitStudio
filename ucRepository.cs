@@ -318,13 +318,15 @@ namespace PaJaMa.GitStudio
 			var tv = tvUnStaged.Focused ? tvUnStaged : tvStaged;
 			foreach (var node in tv.GetSelectedFlattenedNodes())
 			{
-				if (node.Tag == null) return;
-				var currFile = Path.Combine(Repository.LocalPath, (node.Tag as Difference).FileName);
+				if (node.Tag == null) continue;
+				var diff = node.Tag as Difference;
+				if (diff.DifferenceType != DifferenceType.Modify) continue;
+				var currFile = Path.Combine(Repository.LocalPath, diff.FileName);
 				var tmpDir = Path.Combine(Path.GetTempPath(), "GitStudio");
 				if (!Directory.Exists(tmpDir)) Directory.CreateDirectory(tmpDir);
 				var tmpFile = Path.Combine(tmpDir, Guid.NewGuid() + ".tmp");
 				bool error = false;
-				var oldContent = _helper.RunCommand("--no-pager show " + _currentBranch + ":\"" + (node.Tag as Difference).FileName + "\"", ref error);
+				var oldContent = _helper.RunCommand("--no-pager show " + _currentBranch + ":\"" + diff.FileName + "\"", ref error);
 				if (error) return;
 				File.WriteAllLines(tmpFile, oldContent);
 				Process.Start(settings.ExternalDiffApplication, string.Format(settings.ExternalDiffArgumentsFormat, currFile, tmpFile));
@@ -397,7 +399,7 @@ namespace PaJaMa.GitStudio
 			var selectedItems = getSelectedNodeTags<Difference>(tv);
 			var diff = tv.SelectedNode == null ? null : tv.SelectedNode.Tag as Difference;
 			resolveConflictToolStripMenuItem.Enabled = diff != null && diff.IsConflict;
-			viewExternalToolStripMenuItem.Enabled = diff != null && diff.DifferenceType == DifferenceType.Modify;
+			// viewExternalToolStripMenuItem.Enabled = diff != null && diff.DifferenceType == DifferenceType.Modify;
 			stageAllToolStripMenuItem.Enabled = stageToolStripMenuItem.Enabled = tvUnStaged.Focused;
 			unstageAllToolStripMenuItem.Enabled = unStageToolStripMenuItem.Enabled = tvStaged.Focused;
 		}
