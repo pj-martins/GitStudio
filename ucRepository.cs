@@ -68,6 +68,7 @@ namespace PaJaMa.GitStudio
 				var tv = remote ? tvRemoteBranches : tvLocalBranches;
 				tv.BeginUpdate();
 				tv.Nodes.Clear();
+				tv.SelectedNodes.Clear();
 				foreach (var branch in branches.Where(b => remote ? b is RemoteBranch : b is LocalBranch))
 				{
 					var parts = branch.BranchName.Split(new string[] { "/" }, StringSplitOptions.RemoveEmptyEntries);
@@ -148,7 +149,7 @@ namespace PaJaMa.GitStudio
 		private void mnuRemote_Opening(object sender, CancelEventArgs e)
 		{
 			var branch = tvRemoteBranches.SelectedNode == null ? null : tvRemoteBranches.SelectedNode.Tag as RemoteBranch;
-			pullIntoToolStripMenuItem.Enabled = branch != null;
+			pullIntoToolStripMenuItem.Enabled = branchToolStripMenuItem.Enabled = branch != null;
 			deleteToolStripMenuItem.Enabled = getSelectedNodeTags<RemoteBranch>(tvRemoteBranches).Any();
 			enableDisableCompare();
 		}
@@ -172,7 +173,7 @@ namespace PaJaMa.GitStudio
 		private void deleteToolStripMenuItem_Click(object sender, EventArgs e)
 		{
 			var selected = getSelectedNodeTags<LocalBranch>(tvLocalBranches);
-			if (MessageBox.Show("Are you sure you want to delete " +
+			if (MessageBox.Show("Are you sure you want to delete the following branches?\r\n" +
 				string.Join("\r\n", selected.Select(s => s.ToString()).ToArray())
 				+ "?", "Warning!",
 				MessageBoxButtons.YesNo) == DialogResult.Yes)
@@ -191,7 +192,7 @@ namespace PaJaMa.GitStudio
 		private void deleteRemoteToolStripMenuItem_Click(object sender, EventArgs e)
 		{
 			var selected = getSelectedNodeTags<RemoteBranch>(tvRemoteBranches);
-			if (MessageBox.Show("Are you sure you want to delete " +
+			if (MessageBox.Show("Are you sure you want to delete the following remote branches?\r\n" +
 				string.Join("\r\n", selected.Select(s => s.ToString()).ToArray())
 				+ "?", "Warning!",
 				MessageBoxButtons.YesNo) == DialogResult.Yes)
