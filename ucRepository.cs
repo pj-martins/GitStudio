@@ -399,9 +399,8 @@ namespace PaJaMa.GitStudio
 			var selectedItems = getSelectedNodeTags<Difference>(tv);
 			var diff = tv.SelectedNode == null ? null : tv.SelectedNode.Tag as Difference;
 			resolveConflictToolStripMenuItem.Enabled = diff != null && diff.IsConflict;
-			// viewExternalToolStripMenuItem.Enabled = diff != null && diff.DifferenceType == DifferenceType.Modify;
-			stageAllToolStripMenuItem.Enabled = stageToolStripMenuItem.Enabled = tvUnStaged.Focused;
-			unstageAllToolStripMenuItem.Enabled = unStageToolStripMenuItem.Enabled = tvStaged.Focused;
+			stageAllToolStripMenuItem.Visible = stageToolStripMenuItem.Visible = tvUnStaged.Focused;
+			unstageAllToolStripMenuItem.Visible = unStageToolStripMenuItem.Visible = tvStaged.Focused;
 		}
 
 		private void tv_AfterSelect(object sender, TreeViewEventArgs e)
