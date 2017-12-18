@@ -43,6 +43,7 @@ namespace PaJaMa.GitStudio
 	{
 		Add,
 		Modify,
-		Delete
+		Delete,
+		Rename
 	}
 }

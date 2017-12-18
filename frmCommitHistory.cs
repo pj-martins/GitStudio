@@ -139,6 +139,10 @@ namespace PaJaMa.GitStudio
 					{
 						details.Add(diffparts[1], DifferenceType.Delete);
 					}
+					else if (diffparts[0] == "R")
+					{
+						details.Add(diffparts[1], DifferenceType.Rename);
+					}
 				}
 			}
 			gridDetails.DataSource = details.Select(d => new

@@ -267,6 +267,10 @@ namespace PaJaMa.GitStudio
 								case DifferenceType.Delete:
 									nodeText = "D: " + nodeText;
 									break;
+								case DifferenceType.Rename:
+									nodeText = "R: " + nodeText;
+									break;
+
 							}
 							isConflict = diff.IsConflict;
 						}

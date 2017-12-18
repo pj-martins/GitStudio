@@ -155,6 +155,9 @@ namespace PaJaMa.GitStudio
 					case "D":
 						diff.DifferenceType = DifferenceType.Delete;
 						break;
+					case "R":
+						diff.DifferenceType = DifferenceType.Rename;
+						break;
 					case "UU":
 						diff.DifferenceType = DifferenceType.Modify;
 						diff.IsConflict = true;

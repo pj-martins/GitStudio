@@ -125,7 +125,7 @@
       <DependentUpon>ucRepository.cs</DependentUpon>
     </Compile>
     <Compile Include="GitHelper.cs" />
-    <Compile Include="GitUserSettings.cs" />
+    <Compile Include="GitUserSettings1.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="frmSetup.resx">
