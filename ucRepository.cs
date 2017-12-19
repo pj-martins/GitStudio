@@ -1,4 +1,4 @@
-﻿using PaJaMa.WinControls.MultiSelectTreeView;
+﻿using PaJaMa.WinControls;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;

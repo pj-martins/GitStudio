@@ -31,7 +31,7 @@
 			this.components = new System.ComponentModel.Container();
 			this.splitContainer1 = new System.Windows.Forms.SplitContainer();
 			this.splitContainer2 = new System.Windows.Forms.SplitContainer();
-			this.tvLocalBranches = new PaJaMa.WinControls.MultiSelectTreeView.MultiSelectTreeView();
+			this.tvLocalBranches = new PaJaMa.WinControls.MultiSelectTreeView();
 			this.mnuLocal = new System.Windows.Forms.ContextMenuStrip(this.components);
 			this.checkoutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.deleteToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -41,7 +41,7 @@
 			this.compareToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.historyToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
 			this.label1 = new System.Windows.Forms.Label();
-			this.tvRemoteBranches = new PaJaMa.WinControls.MultiSelectTreeView.MultiSelectTreeView();
+			this.tvRemoteBranches = new PaJaMa.WinControls.MultiSelectTreeView();
 			this.mnuRemote = new System.Windows.Forms.ContextMenuStrip(this.components);
 			this.branchToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.fetchToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -54,7 +54,7 @@
 			this.label2 = new System.Windows.Forms.Label();
 			this.splitContainer3 = new System.Windows.Forms.SplitContainer();
 			this.splitContainer4 = new System.Windows.Forms.SplitContainer();
-			this.tvUnStaged = new PaJaMa.WinControls.MultiSelectTreeView.MultiSelectTreeView();
+			this.tvUnStaged = new PaJaMa.WinControls.MultiSelectTreeView();
 			this.mnuDiffs = new System.Windows.Forms.ContextMenuStrip(this.components);
 			this.viewExternalToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.undoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -66,7 +66,7 @@
 			this.stageAllToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.unstageAllToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.label3 = new System.Windows.Forms.Label();
-			this.tvStaged = new PaJaMa.WinControls.MultiSelectTreeView.MultiSelectTreeView();
+			this.tvStaged = new PaJaMa.WinControls.MultiSelectTreeView();
 			this.label4 = new System.Windows.Forms.Label();
 			this.txtDiffText = new System.Windows.Forms.RichTextBox();
 			this.label5 = new System.Windows.Forms.Label();
@@ -654,22 +654,22 @@
 
 		private System.Windows.Forms.SplitContainer splitContainer1;
 		private System.Windows.Forms.SplitContainer splitContainer2;
-		private PaJaMa.WinControls.MultiSelectTreeView.MultiSelectTreeView tvRemoteBranches;
+		private PaJaMa.WinControls.MultiSelectTreeView tvRemoteBranches;
 		private System.Windows.Forms.ContextMenuStrip mnuRemote;
 		private System.Windows.Forms.ToolStripMenuItem branchToolStripMenuItem;
 		private System.Windows.Forms.ContextMenuStrip mnuLocal;
 		private System.Windows.Forms.ToolStripMenuItem checkoutToolStripMenuItem;
 		private System.Windows.Forms.ToolStripMenuItem fetchToolStripMenuItem;
-		private PaJaMa.WinControls.MultiSelectTreeView.MultiSelectTreeView tvLocalBranches;
+		private PaJaMa.WinControls.MultiSelectTreeView tvLocalBranches;
 		private System.Windows.Forms.ToolStripMenuItem deleteToolStripMenuItem;
 		private System.Windows.Forms.Timer timDiff;
 		private System.Windows.Forms.SplitContainer splitContainer3;
-		private PaJaMa.WinControls.MultiSelectTreeView.MultiSelectTreeView tvUnStaged;
+		private PaJaMa.WinControls.MultiSelectTreeView tvUnStaged;
 		private System.Windows.Forms.RichTextBox txtDiffText;
 		private System.Windows.Forms.ContextMenuStrip mnuDiffs;
 		private System.Windows.Forms.ToolStripMenuItem viewExternalToolStripMenuItem;
 		private System.Windows.Forms.SplitContainer splitContainer4;
-		private PaJaMa.WinControls.MultiSelectTreeView.MultiSelectTreeView tvStaged;
+		private PaJaMa.WinControls.MultiSelectTreeView tvStaged;
 		private System.Windows.Forms.Panel panel1;
 		private System.Windows.Forms.Button btnCommit;
 		private System.Windows.Forms.ToolStripMenuItem undoToolStripMenuItem;
