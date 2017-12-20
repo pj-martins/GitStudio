@@ -445,7 +445,7 @@ namespace PaJaMa.GitStudio
 			resolveUsingMineToolStripMenuItem.Enabled =
 			resolveUsingTheirsToolStripMenuItem.Enabled =
 				diff != null && diff.IsConflict;
-			fileHistoryToolStripMenuItem.Enabled = diff.DifferenceType != DifferenceType.Add;
+			fileHistoryToolStripMenuItem.Enabled = diff != null && diff.DifferenceType != DifferenceType.Add;
 			stageAllToolStripMenuItem.Visible = stageToolStripMenuItem.Visible = tvUnStaged.Focused;
 			unstageAllToolStripMenuItem.Visible = unStageToolStripMenuItem.Visible = tvStaged.Focused;
 		}
