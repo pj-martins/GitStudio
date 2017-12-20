@@ -66,6 +66,7 @@
 			this.gridCommits.Size = new System.Drawing.Size(577, 640);
 			this.gridCommits.TabIndex = 0;
 			this.gridCommits.SelectionChanged += new System.EventHandler(this.gridCommits_SelectionChanged);
+			this.gridCommits.DoubleClick += new System.EventHandler(this.gridCommits_DoubleClick);
 			// 
 			// splitContainer1
 			// 

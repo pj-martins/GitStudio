@@ -16,6 +16,7 @@ namespace PaJaMa.GitStudio
 	{
 		public GitHelper Helper { get; set; }
 		public Branch Branch { get; set; }
+		public string FileName { get; set; }
 
 		public frmCommitHistory()
 		{
@@ -35,7 +36,8 @@ namespace PaJaMa.GitStudio
 
 		private void refreshDifferences()
 		{
-			var logs = Helper.RunCommand("--no-pager log " + Branch.BranchName);
+			splitContainer2.Panel2Collapsed = !string.IsNullOrEmpty(FileName);
+			var logs = Helper.RunCommand("--no-pager log " + (string.IsNullOrEmpty(FileName) ? Branch.BranchName : " -- " + FileName));
 			var commits = new List<Commit>();
 			//commits.Add(new Commit()
 			//{
@@ -127,6 +129,7 @@ namespace PaJaMa.GitStudio
 				var diffparts = diff.Split('\t');
 				if (diffparts.Length > 1)
 				{
+					if (!string.IsNullOrEmpty(FileName) && diffparts[1] != FileName) continue;
 					if (diffparts[0] == "M")
 					{
 						details.Add(diffparts[1], DifferenceType.Modify);
@@ -197,7 +200,7 @@ namespace PaJaMa.GitStudio
 					txtDifferences.Text = string.Empty;
 					return;
 				}
-				
+
 				var content1 = Helper.RunCommand("--no-pager show " + commitsToCompare.Item2.CommitID + ":" + selectedRow.Cells["File"].Value.ToString());
 				var content2 = Helper.RunCommand("--no-pager show " + commitsToCompare.Item1.CommitID + ":" + selectedRow.Cells["File"].Value.ToString());
 
@@ -210,21 +213,11 @@ namespace PaJaMa.GitStudio
 				Process.Start(settings.ExternalDiffApplication, string.Format(settings.ExternalDiffArgumentsFormat, tmpFile1, tmpFile2));
 			}
 		}
-	}
 
-	public class Commit
-	{
-		public string CommitID { get; set; }
-		public string Author { get; set; }
-		public string Date { get; set; }
-		public string Comment { get; set; }
-
-		[Browsable(false)]
-		public int Index { get; set; }
-
-		public Commit()
+		private void gridCommits_DoubleClick(object sender, EventArgs e)
 		{
-			Comment = "";
+			if (!string.IsNullOrEmpty(FileName))
+				externalCompareToolStripMenuItem_Click(sender, e);
 		}
 	}
 }

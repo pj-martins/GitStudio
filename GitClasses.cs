@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -45,5 +46,21 @@ namespace PaJaMa.GitStudio
 		Modify,
 		Delete,
 		Rename
+	}
+
+	public class Commit
+	{
+		public string CommitID { get; set; }
+		public string Author { get; set; }
+		public string Date { get; set; }
+		public string Comment { get; set; }
+
+		[Browsable(false)]
+		public int Index { get; set; }
+
+		public Commit()
+		{
+			Comment = "";
+		}
 	}
 }

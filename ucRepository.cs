@@ -299,10 +299,10 @@ namespace PaJaMa.GitStudio
 			//}
 			//else
 			//{
-				foreach (var exp in expandedNodes)
-				{
-					exp.Expand();
-				}
+			foreach (var exp in expandedNodes)
+			{
+				exp.Expand();
+			}
 			//}
 			tvUnStaged.EndUpdate();
 			tvStaged.EndUpdate();
@@ -333,6 +333,45 @@ namespace PaJaMa.GitStudio
 				var oldContent = _helper.RunCommand("--no-pager show " + _currentBranch + ":\"" + diff.FileName + "\"", ref error);
 				if (error) return;
 				File.WriteAllLines(tmpFile, oldContent);
+
+				if (diff.IsConflict)
+				{
+					var currContent = File.ReadAllLines(currFile);
+					List<string> parsedContent = new List<string>();
+
+					bool inHead = false;
+					bool inBranch = false;
+					foreach (var line in currContent)
+					{
+						if (line == "<<<<<<< HEAD")
+						{
+							inHead = true;
+						}
+						else if (inHead)
+						{
+							if (line == "=======")
+							{
+								inBranch = true;
+								inHead = false;
+							}
+						}
+						else
+						{
+							// TODO: parse branch
+							if (inBranch && line.StartsWith(">>>>>>> "))
+							{
+								inBranch = false;
+							}
+							else
+							{
+								parsedContent.Add(line);
+							}
+						}
+					}
+					currFile = Path.Combine(tmpDir, Guid.NewGuid() + ".tmp");
+					File.WriteAllLines(currFile, parsedContent.ToArray());
+				}
+
 				Process.Start(settings.ExternalDiffApplication, string.Format(settings.ExternalDiffArgumentsFormat, currFile, tmpFile));
 			}
 		}
@@ -402,7 +441,11 @@ namespace PaJaMa.GitStudio
 			var tv = tvUnStaged.Focused ? tvUnStaged : tvStaged;
 			var selectedItems = getSelectedNodeTags<Difference>(tv);
 			var diff = tv.SelectedNode == null ? null : tv.SelectedNode.Tag as Difference;
-			resolveConflictToolStripMenuItem.Enabled = diff != null && diff.IsConflict;
+			resolveConflictToolStripMenuItem.Enabled =
+			resolveUsingMineToolStripMenuItem.Enabled =
+			resolveUsingTheirsToolStripMenuItem.Enabled =
+				diff != null && diff.IsConflict;
+			fileHistoryToolStripMenuItem.Enabled = diff.DifferenceType != DifferenceType.Add;
 			stageAllToolStripMenuItem.Visible = stageToolStripMenuItem.Visible = tvUnStaged.Focused;
 			unstageAllToolStripMenuItem.Visible = unStageToolStripMenuItem.Visible = tvStaged.Focused;
 		}
@@ -517,6 +560,7 @@ namespace PaJaMa.GitStudio
 			_helper.RunCommand("add " + diff.FileName, ref error);
 			_previousDifferences = null;
 			txtDiffText.Text = string.Empty;
+			timDiff_Tick(sender, e);
 		}
 
 		private void stageToolStripMenuItem_Click(object sender, EventArgs e)
@@ -745,6 +789,34 @@ namespace PaJaMa.GitStudio
 				_helper.RunCommand("branch -m " + branch.BranchName + " " + result.Text);
 				refreshBranches();
 			}
+		}
+
+		private void resolveUsingMineToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+			var tv = tvUnStaged.Focused ? tvUnStaged : tvStaged;
+			var diff = tv.SelectedNode == null ? null : tv.SelectedNode.Tag as Difference;
+			_helper.RunCommand("checkout --ours " + diff.FileName);
+			_previousDifferences = null;
+			timDiff_Tick(sender, e);
+		}
+
+		private void resolveUsingTheirsToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+			var tv = tvUnStaged.Focused ? tvUnStaged : tvStaged;
+			var diff = tv.SelectedNode == null ? null : tv.SelectedNode.Tag as Difference;
+			_helper.RunCommand("checkout --theirs " + diff.FileName);
+			_previousDifferences = null;
+			timDiff_Tick(sender, e);
+		}
+
+		private void fileHistoryToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+			var tv = tvUnStaged.Focused ? tvUnStaged : tvStaged;
+			var diff = tv.SelectedNode == null ? null : tv.SelectedNode.Tag as Difference;
+			var frm = new frmCommitHistory();
+			frm.Helper = _helper;
+			frm.FileName = diff.FileName;
+			frm.Show();
 		}
 	}
 }
