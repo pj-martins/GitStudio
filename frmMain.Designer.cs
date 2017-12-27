@@ -34,11 +34,11 @@
 			this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.openToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.cloneToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.setupToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.tabMain = new System.Windows.Forms.TabControl();
 			this.mnuTab = new System.Windows.Forms.ContextMenuStrip(this.components);
 			this.openInExplorerToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.closeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-			this.setupToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.menuStrip1.SuspendLayout();
 			this.mnuTab.SuspendLayout();
 			this.SuspendLayout();
@@ -67,16 +67,23 @@
 			// openToolStripMenuItem
 			// 
 			this.openToolStripMenuItem.Name = "openToolStripMenuItem";
-			this.openToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+			this.openToolStripMenuItem.Size = new System.Drawing.Size(105, 22);
 			this.openToolStripMenuItem.Text = "&Open";
 			this.openToolStripMenuItem.Click += new System.EventHandler(this.openToolStripMenuItem_Click);
 			// 
 			// cloneToolStripMenuItem
 			// 
 			this.cloneToolStripMenuItem.Name = "cloneToolStripMenuItem";
-			this.cloneToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+			this.cloneToolStripMenuItem.Size = new System.Drawing.Size(105, 22);
 			this.cloneToolStripMenuItem.Text = "&Clone";
 			this.cloneToolStripMenuItem.Click += new System.EventHandler(this.cloneToolStripMenuItem_Click);
+			// 
+			// setupToolStripMenuItem
+			// 
+			this.setupToolStripMenuItem.Name = "setupToolStripMenuItem";
+			this.setupToolStripMenuItem.Size = new System.Drawing.Size(105, 22);
+			this.setupToolStripMenuItem.Text = "&Setup";
+			this.setupToolStripMenuItem.Click += new System.EventHandler(this.setupToolStripMenuItem_Click);
 			// 
 			// tabMain
 			// 
@@ -97,7 +104,7 @@
             this.openInExplorerToolStripMenuItem,
             this.closeToolStripMenuItem});
 			this.mnuTab.Name = "mnuTab";
-			this.mnuTab.Size = new System.Drawing.Size(162, 48);
+			this.mnuTab.Size = new System.Drawing.Size(162, 70);
 			// 
 			// openInExplorerToolStripMenuItem
 			// 
@@ -112,13 +119,6 @@
 			this.closeToolStripMenuItem.Size = new System.Drawing.Size(161, 22);
 			this.closeToolStripMenuItem.Text = "&Close";
 			this.closeToolStripMenuItem.Click += new System.EventHandler(this.closeToolStripMenuItem_Click);
-			// 
-			// setupToolStripMenuItem
-			// 
-			this.setupToolStripMenuItem.Name = "setupToolStripMenuItem";
-			this.setupToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
-			this.setupToolStripMenuItem.Text = "&Setup";
-			this.setupToolStripMenuItem.Click += new System.EventHandler(this.setupToolStripMenuItem_Click);
 			// 
 			// frmMain
 			// 

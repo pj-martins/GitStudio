@@ -62,10 +62,13 @@
 			this.ignoreToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.ignoreExtensionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.resolveConflictToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.resolveUsingMineToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.resolveUsingTheirsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.stageToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.unStageToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.stageAllToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.unstageAllToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.fileHistoryToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.label3 = new System.Windows.Forms.Label();
 			this.tvStaged = new PaJaMa.WinControls.MultiSelectTreeView();
 			this.label4 = new System.Windows.Forms.Label();
@@ -79,9 +82,7 @@
 			this.btnStash = new System.Windows.Forms.Button();
 			this.btnRefresh = new System.Windows.Forms.Button();
 			this.btnCommit = new System.Windows.Forms.Button();
-			this.resolveUsingMineToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-			this.resolveUsingTheirsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-			this.fileHistoryToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.fileHistoryToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
 			((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
 			this.splitContainer1.Panel1.SuspendLayout();
 			this.splitContainer1.Panel2.SuspendLayout();
@@ -163,9 +164,10 @@
             this.abortMergeToolStripMenuItem,
             this.compareToolStripMenuItem,
             this.historyToolStripMenuItem1,
-            this.renameToolStripMenuItem});
+            this.renameToolStripMenuItem,
+            this.fileHistoryToolStripMenuItem1});
 			this.mnuLocal.Name = "mnuLocal";
-			this.mnuLocal.Size = new System.Drawing.Size(142, 180);
+			this.mnuLocal.Size = new System.Drawing.Size(153, 224);
 			this.mnuLocal.Opening += new System.ComponentModel.CancelEventHandler(this.mnuLocal_Opening);
 			// 
 			// checkoutToolStripMenuItem
@@ -402,7 +404,7 @@
             this.unstageAllToolStripMenuItem,
             this.fileHistoryToolStripMenuItem});
 			this.mnuDiffs.Name = "mnuDiffs";
-			this.mnuDiffs.Size = new System.Drawing.Size(183, 290);
+			this.mnuDiffs.Size = new System.Drawing.Size(183, 268);
 			this.mnuDiffs.Opening += new System.ComponentModel.CancelEventHandler(this.mnuDiffs_Opening);
 			// 
 			// viewExternalToolStripMenuItem
@@ -440,6 +442,20 @@
 			this.resolveConflictToolStripMenuItem.Text = "Resolve &Conflict";
 			this.resolveConflictToolStripMenuItem.Click += new System.EventHandler(this.resolveConflictToolStripMenuItem_Click);
 			// 
+			// resolveUsingMineToolStripMenuItem
+			// 
+			this.resolveUsingMineToolStripMenuItem.Name = "resolveUsingMineToolStripMenuItem";
+			this.resolveUsingMineToolStripMenuItem.Size = new System.Drawing.Size(182, 22);
+			this.resolveUsingMineToolStripMenuItem.Text = "Resolve Using &Mine";
+			this.resolveUsingMineToolStripMenuItem.Click += new System.EventHandler(this.resolveUsingMineToolStripMenuItem_Click);
+			// 
+			// resolveUsingTheirsToolStripMenuItem
+			// 
+			this.resolveUsingTheirsToolStripMenuItem.Name = "resolveUsingTheirsToolStripMenuItem";
+			this.resolveUsingTheirsToolStripMenuItem.Size = new System.Drawing.Size(182, 22);
+			this.resolveUsingTheirsToolStripMenuItem.Text = "Resolve Using &Theirs";
+			this.resolveUsingTheirsToolStripMenuItem.Click += new System.EventHandler(this.resolveUsingTheirsToolStripMenuItem_Click);
+			// 
 			// stageToolStripMenuItem
 			// 
 			this.stageToolStripMenuItem.Name = "stageToolStripMenuItem";
@@ -467,6 +483,13 @@
 			this.unstageAllToolStripMenuItem.Size = new System.Drawing.Size(182, 22);
 			this.unstageAllToolStripMenuItem.Text = "U&nstage All";
 			this.unstageAllToolStripMenuItem.Click += new System.EventHandler(this.unstageAllToolStripMenuItem_Click);
+			// 
+			// fileHistoryToolStripMenuItem
+			// 
+			this.fileHistoryToolStripMenuItem.Name = "fileHistoryToolStripMenuItem";
+			this.fileHistoryToolStripMenuItem.Size = new System.Drawing.Size(182, 22);
+			this.fileHistoryToolStripMenuItem.Text = "&History";
+			this.fileHistoryToolStripMenuItem.Click += new System.EventHandler(this.fileHistoryToolStripMenuItem_Click);
 			// 
 			// label3
 			// 
@@ -618,26 +641,12 @@
 			this.btnCommit.UseVisualStyleBackColor = true;
 			this.btnCommit.Click += new System.EventHandler(this.btnCommit_Click);
 			// 
-			// resolveUsingMineToolStripMenuItem
+			// fileHistoryToolStripMenuItem1
 			// 
-			this.resolveUsingMineToolStripMenuItem.Name = "resolveUsingMineToolStripMenuItem";
-			this.resolveUsingMineToolStripMenuItem.Size = new System.Drawing.Size(182, 22);
-			this.resolveUsingMineToolStripMenuItem.Text = "Resolve Using &Mine";
-			this.resolveUsingMineToolStripMenuItem.Click += new System.EventHandler(this.resolveUsingMineToolStripMenuItem_Click);
-			// 
-			// resolveUsingTheirsToolStripMenuItem
-			// 
-			this.resolveUsingTheirsToolStripMenuItem.Name = "resolveUsingTheirsToolStripMenuItem";
-			this.resolveUsingTheirsToolStripMenuItem.Size = new System.Drawing.Size(182, 22);
-			this.resolveUsingTheirsToolStripMenuItem.Text = "Resolve Using &Theirs";
-			this.resolveUsingTheirsToolStripMenuItem.Click += new System.EventHandler(this.resolveUsingTheirsToolStripMenuItem_Click);
-			// 
-			// fileHistoryToolStripMenuItem
-			// 
-			this.fileHistoryToolStripMenuItem.Name = "fileHistoryToolStripMenuItem";
-			this.fileHistoryToolStripMenuItem.Size = new System.Drawing.Size(182, 22);
-			this.fileHistoryToolStripMenuItem.Text = "&History";
-			this.fileHistoryToolStripMenuItem.Click += new System.EventHandler(this.fileHistoryToolStripMenuItem_Click);
+			this.fileHistoryToolStripMenuItem1.Name = "fileHistoryToolStripMenuItem1";
+			this.fileHistoryToolStripMenuItem1.Size = new System.Drawing.Size(152, 22);
+			this.fileHistoryToolStripMenuItem1.Text = "&File History";
+			this.fileHistoryToolStripMenuItem1.Click += new System.EventHandler(this.fileHistoryToolStripMenuItem1_Click);
 			// 
 			// ucRepository
 			// 
@@ -732,5 +741,6 @@
 		private System.Windows.Forms.ToolStripMenuItem resolveUsingMineToolStripMenuItem;
 		private System.Windows.Forms.ToolStripMenuItem resolveUsingTheirsToolStripMenuItem;
 		private System.Windows.Forms.ToolStripMenuItem fileHistoryToolStripMenuItem;
+		private System.Windows.Forms.ToolStripMenuItem fileHistoryToolStripMenuItem1;
 	}
 }

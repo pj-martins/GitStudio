@@ -818,5 +818,12 @@ namespace PaJaMa.GitStudio
 			frm.FileName = diff.FileName;
 			frm.Show();
 		}
+
+		private void fileHistoryToolStripMenuItem1_Click(object sender, EventArgs e)
+		{
+			var frm = new frmFileHistory();
+			frm.Helper = _helper;
+			frm.Show();
+		}
 	}
 }
