@@ -1,4 +1,5 @@
-﻿using System;
+﻿using PaJaMa.WinControls;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
@@ -65,13 +66,12 @@ namespace PaJaMa.GitStudio
 			}
 			if (errorLines.Count > 0)
 			{
-				var errorMessage = string.Join("\r\n", errorLines.ToArray());
 				if (!checkForErrors)
-					lines.Add(errorMessage);
+					lines.AddRange(errorLines);
 				else
 				{
 					hasError = true;
-					MessageBox.Show(errorMessage);
+					ScrollableMessageBox.Show(errorLines.ToArray());
 				}
 			}
 			return lines.ToArray();

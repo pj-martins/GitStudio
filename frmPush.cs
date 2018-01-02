@@ -1,4 +1,5 @@
-﻿using System;
+﻿using PaJaMa.WinControls;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -65,7 +66,7 @@ namespace PaJaMa.GitStudio
 
 			var lines = helper.RunCommand("push -u origin " + branchName, true);
 			if (lines.Length > 0)
-				MessageBox.Show(string.Join("\r\n", lines));
+				ScrollableMessageBox.Show(lines);
 
 			// if (error) return;
 			this.DialogResult = DialogResult.OK;

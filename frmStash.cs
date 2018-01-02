@@ -1,4 +1,5 @@
-﻿using System;
+﻿using PaJaMa.WinControls;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -23,7 +24,7 @@ namespace PaJaMa.GitStudio
 		{
 			var helper = new GitHelper(Repository.LocalPath);
 			var lines = helper.RunCommand("stash save \"" + txtMessage.Text + "\"");
-			MessageBox.Show(string.Join("\r\n", lines));
+			ScrollableMessageBox.Show(lines);
 			if (lines.Any(l => l.Contains("error"))) return;
 			this.DialogResult = DialogResult.OK;
 			this.Close();

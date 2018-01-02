@@ -1,4 +1,5 @@
-﻿using System;
+﻿using PaJaMa.WinControls;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -86,7 +87,7 @@ namespace PaJaMa.GitStudio
 			var lines = helper.RunCommand("commit -m \"" + txtMessage.Text + "\"", true).ToList();
 			if (lines.Any(l => l.StartsWith("error")))
 			{
-				MessageBox.Show(string.Join("\r\n", lines));
+				ScrollableMessageBox.Show(lines.ToArray());
 				return;
 			}
 
@@ -97,7 +98,7 @@ namespace PaJaMa.GitStudio
 			if (chkPush.Checked)
 				lines.AddRange(helper.RunCommand("push -u origin " + branchName, true));
 
-			MessageBox.Show(string.Join("\r\n", lines));
+			ScrollableMessageBox.Show(lines.ToArray());
 
 			this.DialogResult = DialogResult.OK;
 			this.Close();

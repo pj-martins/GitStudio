@@ -183,7 +183,7 @@ namespace PaJaMa.GitStudio
 
 				var lines = _helper.RunCommand(arguments.ToArray());
 				if (lines.Any())
-					MessageBox.Show(string.Join("\r\n", lines));
+					ScrollableMessageBox.Show(lines);
 				refreshBranches();
 			}
 		}
@@ -207,7 +207,7 @@ namespace PaJaMa.GitStudio
 				}
 				var lines = _helper.RunCommand(arguments.ToArray());
 				if (lines.Any())
-					MessageBox.Show(string.Join("\r\n", lines));
+					ScrollableMessageBox.Show(lines);
 				refreshBranches();
 			}
 		}
@@ -770,7 +770,7 @@ namespace PaJaMa.GitStudio
 				branchName = branchName.Substring(7);
 			var lines = _helper.RunCommand("pull origin " + branchName, true);
 			if (lines.Length > 0)
-				MessageBox.Show(string.Join("\r\n", lines));
+				ScrollableMessageBox.Show(lines);
 			// if (error) return;
 			refreshBranches();
 		}
@@ -793,7 +793,7 @@ namespace PaJaMa.GitStudio
 				branchName = branchName.Substring(7);
 			var lines = _helper.RunCommand("pull origin " + branchName, true);
 			if (lines.Length > 0)
-				MessageBox.Show(string.Join("\r\n", lines));
+				ScrollableMessageBox.Show(lines);
 			// if (error) return;
 			refreshBranches();
 		}

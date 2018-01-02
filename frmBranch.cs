@@ -1,4 +1,5 @@
-﻿using System;
+﻿using PaJaMa.WinControls;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -45,7 +46,7 @@ namespace PaJaMa.GitStudio
 					+ (chkTrack.Checked ? " --track " : " --no-track ") + txtFrom.Text, true);
 			//if (lines.Any(l => !l.StartsWith("Switched to")))
 			//{
-			if (lines.Any()) MessageBox.Show(string.Join("\r\n", lines));
+			if (lines.Any()) ScrollableMessageBox.Show(lines);
 			//	return;
 			//}
 			this.DialogResult = DialogResult.OK;

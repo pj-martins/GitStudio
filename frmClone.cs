@@ -1,4 +1,5 @@
 ﻿using PaJaMa.Common;
+using PaJaMa.WinControls;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -64,7 +65,7 @@ namespace PaJaMa.GitStudio
 			}
 			else
 			{
-				MessageBox.Show(string.Join("\r\n", lines), "ERROR!");
+				ScrollableMessageBox.Show(lines, "ERROR!");
 			}
 
 		}

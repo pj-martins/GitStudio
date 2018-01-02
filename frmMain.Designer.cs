@@ -104,7 +104,7 @@
             this.openInExplorerToolStripMenuItem,
             this.closeToolStripMenuItem});
 			this.mnuTab.Name = "mnuTab";
-			this.mnuTab.Size = new System.Drawing.Size(162, 70);
+			this.mnuTab.Size = new System.Drawing.Size(162, 48);
 			// 
 			// openInExplorerToolStripMenuItem
 			// 
