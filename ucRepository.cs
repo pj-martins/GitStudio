@@ -52,7 +52,7 @@ namespace PaJaMa.GitStudio
 
 		private void refreshBranches(bool initial = false)
 		{
-			var branches = _helper.GetBranches();
+			var branches = _helper.GetBranches(initial);
 			if (branches.Count < 1) return;
 
 			_currentBranch = branches.OfType<LocalBranch>().First(b => b.IsCurrent);
@@ -129,7 +129,7 @@ namespace PaJaMa.GitStudio
 		{
 			if (tvLocalBranches.SelectedNode == null || tvLocalBranches.SelectedNode.Tag == null) return;
 			bool error = false;
-			_helper.RunCommand("checkout " + tvLocalBranches.SelectedNode.Tag.ToString(), ref error);
+			_helper.RunCommand("checkout " + tvLocalBranches.SelectedNode.Tag.ToString(), true, ref error);
 			refreshBranches();
 		}
 
@@ -162,7 +162,7 @@ namespace PaJaMa.GitStudio
 		private void fetchToolStripMenuItem_Click(object sender, EventArgs e)
 		{
 			bool error = false;
-			_helper.RunCommand("fetch " + tvRemoteBranches.SelectedNode.Text, ref error);
+			_helper.RunCommand("fetch " + tvRemoteBranches.SelectedNode.Text, true, ref error);
 			// if (error) return;
 			refreshBranches();
 		}
@@ -175,11 +175,13 @@ namespace PaJaMa.GitStudio
 				, "Warning!",
 				MessageBoxButtons.YesNo) == DialogResult.Yes)
 			{
-				List<string> lines = new List<string>();
+				List<string> arguments = new List<string>();
 				foreach (var s in selected)
 				{
-					lines.AddRange(_helper.RunCommand("branch -D " + s.BranchName));
+					arguments.Add("branch -D " + s.BranchName);
 				}
+
+				var lines = _helper.RunCommand(arguments.ToArray());
 				if (lines.Any())
 					MessageBox.Show(string.Join("\r\n", lines));
 				refreshBranches();
@@ -194,15 +196,16 @@ namespace PaJaMa.GitStudio
 				, "Warning!",
 				MessageBoxButtons.YesNo) == DialogResult.Yes)
 			{
-				List<string> lines = new List<string>();
+				List<string> arguments = new List<string>();
 				foreach (var s in selected)
 				{
 					var branchName = s.BranchName;
 					if (branchName.StartsWith("origin/"))
 						branchName = branchName.Substring(7);
 
-					lines.AddRange(_helper.RunCommand("push -d origin " + branchName));
+					arguments.Add("push -d origin " + branchName);
 				}
+				var lines = _helper.RunCommand(arguments.ToArray());
 				if (lines.Any())
 					MessageBox.Show(string.Join("\r\n", lines));
 				refreshBranches();
@@ -330,7 +333,7 @@ namespace PaJaMa.GitStudio
 				if (!Directory.Exists(tmpDir)) Directory.CreateDirectory(tmpDir);
 				var tmpFile = Path.Combine(tmpDir, Guid.NewGuid() + ".tmp");
 				bool error = false;
-				var oldContent = _helper.RunCommand("--no-pager show " + _currentBranch + ":\"" + diff.FileName + "\"", ref error);
+				var oldContent = _helper.RunCommand("--no-pager show " + _currentBranch + ":\"" + diff.FileName + "\"", false, ref error);
 				if (error) return;
 				File.WriteAllLines(tmpFile, oldContent);
 
@@ -343,7 +346,7 @@ namespace PaJaMa.GitStudio
 					bool inBranch = false;
 					foreach (var line in currContent)
 					{
-						if (line == "<<<<<<< HEAD")
+						if (line.StartsWith("<<<<<<< "))
 						{
 							inHead = true;
 						}
@@ -382,22 +385,30 @@ namespace PaJaMa.GitStudio
 				return;
 
 			var tv = tvUnStaged.Focused ? tvUnStaged : tvStaged;
-			foreach (var selectedItem in getSelectedNodeTags<Difference>(tv))
+			var differences = getSelectedNodeTags<Difference>(tv);
+			var worker = new BackgroundWorker();
+			worker.DoWork += (object sender2, DoWorkEventArgs e2) =>
 			{
-				if (tv == tvStaged)
-					_helper.RunCommand("reset -- " + selectedItem.FileName);
-				if (selectedItem.DifferenceType == DifferenceType.Add)
+				int i = 1;
+				foreach (var selectedItem in differences)
 				{
-					if (selectedItem.FileName.EndsWith("/"))
-						Directory.Delete(Path.Combine(Repository.LocalPath, selectedItem.FileName), true);
+					worker.ReportProgress(100 * i++ / differences.Count, "Undoing " + selectedItem.FileName);
+					if (tv == tvStaged)
+						_helper.RunCommand("reset -- " + selectedItem.FileName);
+					if (selectedItem.DifferenceType == DifferenceType.Add)
+					{
+						if (selectedItem.FileName.EndsWith("/"))
+							Directory.Delete(Path.Combine(Repository.LocalPath, selectedItem.FileName), true);
+						else
+							File.Delete(Path.Combine(Repository.LocalPath, selectedItem.FileName));
+					}
 					else
-						File.Delete(Path.Combine(Repository.LocalPath, selectedItem.FileName));
+					{
+						_helper.RunCommand("checkout -- " + selectedItem.FileName);
+					}
 				}
-				else
-				{
-					_helper.RunCommand("checkout -- " + selectedItem.FileName);
-				}
-			}
+			};
+			WinControls.WinProgressBox.ShowProgress(worker, "Undoing changes");
 			txtDiffText.Text = string.Empty;
 			timDiff_Tick(this, new EventArgs());
 		}
@@ -459,7 +470,8 @@ namespace PaJaMa.GitStudio
 			}
 
 			var diff = e.Node.Tag as Difference;
-			var diffs = diff == null || diff.DifferenceType != DifferenceType.Modify ? new string[0] : _helper.RunCommand("--no-pager diff " + (diff.IsStaged ? "--cached " : "") + "\"" + diff.FileName + "\"");
+			var diffs = diff == null || diff.DifferenceType != DifferenceType.Modify ? new string[0] :
+				_helper.RunCommand("--no-pager diff " + (diff.IsStaged ? "--cached " : "") + "\"" + diff.FileName + "\"");
 			// if (error) return;
 			txtDiffText.Text = string.Join("\r\n", diffs);
 		}
@@ -537,7 +549,7 @@ namespace PaJaMa.GitStudio
 				MessageBoxButtons.YesNo) == DialogResult.Yes)
 			{
 				bool error = false;
-				_helper.RunCommand("merge " + branch.BranchName, ref error);
+				_helper.RunCommand("merge " + branch.BranchName, true, ref error);
 			}
 		}
 
@@ -548,7 +560,7 @@ namespace PaJaMa.GitStudio
 				MessageBoxButtons.YesNo) == DialogResult.Yes)
 			{
 				bool error = false;
-				_helper.RunCommand("merge " + branch.BranchName, ref error);
+				_helper.RunCommand("merge " + branch.BranchName, true, ref error);
 			}
 		}
 
@@ -557,7 +569,7 @@ namespace PaJaMa.GitStudio
 			var tv = tvUnStaged.Focused ? tvUnStaged : tvStaged;
 			var diff = tv.SelectedNode.Tag as Difference;
 			bool error = false;
-			_helper.RunCommand("add " + diff.FileName, ref error);
+			_helper.RunCommand("add " + diff.FileName, false, ref error);
 			_previousDifferences = null;
 			txtDiffText.Text = string.Empty;
 			timDiff_Tick(sender, e);
@@ -717,22 +729,28 @@ namespace PaJaMa.GitStudio
 
 		private void stageAllToolStripMenuItem_Click(object sender, EventArgs e)
 		{
-			var flattened = MultiSelectTreeView.GetFlattenedNodes(tvUnStaged.Nodes.OfType<TreeNode>());
-			foreach (var flat in flattened.Where(f => f.Tag is Difference).Select(f => f.Tag as Difference))
+			List<string> arguments = new List<string>();
+			var flattened = MultiSelectTreeView.GetFlattenedNodes(tvUnStaged.Nodes.OfType<TreeNode>())
+					.Where(f => f.Tag is Difference).Select(f => f.Tag as Difference).ToList();
+			foreach (var flat in flattened)
 			{
-				_helper.RunCommand("add " + flat.FileName);
+				arguments.Add("add " + flat.FileName);
 			}
+			_helper.RunCommand(arguments.ToArray(), true);
 			txtDiffText.Text = string.Empty;
 			timDiff_Tick(this, new EventArgs());
 		}
 
 		private void unstageAllToolStripMenuItem_Click(object sender, EventArgs e)
 		{
-			var flattened = MultiSelectTreeView.GetFlattenedNodes(tvStaged.Nodes.OfType<TreeNode>());
-			foreach (var flat in flattened.Where(f => f.Tag is Difference).Select(f => f.Tag as Difference))
+			List<string> arguments = new List<string>();
+			var flattened = MultiSelectTreeView.GetFlattenedNodes(tvStaged.Nodes.OfType<TreeNode>())
+				.Where(f => f.Tag is Difference).Select(f => f.Tag as Difference).ToList();
+			foreach (var flat in flattened)
 			{
-				_helper.RunCommand("reset -- " + flat.FileName);
+				arguments.Add("reset -- " + flat.FileName);
 			}
+			_helper.RunCommand(arguments.ToArray(), true);
 			txtDiffText.Text = string.Empty;
 			timDiff_Tick(this, new EventArgs());
 		}
@@ -740,7 +758,7 @@ namespace PaJaMa.GitStudio
 		private void pruneToolStripMenuItem_Click(object sender, EventArgs e)
 		{
 			bool error = false;
-			_helper.RunCommand("remote prune " + tvRemoteBranches.SelectedNode.Text, ref error);
+			_helper.RunCommand("remote prune " + tvRemoteBranches.SelectedNode.Text, true, ref error);
 			// if (error) return;
 			refreshBranches();
 		}
@@ -750,7 +768,7 @@ namespace PaJaMa.GitStudio
 			var branchName = _currentBranch.TracksBranch.BranchName;
 			if (branchName.StartsWith("origin/"))
 				branchName = branchName.Substring(7);
-			var lines = _helper.RunCommand("pull origin " + branchName);
+			var lines = _helper.RunCommand("pull origin " + branchName, true);
 			if (lines.Length > 0)
 				MessageBox.Show(string.Join("\r\n", lines));
 			// if (error) return;
@@ -773,7 +791,7 @@ namespace PaJaMa.GitStudio
 			var branchName = branch.BranchName;
 			if (branchName.StartsWith("origin/"))
 				branchName = branchName.Substring(7);
-			var lines = _helper.RunCommand("pull origin " + branchName);
+			var lines = _helper.RunCommand("pull origin " + branchName, true);
 			if (lines.Length > 0)
 				MessageBox.Show(string.Join("\r\n", lines));
 			// if (error) return;
@@ -783,10 +801,10 @@ namespace PaJaMa.GitStudio
 		private void renameToolStripMenuItem_Click(object sender, EventArgs e)
 		{
 			var branch = tvLocalBranches.SelectedNodes[0].Tag as LocalBranch;
-			var result = WinControls.InputBox.Show("Enter new branch name:", "Rename Branch");
+			var result = WinControls.InputBox.Show("Enter new branch name:", "Rename Branch", branch.BranchName);
 			if (result.Result == DialogResult.OK)
 			{
-				_helper.RunCommand("branch -m " + branch.BranchName + " " + result.Text);
+				_helper.RunCommand("branch -m " + branch.BranchName + " " + result.Text, true);
 				refreshBranches();
 			}
 		}

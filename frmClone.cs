@@ -32,7 +32,7 @@ namespace PaJaMa.GitStudio
 			if (cboBranches.Items.Count < 1)
 			{
 				bool error = false;
-				var remotes = new GitHelper(null).RunCommand("ls-remote " + txtURL.Text, ref error);
+				var remotes = new GitHelper(null).RunCommand("ls-remote " + txtURL.Text, false, ref error);
 				foreach (var remote in remotes)
 				{
 					var repo = remote.Split('\t')[1];
@@ -48,7 +48,7 @@ namespace PaJaMa.GitStudio
 		{
 			var settings = SettingsHelper.GetUserSettings<GitUserSettings>();
 			var lines = new GitHelper(null).RunCommand("clone " + txtURL.Text + " " + txtPath.Text +
-			(string.IsNullOrEmpty(cboBranches.Text) ? "" : " -b " + cboBranches.Text));
+			(string.IsNullOrEmpty(cboBranches.Text) ? "" : " -b " + cboBranches.Text), true);
 
 			if (lines.Length == 1 && lines[0].StartsWith("Cloning into"))
 			{

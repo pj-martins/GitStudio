@@ -37,7 +37,7 @@ namespace PaJaMa.GitStudio
 
 		private void refreshStashes()
 		{
-			var items = Helper.RunCommand("stash list");
+			var items = Helper.RunCommand("stash list", false);
 			var stashes = new List<Stash>();
 			foreach (var item in items)
 			{
@@ -63,8 +63,7 @@ namespace PaJaMa.GitStudio
 
 			var stashID = (selectedRows.First().DataBoundItem as Stash).StashID;
 
-			var diffs = Helper.RunCommand("--no-pager stash show " + stashID
-	+ " --name-status");
+			var diffs = Helper.RunCommand("--no-pager stash show " + stashID + " --name-status", false);
 			var details = new Dictionary<string, DifferenceType>();
 			foreach (var diff in diffs)
 			{
@@ -113,8 +112,7 @@ namespace PaJaMa.GitStudio
 				return;
 			}
 
-			var diffs = Helper.RunCommand("--no-pager diff " + (selectedStash.DataBoundItem as Stash).StashID + " -- "
-	+ selectedRow.Cells["File"].Value.ToString());
+			var diffs = Helper.RunCommand("--no-pager diff " + (selectedStash.DataBoundItem as Stash).StashID + " -- " + selectedRow.Cells["File"].Value.ToString());
 			txtDifferences.Text = string.Join("\r\n", diffs);
 		}
 
@@ -149,7 +147,7 @@ namespace PaJaMa.GitStudio
 				if (!Directory.Exists(tmpDir)) Directory.CreateDirectory(tmpDir);
 				var tmpFile = Path.Combine(tmpDir, Guid.NewGuid() + ".tmp");
 				bool error = false;
-				var oldContent = Helper.RunCommand("--no-pager show " + stashID + ":\"" + fileName + "\"", ref error);
+				var oldContent = Helper.RunCommand("--no-pager show " + stashID + ":\"" + fileName + "\"", false, ref error);
 				if (error) return;
 				File.WriteAllLines(tmpFile, oldContent);
 				Process.Start(settings.ExternalDiffApplication, string.Format(settings.ExternalDiffArgumentsFormat, currFile, tmpFile));
@@ -168,7 +166,7 @@ namespace PaJaMa.GitStudio
 			foreach (var stashRow in stashRows)
 			{
 				var stashID = stashRow.Cells["StashID"].Value.ToString();
-				Helper.RunCommand("stash drop " + stashID);
+				Helper.RunCommand("stash drop " + stashID, false);
 			}
 			refreshStashes();
 		}
@@ -181,7 +179,7 @@ namespace PaJaMa.GitStudio
 				stashRow.Cells["StashID"].Value.ToString(), "Warning!", MessageBoxButtons.YesNo) != DialogResult.Yes)
 				return;
 
-			Helper.RunCommand("stash apply " + stashRow.Cells["StashID"].Value.ToString());
+			Helper.RunCommand("stash apply " + stashRow.Cells["StashID"].Value.ToString(), true);
 			refreshStashes();
 		}
 
@@ -193,7 +191,7 @@ namespace PaJaMa.GitStudio
 				stashRow.Cells["StashID"].Value.ToString(), "Warning!", MessageBoxButtons.YesNo) != DialogResult.Yes)
 				return;
 
-			Helper.RunCommand("stash pop " + stashRow.Cells["StashID"].Value.ToString());
+			Helper.RunCommand("stash pop " + stashRow.Cells["StashID"].Value.ToString(), true);
 			refreshStashes();
 		}
 
@@ -205,7 +203,7 @@ namespace PaJaMa.GitStudio
 			var result = InputBox.Show("Branch Name");
 			if (result.Result != DialogResult.OK) return;
 
-			Helper.RunCommand("stash branch " + result.Text + " " + stashRow.Cells["StashID"].Value.ToString());
+			Helper.RunCommand("stash branch " + result.Text + " " + stashRow.Cells["StashID"].Value.ToString(), true);
 
 			BranchCreated?.Invoke(this, new EventArgs());
 			refreshStashes();

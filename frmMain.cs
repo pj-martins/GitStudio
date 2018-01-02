@@ -97,7 +97,7 @@ namespace PaJaMa.GitStudio
 				settings.LastBrowsedFolder = dlg.SelectedPath;
 				bool error = false;
 				var helper = new GitHelper(dlg.SelectedPath);
-				var remote = helper.RunCommand("config --get remote.origin.url", ref error).FirstOrDefault();
+				var remote = helper.RunCommand("config --get remote.origin.url", true, ref error).FirstOrDefault();
 				if (error) return;
 				var repo = new GitRepository()
 				{

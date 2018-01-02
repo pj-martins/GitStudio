@@ -83,7 +83,7 @@ namespace PaJaMa.GitStudio
 		private void btnGo_Click(object sender, EventArgs e)
 		{
 			var helper = new GitHelper(Repository.LocalPath);
-			var lines = helper.RunCommand("commit -m \"" + txtMessage.Text + "\"").ToList();
+			var lines = helper.RunCommand("commit -m \"" + txtMessage.Text + "\"", true).ToList();
 			if (lines.Any(l => l.StartsWith("error")))
 			{
 				MessageBox.Show(string.Join("\r\n", lines));
@@ -95,7 +95,7 @@ namespace PaJaMa.GitStudio
 				branchName = branchName.Substring(7);
 
 			if (chkPush.Checked)
-				lines.AddRange(helper.RunCommand("push -u origin " + branchName));
+				lines.AddRange(helper.RunCommand("push -u origin " + branchName, true));
 
 			MessageBox.Show(string.Join("\r\n", lines));
 

@@ -46,7 +46,7 @@
 			this.txtFrom.Name = "txtFrom";
 			this.txtFrom.ReadOnly = true;
 			this.txtFrom.Size = new System.Drawing.Size(426, 20);
-			this.txtFrom.TabIndex = 0;
+			this.txtFrom.TabIndex = 6;
 			// 
 			// txtTo
 			// 
@@ -55,7 +55,8 @@
 			this.txtTo.Location = new System.Drawing.Point(62, 38);
 			this.txtTo.Name = "txtTo";
 			this.txtTo.Size = new System.Drawing.Size(426, 20);
-			this.txtTo.TabIndex = 1;
+			this.txtTo.TabIndex = 0;
+			this.txtTo.KeyUp += new System.Windows.Forms.KeyEventHandler(this.txtTo_KeyUp);
 			// 
 			// btnBranch
 			// 

@@ -116,7 +116,7 @@ namespace PaJaMa.GitStudio
 			{
 				lblCommits.Text = commitsToCompare.Item1.CommitID + " - " + commitsToCompare.Item2.CommitID;
 				diffs = Helper.RunCommand("--no-pager diff --name-status " + commitsToCompare.Item1.CommitID
-					+ " " + commitsToCompare.Item2.CommitID);
+					+ " " + commitsToCompare.Item2.CommitID, false);
 			}
 			else
 			{

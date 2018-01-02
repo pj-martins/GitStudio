@@ -39,10 +39,10 @@ namespace PaJaMa.GitStudio
 		{
 			string[] lines = null;
 			if ((BranchFrom is LocalBranch) && (BranchFrom as LocalBranch).TracksBranch != null && txtFrom.Text == txtTo.Text)
-				lines = new GitHelper(Repository.LocalPath).RunCommand("branch --unset-upstream");
+				lines = new GitHelper(Repository.LocalPath).RunCommand("branch --unset-upstream", true);
 			else
 				lines = new GitHelper(Repository.LocalPath).RunCommand((chkCheckout.Checked ? "checkout -b " : "branch ") + txtTo.Text
-					+ (chkTrack.Checked ? " --track " : " --no-track ") + txtFrom.Text);
+					+ (chkTrack.Checked ? " --track " : " --no-track ") + txtFrom.Text, true);
 			//if (lines.Any(l => !l.StartsWith("Switched to")))
 			//{
 			if (lines.Any()) MessageBox.Show(string.Join("\r\n", lines));
@@ -56,6 +56,12 @@ namespace PaJaMa.GitStudio
 		{
 			this.DialogResult = DialogResult.Cancel;
 			this.Close();
+		}
+
+		private void txtTo_KeyUp(object sender, KeyEventArgs e)
+		{
+			if (e.KeyCode == Keys.Enter)
+				btnBranch_Click(sender, e);
 		}
 	}
 }

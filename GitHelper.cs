@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -18,30 +19,50 @@ namespace PaJaMa.GitStudio
 			this.WorkingDirectory = workingDirectory;
 		}
 
-		private string[] runCommand(string arguments, bool checkForErrors, ref bool hasError)
+		private string[] runCommand(string[] arguments, bool showProgress, bool checkForErrors, ref bool hasError)
 		{
-			var inf = new ProcessStartInfo("git.exe", arguments);
-			inf.UseShellExecute = false;
-			inf.RedirectStandardOutput = true;
-			inf.RedirectStandardError = true;
-			inf.WindowStyle = ProcessWindowStyle.Hidden;
-			inf.CreateNoWindow = true;
-			if (WorkingDirectory != null)
-				inf.WorkingDirectory = WorkingDirectory;
-			var p = Process.Start(inf);
-			string line = string.Empty;
 			var lines = new List<string>();
-			while ((line = p.StandardOutput.ReadLine()) != null)
-			{
-				lines.Add(line);
-			}
-
 			var errorLines = new List<string>();
-			while ((line = p.StandardError.ReadLine()) != null)
+			BackgroundWorker worker = null;
+			var action = new Action(() =>
 			{
-				errorLines.Add(line);
+				int i = 1;
+				foreach (var argument in arguments)
+				{
+					var inf = new ProcessStartInfo("git.exe", argument);
+					inf.UseShellExecute = false;
+					inf.RedirectStandardOutput = true;
+					inf.RedirectStandardError = true;
+					inf.WindowStyle = ProcessWindowStyle.Hidden;
+					inf.CreateNoWindow = true;
+					if (WorkingDirectory != null)
+						inf.WorkingDirectory = WorkingDirectory;
+					var p = Process.Start(inf);
+					string line = string.Empty;
+					while ((line = p.StandardOutput.ReadLine()) != null)
+					{
+						if (worker != null) worker.ReportProgress(100 * i / argument.Length, line);
+						lines.Add(line);
+					}
+
+					while ((line = p.StandardError.ReadLine()) != null)
+					{
+						if (worker != null) worker.ReportProgress(100 * i / argument.Length, line);
+						errorLines.Add(line);
+					}
+					p.WaitForExit();
+				}
+			});
+			if (showProgress)
+			{
+				worker = new BackgroundWorker();
+				worker.DoWork += (object sender, DoWorkEventArgs e) => action.Invoke();
+				WinControls.WinProgressBox.ShowProgress(worker, "Running command " + arguments, progressBarStyle: ProgressBarStyle.Marquee);
 			}
-			p.WaitForExit();
+			else
+			{
+				action.Invoke();
+			}
 			if (errorLines.Count > 0)
 			{
 				var errorMessage = string.Join("\r\n", errorLines.ToArray());
@@ -56,70 +77,93 @@ namespace PaJaMa.GitStudio
 			return lines.ToArray();
 		}
 
-		public string[] RunCommand(string arguments, ref bool hasError)
+		public string[] RunCommand(string[] arguments, bool showProgress, ref bool hasError)
 		{
-			return runCommand(arguments, true, ref hasError);
+			return runCommand(arguments, showProgress, true, ref hasError);
 		}
 
-		public string[] RunCommand(string arguments)
+		public string[] RunCommand(string[] arguments, bool showProgress = false)
 		{
 			bool hasError = false;
-			return runCommand(arguments, false, ref hasError);
+			return runCommand(arguments, showProgress, false, ref hasError);
 		}
 
-		public List<Branch> GetBranches()
+		public string[] RunCommand(string arguments, bool showProgress, ref bool hasError)
+		{
+			return runCommand(new string[] { arguments }, showProgress, true, ref hasError);
+		}
+
+		public string[] RunCommand(string arguments, bool showProgress = false)
+		{
+			bool hasError = false;
+			return runCommand(new string[] { arguments }, showProgress, false, ref hasError);
+		}
+
+		public List<Branch> GetBranches(bool showProgress = false)
 		{
 			bool remote = true;
 			List<Branch> branches = new List<Branch>();
-			while (true)
+			var action = new Action(() =>
 			{
-				bool error = false;
-				var branchLines = RunCommand("branch " + (remote ? "-r" : "-l") + " -vv", ref error);
-				if (error) return new List<Branch>();
-
-				foreach (var b in branchLines.Select(bl => bl.Trim()))
+				while (true)
 				{
-					var branchParts = b.Split(new string[] { " " }, StringSplitOptions.RemoveEmptyEntries).ToList();
-					Branch branch = remote ? (Branch)new RemoteBranch() : new LocalBranch();
-					branches.Add(branch);
-					if (!remote && branchParts[0] == "*")
+					bool error = false;
+					var branchLines = RunCommand("branch " + (remote ? "-r" : "-l") + " -vv", false, ref error);
+					if (error) break;
+
+					foreach (var b in branchLines.Select(bl => bl.Trim()))
 					{
-						((LocalBranch)branch).IsCurrent = true;
-						branchParts.RemoveAt(0);
-					}
-					branch.BranchName = branchParts[0];
-					branch.BranchID = branchParts[1];
-					branchParts.RemoveRange(0, 2);
-					var remainingParts = string.Join(" ", branchParts.ToArray());
-					if (!remote)
-					{
-						var match = Regex.Match(remainingParts, "\\[(.*?)\\]");
-						if (match.Success)
+						var branchParts = b.Split(new string[] { " " }, StringSplitOptions.RemoveEmptyEntries).ToList();
+						Branch branch = remote ? (Branch)new RemoteBranch() : new LocalBranch();
+						branches.Add(branch);
+						if (!remote && branchParts[0] == "*")
 						{
-							var lb = branch as LocalBranch;
-							var match2 = Regex.Match(match.Groups[1].Value, "(.*?):(.*)");
-							if (match2.Success)
+							((LocalBranch)branch).IsCurrent = true;
+							branchParts.RemoveAt(0);
+						}
+						branch.BranchName = branchParts[0];
+						branch.BranchID = branchParts[1];
+						branchParts.RemoveRange(0, 2);
+						var remainingParts = string.Join(" ", branchParts.ToArray());
+						if (!remote)
+						{
+							var match = Regex.Match(remainingParts, "\\[(.*?)\\]");
+							if (match.Success)
 							{
-								if (match2.Groups[2].Value.Contains("gone"))
-									lb.RemoteIsGone = true;
-								var match3 = Regex.Match(match2.Groups[2].Value, "ahead (\\d*)");
-								if (match3.Success)
-									lb.Ahead = Convert.ToInt16(match3.Groups[1].Value);
-								match3 = Regex.Match(match2.Groups[2].Value, "behind (\\d*)");
-								if (match3.Success)
-									lb.Behind = Convert.ToInt16(match3.Groups[1].Value);
-							}
-							if (!lb.RemoteIsGone)
-							{
-								var remoteBranchName = match2.Success ? match2.Groups[1].Value : match.Groups[1].Value;
-								lb.TracksBranch = branches.OfType<RemoteBranch>().FirstOrDefault(rb => rb.BranchName == remoteBranchName);
+								var lb = branch as LocalBranch;
+								var match2 = Regex.Match(match.Groups[1].Value, "(.*?):(.*)");
+								if (match2.Success)
+								{
+									if (match2.Groups[2].Value.Contains("gone"))
+										lb.RemoteIsGone = true;
+									var match3 = Regex.Match(match2.Groups[2].Value, "ahead (\\d*)");
+									if (match3.Success)
+										lb.Ahead = Convert.ToInt16(match3.Groups[1].Value);
+									match3 = Regex.Match(match2.Groups[2].Value, "behind (\\d*)");
+									if (match3.Success)
+										lb.Behind = Convert.ToInt16(match3.Groups[1].Value);
+								}
+								if (!lb.RemoteIsGone)
+								{
+									var remoteBranchName = match2.Success ? match2.Groups[1].Value : match.Groups[1].Value;
+									lb.TracksBranch = branches.OfType<RemoteBranch>().FirstOrDefault(rb => rb.BranchName == remoteBranchName);
+								}
 							}
 						}
 					}
+					if (remote) remote = false;
+					else break;
 				}
-				if (remote) remote = false;
-				else break;
+			});
+
+			if (showProgress)
+			{
+				var backgroundWorker = new BackgroundWorker();
+				backgroundWorker.DoWork += (object sender, DoWorkEventArgs e) => action.Invoke();
+				WinControls.WinProgressBox.ShowProgress(backgroundWorker, "Retrieving branches.");
 			}
+			else
+				action.Invoke();
 
 			return branches;
 		}
@@ -127,7 +171,7 @@ namespace PaJaMa.GitStudio
 		public List<Difference> GetDifferences()
 		{
 			bool error = false;
-			var diffLines = RunCommand("status --short", ref error);
+			var diffLines = RunCommand("status --short", false, ref error);
 			if (error) return null;
 
 			var diffs = new List<Difference>();
