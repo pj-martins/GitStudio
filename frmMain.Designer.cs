@@ -35,9 +35,9 @@
 			this.openToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.cloneToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.setupToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-			this.tabMain = new PaJaMa.WinControls.TabControl.TabControl();
 			this.mnuTab = new System.Windows.Forms.ContextMenuStrip(this.components);
 			this.openInExplorerToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.tabMain = new PaJaMa.WinControls.TabControl.TabControl();
 			this.menuStrip1.SuspendLayout();
 			this.mnuTab.SuspendLayout();
 			this.SuspendLayout();
@@ -84,19 +84,6 @@
 			this.setupToolStripMenuItem.Text = "&Setup";
 			this.setupToolStripMenuItem.Click += new System.EventHandler(this.setupToolStripMenuItem_Click);
 			// 
-			// tabMain
-			// 
-			this.tabMain.AllowRemove = true;
-			this.tabMain.ContextMenuStrip = this.mnuTab;
-			this.tabMain.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.tabMain.Location = new System.Drawing.Point(0, 24);
-			this.tabMain.Name = "tabMain";
-			this.tabMain.SelectedTab = null;
-			this.tabMain.Size = new System.Drawing.Size(984, 471);
-			this.tabMain.TabIndex = 1;
-			this.tabMain.TabClosing += new PaJaMa.WinControls.TabControl.TabEventHandler(this.tabMain_TabClosing);
-			this.tabMain.TabChanged += new PaJaMa.WinControls.TabControl.TabEventHandler(this.tabMain_TabChanged);
-			// 
 			// mnuTab
 			// 
 			this.mnuTab.ImageScalingSize = new System.Drawing.Size(40, 40);
@@ -111,6 +98,20 @@
 			this.openInExplorerToolStripMenuItem.Size = new System.Drawing.Size(161, 22);
 			this.openInExplorerToolStripMenuItem.Text = "&Open In Explorer";
 			this.openInExplorerToolStripMenuItem.Click += new System.EventHandler(this.openInExplorerToolStripMenuItem_Click);
+			// 
+			// tabMain
+			// 
+			this.tabMain.AllowRemove = true;
+			this.tabMain.ContextMenuStrip = this.mnuTab;
+			this.tabMain.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.tabMain.Location = new System.Drawing.Point(0, 24);
+			this.tabMain.Name = "tabMain";
+			this.tabMain.SelectedTab = null;
+			this.tabMain.Size = new System.Drawing.Size(984, 471);
+			this.tabMain.TabIndex = 1;
+			this.tabMain.TabClosing += new PaJaMa.WinControls.TabControl.TabEventHandler(this.tabMain_TabClosing);
+			this.tabMain.TabChanged += new PaJaMa.WinControls.TabControl.TabEventHandler(this.tabMain_TabChanged);
+			this.tabMain.TabOrderChanged += new PaJaMa.WinControls.TabControl.TabEventHandler(this.tabMain_TabOrderChanged);
 			// 
 			// frmMain
 			// 

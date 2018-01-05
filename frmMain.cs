@@ -78,9 +78,8 @@ namespace PaJaMa.GitStudio
 			var uc = new ucRepository();
 			uc.Repository = repo;
 			uc.Dock = DockStyle.Fill;
-			var tab = new WinControls.TabControl.TabPage();
+			var tab = new WinControls.TabControl.TabPage(repo.LocalPath);
 			tab.Controls.Add(uc);
-			tab.Text = repo.LocalPath;
 			tabMain.TabPages.Add(tab);
 			return tab;
 		}
@@ -152,6 +151,17 @@ namespace PaJaMa.GitStudio
 			(e.TabPage.Controls[0] as ucRepository).Init();
 			var settings = SettingsHelper.GetUserSettings<GitUserSettings>();
 			settings.FocusedRepository = tabMain.SelectedTab.Text;
+			SettingsHelper.SaveUserSettings<GitUserSettings>(settings);
+		}
+
+		private void tabMain_TabOrderChanged(object sender, WinControls.TabControl.TabEventArgs e)
+		{
+			var settings = SettingsHelper.GetUserSettings<GitUserSettings>();
+			settings.Repositories = new List<GitRepository>();
+			foreach (var page in tabMain.TabPages)
+			{
+				settings.Repositories.Add((page.Controls[0] as ucRepository).Repository);
+			}
 			SettingsHelper.SaveUserSettings<GitUserSettings>(settings);
 		}
 	}
