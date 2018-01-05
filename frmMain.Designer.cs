@@ -35,10 +35,9 @@
 			this.openToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.cloneToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.setupToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-			this.tabMain = new System.Windows.Forms.TabControl();
+			this.tabMain = new PaJaMa.WinControls.TabControl.TabControl();
 			this.mnuTab = new System.Windows.Forms.ContextMenuStrip(this.components);
 			this.openInExplorerToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-			this.closeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.menuStrip1.SuspendLayout();
 			this.mnuTab.SuspendLayout();
 			this.SuspendLayout();
@@ -87,24 +86,24 @@
 			// 
 			// tabMain
 			// 
+			this.tabMain.AllowRemove = true;
 			this.tabMain.ContextMenuStrip = this.mnuTab;
 			this.tabMain.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.tabMain.Location = new System.Drawing.Point(0, 24);
 			this.tabMain.Name = "tabMain";
-			this.tabMain.SelectedIndex = 0;
+			this.tabMain.SelectedTab = null;
 			this.tabMain.Size = new System.Drawing.Size(984, 471);
 			this.tabMain.TabIndex = 1;
-			this.tabMain.SelectedIndexChanged += new System.EventHandler(this.tabMain_TabIndexChanged);
-			this.tabMain.TabIndexChanged += new System.EventHandler(this.tabMain_TabIndexChanged);
+			this.tabMain.TabClosing += new PaJaMa.WinControls.TabControl.TabEventHandler(this.tabMain_TabClosing);
+			this.tabMain.TabChanged += new PaJaMa.WinControls.TabControl.TabEventHandler(this.tabMain_TabChanged);
 			// 
 			// mnuTab
 			// 
 			this.mnuTab.ImageScalingSize = new System.Drawing.Size(40, 40);
 			this.mnuTab.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.openInExplorerToolStripMenuItem,
-            this.closeToolStripMenuItem});
+            this.openInExplorerToolStripMenuItem});
 			this.mnuTab.Name = "mnuTab";
-			this.mnuTab.Size = new System.Drawing.Size(162, 48);
+			this.mnuTab.Size = new System.Drawing.Size(162, 26);
 			// 
 			// openInExplorerToolStripMenuItem
 			// 
@@ -112,13 +111,6 @@
 			this.openInExplorerToolStripMenuItem.Size = new System.Drawing.Size(161, 22);
 			this.openInExplorerToolStripMenuItem.Text = "&Open In Explorer";
 			this.openInExplorerToolStripMenuItem.Click += new System.EventHandler(this.openInExplorerToolStripMenuItem_Click);
-			// 
-			// closeToolStripMenuItem
-			// 
-			this.closeToolStripMenuItem.Name = "closeToolStripMenuItem";
-			this.closeToolStripMenuItem.Size = new System.Drawing.Size(161, 22);
-			this.closeToolStripMenuItem.Text = "&Close";
-			this.closeToolStripMenuItem.Click += new System.EventHandler(this.closeToolStripMenuItem_Click);
 			// 
 			// frmMain
 			// 
@@ -146,11 +138,10 @@
 		private System.Windows.Forms.MenuStrip menuStrip1;
 		private System.Windows.Forms.ToolStripMenuItem fileToolStripMenuItem;
 		private System.Windows.Forms.ToolStripMenuItem cloneToolStripMenuItem;
-		private System.Windows.Forms.TabControl tabMain;
+		private WinControls.TabControl.TabControl tabMain;
 		private System.Windows.Forms.ToolStripMenuItem openToolStripMenuItem;
 		private System.Windows.Forms.ContextMenuStrip mnuTab;
 		private System.Windows.Forms.ToolStripMenuItem openInExplorerToolStripMenuItem;
-		private System.Windows.Forms.ToolStripMenuItem closeToolStripMenuItem;
 		private System.Windows.Forms.ToolStripMenuItem setupToolStripMenuItem;
 	}
 }

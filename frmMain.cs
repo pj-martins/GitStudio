@@ -40,7 +40,7 @@ namespace PaJaMa.GitStudio
 			FormSettings.LoadSettings(this);
 
 			var settings = SettingsHelper.GetUserSettings<GitUserSettings>();
-			TabPage selectedTab = null;
+			WinControls.TabControl.TabPage selectedTab = null;
 			List<GitRepository> missing = new List<GitRepository>();
 			foreach (var repo in settings.Repositories)
 			{
@@ -73,12 +73,12 @@ namespace PaJaMa.GitStudio
 				(tabMain.SelectedTab.Controls[0] as ucRepository).Init();
 		}
 
-		private TabPage createRepository(GitRepository repo)
+		private WinControls.TabControl.TabPage createRepository(GitRepository repo)
 		{
 			var uc = new ucRepository();
 			uc.Repository = repo;
 			uc.Dock = DockStyle.Fill;
-			var tab = new TabPage();
+			var tab = new WinControls.TabControl.TabPage();
 			tab.Controls.Add(uc);
 			tab.Text = repo.LocalPath;
 			tabMain.TabPages.Add(tab);
@@ -112,14 +112,6 @@ namespace PaJaMa.GitStudio
 			}
 		}
 
-		private void tabMain_TabIndexChanged(object sender, EventArgs e)
-		{
-			(tabMain.SelectedTab.Controls[0] as ucRepository).Init();
-			var settings = SettingsHelper.GetUserSettings<GitUserSettings>();
-			settings.FocusedRepository = tabMain.SelectedTab.Text;
-			SettingsHelper.SaveUserSettings<GitUserSettings>(settings);
-		}
-
 		private void openInExplorerToolStripMenuItem_Click(object sender, EventArgs e)
 		{
 			System.Diagnostics.Process.Start(tabMain.SelectedTab.Text);
@@ -140,19 +132,27 @@ namespace PaJaMa.GitStudio
 			FormSettings.SaveSettings(this);
 		}
 
-		private void closeToolStripMenuItem_Click(object sender, EventArgs e)
+		private void setupToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+			new frmSetup().ShowDialog();
+		}
+
+		private void tabMain_TabClosing(object sender, WinControls.TabControl.TabEventArgs e)
 		{
 			var settings = SettingsHelper.GetUserSettings<GitUserSettings>();
-			var tab = tabMain.SelectedTab;
+			var tab = e.TabPage;
 			var repo = settings.Repositories.First(r => r.LocalPath == tab.Text);
 			settings.Repositories.Remove(repo);
 			tabMain.TabPages.Remove(tab);
 			SettingsHelper.SaveUserSettings<GitUserSettings>(settings);
 		}
 
-		private void setupToolStripMenuItem_Click(object sender, EventArgs e)
+		private void tabMain_TabChanged(object sender, WinControls.TabControl.TabEventArgs e)
 		{
-			new frmSetup().ShowDialog();
+			(e.TabPage.Controls[0] as ucRepository).Init();
+			var settings = SettingsHelper.GetUserSettings<GitUserSettings>();
+			settings.FocusedRepository = tabMain.SelectedTab.Text;
+			SettingsHelper.SaveUserSettings<GitUserSettings>(settings);
 		}
 	}
 }
