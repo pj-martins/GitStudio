@@ -35,6 +35,8 @@
 			this.btnBrowse = new System.Windows.Forms.Button();
 			this.txtArgumentsFormat = new System.Windows.Forms.TextBox();
 			this.label1 = new System.Windows.Forms.Label();
+			this.label3 = new System.Windows.Forms.Label();
+			this.txtGitHubUserName = new System.Windows.Forms.TextBox();
 			this.SuspendLayout();
 			// 
 			// txtExternalDiffApplication
@@ -50,7 +52,7 @@
 			// btnSave
 			// 
 			this.btnSave.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-			this.btnSave.Location = new System.Drawing.Point(468, 76);
+			this.btnSave.Location = new System.Drawing.Point(468, 144);
 			this.btnSave.Name = "btnSave";
 			this.btnSave.Size = new System.Drawing.Size(75, 23);
 			this.btnSave.TabIndex = 2;
@@ -61,7 +63,7 @@
 			// btnCancel
 			// 
 			this.btnCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-			this.btnCancel.Location = new System.Drawing.Point(549, 76);
+			this.btnCancel.Location = new System.Drawing.Point(549, 144);
 			this.btnCancel.Name = "btnCancel";
 			this.btnCancel.Size = new System.Drawing.Size(75, 23);
 			this.btnCancel.TabIndex = 6;
@@ -105,11 +107,29 @@
 			this.label1.TabIndex = 10;
 			this.label1.Text = "Arguments Format";
 			// 
+			// label3
+			// 
+			this.label3.AutoSize = true;
+			this.label3.Location = new System.Drawing.Point(12, 67);
+			this.label3.Name = "label3";
+			this.label3.Size = new System.Drawing.Size(96, 13);
+			this.label3.TabIndex = 12;
+			this.label3.Text = "GitHub User Name";
+			// 
+			// txtGitHubUserName
+			// 
+			this.txtGitHubUserName.Location = new System.Drawing.Point(137, 64);
+			this.txtGitHubUserName.Name = "txtGitHubUserName";
+			this.txtGitHubUserName.Size = new System.Drawing.Size(165, 20);
+			this.txtGitHubUserName.TabIndex = 11;
+			// 
 			// frmSetup
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-			this.ClientSize = new System.Drawing.Size(636, 111);
+			this.ClientSize = new System.Drawing.Size(636, 179);
+			this.Controls.Add(this.label3);
+			this.Controls.Add(this.txtGitHubUserName);
 			this.Controls.Add(this.label1);
 			this.Controls.Add(this.txtArgumentsFormat);
 			this.Controls.Add(this.btnBrowse);
@@ -135,5 +155,7 @@
 		private System.Windows.Forms.Button btnBrowse;
 		private System.Windows.Forms.TextBox txtArgumentsFormat;
 		private System.Windows.Forms.Label label1;
+		private System.Windows.Forms.Label label3;
+		private System.Windows.Forms.TextBox txtGitHubUserName;
 	}
 }

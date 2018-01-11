@@ -24,12 +24,14 @@ namespace PaJaMa.GitStudio
 			_settings = SettingsHelper.GetUserSettings<GitUserSettings>();
 			txtExternalDiffApplication.Text = _settings.ExternalDiffApplication;
 			txtArgumentsFormat.Text = _settings.ExternalDiffArgumentsFormat;
+			txtGitHubUserName.Text = _settings.GitHubUserName;
 		}
 
 		private void btnSave_Click(object sender, EventArgs e)
 		{
 			_settings.ExternalDiffApplication = txtExternalDiffApplication.Text;
 			_settings.ExternalDiffArgumentsFormat = txtArgumentsFormat.Text;
+			_settings.GitHubUserName = txtGitHubUserName.Text;
 			SettingsHelper.SaveUserSettings<GitUserSettings>(_settings);
 			this.DialogResult = DialogResult.OK;
 			this.Close();
