@@ -222,6 +222,25 @@ namespace PaJaMa.GitStudio
 			return diffs;
 		}
 
+		public void DownloadBranch(RemoteBranch branch, string url)
+		{
+			var dlgOpenFolder = new FolderBrowserDialog();
+			if (dlgOpenFolder.ShowDialog() == DialogResult.OK)
+			{
+				bool hasError = false;
+				string branchName = branch.BranchName;
+				if (branchName.StartsWith("origin/"))
+					branchName = branchName.Substring(7);
+
+				var lines = new GitHelper(null).RunCommand("clone " + url + " " + dlgOpenFolder.SelectedPath +
+					" -b " + branchName, true, ref hasError);
+				if (hasError && lines.Length > 0)
+				{
+					ScrollableMessageBox.Show(lines, "ERROR");
+				}
+			}
+		}
+
 		private void checkSubdirectoryAddDifferences(Difference difference, List<Difference> diffs)
 		{
 			string[] ignoreLines = new string[0];

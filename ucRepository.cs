@@ -138,6 +138,7 @@ namespace PaJaMa.GitStudio
 			checkoutToolStripMenuItem.Enabled = renameToolStripMenuItem.Enabled = tvLocalBranches.SelectedNodes.Count == 1;
 			var branch = tvLocalBranches.SelectedNode == null ? null : tvLocalBranches.SelectedNode.Tag as LocalBranch;
 			mergeFromLocalToolStripMenuItem.Enabled = branch != null;
+			trackRemoteToolStripMenuItem.Enabled = branch != null && branch.TracksBranch == null && _remoteBranches.Count > 0;
 			deleteToolStripMenuItem.Enabled = getSelectedNodeTags<LocalBranch>(tvLocalBranches).Any();
 			enableDisableCompare();
 		}
@@ -146,7 +147,7 @@ namespace PaJaMa.GitStudio
 		private void mnuRemote_Opening(object sender, CancelEventArgs e)
 		{
 			var branch = tvRemoteBranches.SelectedNode == null ? null : tvRemoteBranches.SelectedNode.Tag as RemoteBranch;
-			pullIntoToolStripMenuItem.Enabled = branchToolStripMenuItem.Enabled = branch != null;
+			pullIntoToolStripMenuItem.Enabled = branchToolStripMenuItem.Enabled = downloadToToolStripMenuItem.Enabled = branch != null;
 			deleteToolStripMenuItem.Enabled = getSelectedNodeTags<RemoteBranch>(tvRemoteBranches).Any();
 			enableDisableCompare();
 		}
@@ -842,6 +843,24 @@ namespace PaJaMa.GitStudio
 			var frm = new frmFileHistory();
 			frm.Helper = _helper;
 			frm.Show();
+		}
+
+		private void trackRemoteToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+			var frm = new frmTrackRemote();
+			frm.BranchFrom = tvLocalBranches.SelectedNode.Tag as LocalBranch;
+			frm.Repository = Repository;
+			frm.RemoteBranches = _remoteBranches;
+			if (frm.ShowDialog() == DialogResult.OK)
+			{
+				refreshBranches();
+			}
+		}
+
+		private void downloadToToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+			var branch = tvRemoteBranches.SelectedNode.Tag as RemoteBranch;
+			_helper.DownloadBranch(branch, _repository.RemoteURL);
 		}
 	}
 }
