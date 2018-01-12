@@ -62,7 +62,7 @@ namespace PaJaMa.GitStudio
 				};
 				settings.Repositories.Add(ClonedRepo);
 				SettingsHelper.SaveUserSettings<GitUserSettings>(settings);
-				this.DialogResult = DialogResult.OK;
+				this.DialogResult = System.Windows.Forms.DialogResult.OK;
 				this.Close();
 			}
 			else
@@ -74,7 +74,7 @@ namespace PaJaMa.GitStudio
 
 		private void btnBrowse_Click(object sender, EventArgs e)
 		{
-			if (dlgOpenFolder.ShowDialog() == DialogResult.OK)
+			if (dlgOpenFolder.ShowDialog() == System.Windows.Forms.DialogResult.OK)
 			{
 				var selectedPath = dlgOpenFolder.SelectedPath;
 				if (!selectedPath.EndsWith("\\"))
@@ -88,7 +88,7 @@ namespace PaJaMa.GitStudio
 
 		private void btnCancel_Click(object sender, EventArgs e)
 		{
-			this.DialogResult = DialogResult.Cancel;
+			this.DialogResult = System.Windows.Forms.DialogResult.Cancel;
 			this.Close();
 		}
 
