@@ -24,27 +24,29 @@ namespace PaJaMa.GitStudio
 			_settings = SettingsHelper.GetUserSettings<GitUserSettings>();
 			txtExternalDiffApplication.Text = _settings.ExternalDiffApplication;
 			txtArgumentsFormat.Text = _settings.ExternalDiffArgumentsFormat;
+			txtGitHubUserName.Text = _settings.GitHubUserName;
 		}
 
 		private void btnSave_Click(object sender, EventArgs e)
 		{
 			_settings.ExternalDiffApplication = txtExternalDiffApplication.Text;
 			_settings.ExternalDiffArgumentsFormat = txtArgumentsFormat.Text;
+			_settings.GitHubUserName = txtGitHubUserName.Text;
 			SettingsHelper.SaveUserSettings<GitUserSettings>(_settings);
-			this.DialogResult = DialogResult.OK;
+			this.DialogResult = System.Windows.Forms.DialogResult.OK;
 			this.Close();
 		}
 
 		private void btnCancel_Click(object sender, EventArgs e)
 		{
-			this.DialogResult = DialogResult.Cancel;
+			this.DialogResult = System.Windows.Forms.DialogResult.Cancel;
 			this.Close();
 		}
 
 		private void btnBrowse_Click(object sender, EventArgs e)
 		{
 			var dlg = new OpenFileDialog();
-			if (dlg.ShowDialog() == DialogResult.OK)
+			if (dlg.ShowDialog() == System.Windows.Forms.DialogResult.OK)
 				txtExternalDiffApplication.Text = dlg.FileName;
 		}
 	}

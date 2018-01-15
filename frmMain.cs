@@ -22,7 +22,7 @@ namespace PaJaMa.GitStudio
 		private void cloneToolStripMenuItem_Click(object sender, EventArgs e)
 		{
 			var frm = new frmClone();
-			if (frm.ShowDialog() == DialogResult.OK)
+			if (frm.ShowDialog() == System.Windows.Forms.DialogResult.OK)
 			{
 				createRepository(frm.ClonedRepo);
 			}
@@ -57,7 +57,7 @@ namespace PaJaMa.GitStudio
 			{
 				var result = MessageBox.Show("The following repositories are missing:\r\n" +
 					string.Join("\r\n", missing.Select(m => m.LocalPath)) + "\r\n\r\nWould you like to remove them?", "Error!", MessageBoxButtons.YesNo);
-				if (result == DialogResult.Yes)
+				if (result == System.Windows.Forms.DialogResult.Yes)
 				{
 					foreach (var m in missing)
 					{
@@ -91,7 +91,7 @@ namespace PaJaMa.GitStudio
 			if (!string.IsNullOrEmpty(settings.LastBrowsedFolder) && Directory.Exists(settings.LastBrowsedFolder))
 				dlg.SelectedPath = settings.LastBrowsedFolder;
 
-			if (dlg.ShowDialog() == DialogResult.OK)
+			if (dlg.ShowDialog() == System.Windows.Forms.DialogResult.OK)
 			{
 				settings.LastBrowsedFolder = dlg.SelectedPath;
 				bool error = false;

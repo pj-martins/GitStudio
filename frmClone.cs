@@ -7,7 +7,9 @@ using System.Data;
 using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
+using System.Net;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -60,7 +62,7 @@ namespace PaJaMa.GitStudio
 				};
 				settings.Repositories.Add(ClonedRepo);
 				SettingsHelper.SaveUserSettings<GitUserSettings>(settings);
-				this.DialogResult = DialogResult.OK;
+				this.DialogResult = System.Windows.Forms.DialogResult.OK;
 				this.Close();
 			}
 			else
@@ -72,7 +74,7 @@ namespace PaJaMa.GitStudio
 
 		private void btnBrowse_Click(object sender, EventArgs e)
 		{
-			if (dlgOpenFolder.ShowDialog() == DialogResult.OK)
+			if (dlgOpenFolder.ShowDialog() == System.Windows.Forms.DialogResult.OK)
 			{
 				var selectedPath = dlgOpenFolder.SelectedPath;
 				if (!selectedPath.EndsWith("\\"))
@@ -86,8 +88,36 @@ namespace PaJaMa.GitStudio
 
 		private void btnCancel_Click(object sender, EventArgs e)
 		{
-			this.DialogResult = DialogResult.Cancel;
+			this.DialogResult = System.Windows.Forms.DialogResult.Cancel;
 			this.Close();
+		}
+
+		private void txtURL_DropDown(object sender, EventArgs e)
+		{
+			if (txtURL.Items.Count < 1)
+			{
+				var settings = SettingsHelper.GetUserSettings<GitUserSettings>();
+				if (!string.IsNullOrEmpty(settings.GitHubUserName))
+				{
+					using (var wc = new WebClient())
+					{
+						wc.Headers.Add("User-Agent", "GitStudio");
+						try
+						{
+							var repostring = wc.DownloadString($"https://api.github.com/users/{settings.GitHubUserName}/repos");
+							var matches = Regex.Matches(repostring, "\"clone_url\":\"(.*?)\"");
+							foreach (Match match in matches)
+							{
+								txtURL.Items.Add(match.Groups[1].Value);
+							}
+						}
+						catch
+						{
+
+						}
+					}
+				}
+			}
 		}
 	}
 }

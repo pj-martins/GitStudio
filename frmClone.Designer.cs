@@ -28,7 +28,7 @@
 		/// </summary>
 		private void InitializeComponent()
 		{
-			this.txtURL = new System.Windows.Forms.TextBox();
+			this.txtURL = new System.Windows.Forms.ComboBox();
 			this.txtPath = new System.Windows.Forms.TextBox();
 			this.dlgOpenFolder = new System.Windows.Forms.FolderBrowserDialog();
 			this.btnClone = new System.Windows.Forms.Button();
@@ -46,8 +46,9 @@
             | System.Windows.Forms.AnchorStyles.Right)));
 			this.txtURL.Location = new System.Drawing.Point(68, 12);
 			this.txtURL.Name = "txtURL";
-			this.txtURL.Size = new System.Drawing.Size(502, 20);
+			this.txtURL.Size = new System.Drawing.Size(502, 21);
 			this.txtURL.TabIndex = 0;
+			this.txtURL.DropDown += new System.EventHandler(this.txtURL_DropDown);
 			// 
 			// txtPath
 			// 
@@ -153,7 +154,7 @@
 
 		#endregion
 
-		private System.Windows.Forms.TextBox txtURL;
+		private System.Windows.Forms.ComboBox txtURL;
 		private System.Windows.Forms.TextBox txtPath;
 		private System.Windows.Forms.FolderBrowserDialog dlgOpenFolder;
 		private System.Windows.Forms.Button btnClone;

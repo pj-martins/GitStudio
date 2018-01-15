@@ -15,6 +15,7 @@ namespace PaJaMa.GitStudio
         public string LastBrowsedFolder { get; set; }
 		public string ExternalDiffApplication { get; set; }
 		public string ExternalDiffArgumentsFormat { get; set; }
+		public string GitHubUserName { get; set; }
 
         public GitUserSettings()
 		{
