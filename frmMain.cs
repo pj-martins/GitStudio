@@ -111,6 +111,32 @@ namespace PaJaMa.GitStudio
 			}
 		}
 
+		private void newToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+			var dlg = new FolderBrowserDialog();
+			var settings = SettingsHelper.GetUserSettings<GitUserSettings>();
+			if (!string.IsNullOrEmpty(settings.LastBrowsedFolder) && Directory.Exists(settings.LastBrowsedFolder))
+				dlg.SelectedPath = settings.LastBrowsedFolder;
+
+			if (dlg.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+			{
+				settings.LastBrowsedFolder = dlg.SelectedPath;
+				bool error = false;
+				var helper = new GitHelper(dlg.SelectedPath);
+				helper.RunCommand("init", true, ref error);
+				if (error) return;
+				var repo = new GitRepository()
+				{
+					LocalPath = dlg.SelectedPath,
+				};
+				var tab = createRepository(repo);
+				settings.Repositories.Add(repo);
+				SettingsHelper.SaveUserSettings<GitUserSettings>(settings);
+				tabMain.SelectedTab = tab;
+				(tab.Controls[0] as ucRepository).Init();
+			}
+		}
+
 		private void openInExplorerToolStripMenuItem_Click(object sender, EventArgs e)
 		{
 			System.Diagnostics.Process.Start(tabMain.SelectedTab.Text);
@@ -163,6 +189,24 @@ namespace PaJaMa.GitStudio
 				settings.Repositories.Add((page.Controls[0] as ucRepository).Repository);
 			}
 			SettingsHelper.SaveUserSettings<GitUserSettings>(settings);
+		}
+
+		private void setRemoteToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+			var result = WinControls.InputBox.Show("Enter remote URL", "Remote URL");
+			if (result.Result == System.Windows.Forms.DialogResult.OK)
+			{
+				var settings = SettingsHelper.GetUserSettings<GitUserSettings>();
+				var tab = tabMain.SelectedTab;
+				var repo = settings.Repositories.First(r => r.LocalPath == tab.Text);
+				bool error = false;
+				var helper = new GitHelper(repo.LocalPath);
+				helper.RunCommand("remote add origin " + result.Text, true, ref error);
+				if (error) return;
+				repo.RemoteURL = result.Text;
+				SettingsHelper.SaveUserSettings<GitUserSettings>(settings);
+				(tab.Controls[0] as ucRepository).RefreshBranches(true);
+			}
 		}
 	}
 }

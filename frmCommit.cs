@@ -21,7 +21,8 @@ namespace PaJaMa.GitStudio
 			{
 				_remoteBranches = value;
 				cboRemote.Items.Clear();
-				cboRemote.Items.AddRange(value.ToArray());
+				if (value != null)
+					cboRemote.Items.AddRange(value.ToArray());
 				//selectRemote();
 			}
 		}

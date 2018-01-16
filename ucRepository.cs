@@ -42,7 +42,7 @@ namespace PaJaMa.GitStudio
 		{
 			if (!_inited)
 			{
-				refreshBranches(true);
+				if (!RefreshBranches(true)) return;
 				_previousDifferences = null;
 				timDiff_Tick(this, new EventArgs());
 				timDiff.Enabled = true;
@@ -50,10 +50,11 @@ namespace PaJaMa.GitStudio
 			}
 		}
 
-		private void refreshBranches(bool initial = false)
+		public bool RefreshBranches(bool initial = false)
 		{
 			var branches = _helper.GetBranches(initial);
-			if (branches.Count < 1) return;
+			if (branches == null) return false;
+			if (branches.Count < 1) return true;
 
 			_currentBranch = branches.OfType<LocalBranch>().First(b => b.IsCurrent);
 			_remoteBranches = branches.OfType<RemoteBranch>().ToList();
@@ -112,6 +113,7 @@ namespace PaJaMa.GitStudio
 			}
 
 			btnPull.Enabled = _currentBranch.TracksBranch != null;
+			return true;
 		}
 
 		private void branchToolStripMenuItem_Click(object sender, EventArgs e)
@@ -121,7 +123,7 @@ namespace PaJaMa.GitStudio
 			frm.Repository = Repository;
 			if (frm.ShowDialog() == DialogResult.OK)
 			{
-				refreshBranches();
+				RefreshBranches();
 			}
 		}
 
@@ -130,7 +132,7 @@ namespace PaJaMa.GitStudio
 			if (tvLocalBranches.SelectedNode == null || tvLocalBranches.SelectedNode.Tag == null) return;
 			bool error = false;
 			_helper.RunCommand("checkout " + tvLocalBranches.SelectedNode.Tag.ToString(), true, ref error);
-			refreshBranches();
+			RefreshBranches();
 		}
 
 		private void mnuLocal_Opening(object sender, CancelEventArgs e)
@@ -165,7 +167,7 @@ namespace PaJaMa.GitStudio
 			bool error = false;
 			_helper.RunCommand("fetch " + tvRemoteBranches.SelectedNode.Text, true, ref error);
 			// if (error) return;
-			refreshBranches();
+			RefreshBranches();
 		}
 
 		private void deleteToolStripMenuItem_Click(object sender, EventArgs e)
@@ -185,7 +187,7 @@ namespace PaJaMa.GitStudio
 				var lines = _helper.RunCommand(arguments.ToArray());
 				if (lines.Any())
 					ScrollableMessageBox.Show(lines);
-				refreshBranches();
+				RefreshBranches();
 			}
 		}
 
@@ -209,7 +211,7 @@ namespace PaJaMa.GitStudio
 				var lines = _helper.RunCommand(arguments.ToArray());
 				if (lines.Any())
 					ScrollableMessageBox.Show(lines);
-				refreshBranches();
+				RefreshBranches();
 			}
 		}
 
@@ -515,7 +517,7 @@ namespace PaJaMa.GitStudio
 			frm.Repository = Repository;
 			if (frm.ShowDialog() == DialogResult.OK)
 			{
-				refreshBranches();
+				RefreshBranches();
 			}
 		}
 
@@ -526,7 +528,7 @@ namespace PaJaMa.GitStudio
 			frm.LocalBranch = _currentBranch;
 			frm.Repository = _repository;
 			frm.ShowDialog();
-			refreshBranches();
+			RefreshBranches();
 			txtDiffText.Text = string.Empty;
 			_previousDifferences = null;
 			timDiff_Tick(this, new EventArgs());
@@ -537,7 +539,7 @@ namespace PaJaMa.GitStudio
 			var frm = new frmStash();
 			frm.Repository = _repository;
 			frm.ShowDialog();
-			refreshBranches();
+			RefreshBranches();
 			txtDiffText.Text = string.Empty;
 			_previousDifferences = null;
 			timDiff_Tick(this, new EventArgs());
@@ -713,7 +715,7 @@ namespace PaJaMa.GitStudio
 			frm.Repository = Repository;
 			frm.BranchCreated += (sender2, e2) =>
 			{
-				this.refreshBranches();
+				this.RefreshBranches();
 			};
 			frm.Show();
 		}
@@ -761,7 +763,7 @@ namespace PaJaMa.GitStudio
 			bool error = false;
 			_helper.RunCommand("remote prune " + tvRemoteBranches.SelectedNode.Text, true, ref error);
 			// if (error) return;
-			refreshBranches();
+			RefreshBranches();
 		}
 
 		private void btnPull_Click(object sender, EventArgs e)
@@ -773,7 +775,7 @@ namespace PaJaMa.GitStudio
 			if (lines.Length > 0)
 				ScrollableMessageBox.Show(lines);
 			// if (error) return;
-			refreshBranches();
+			RefreshBranches();
 		}
 
 		private void btnPush_Click(object sender, EventArgs e)
@@ -783,7 +785,7 @@ namespace PaJaMa.GitStudio
 			frm.LocalBranch = _currentBranch;
 			frm.Repository = _repository;
 			frm.ShowDialog();
-			refreshBranches();
+			RefreshBranches();
 		}
 
 		private void pullIntoToolStripMenuItem_Click(object sender, EventArgs e)
@@ -796,7 +798,7 @@ namespace PaJaMa.GitStudio
 			if (lines.Length > 0)
 				ScrollableMessageBox.Show(lines);
 			// if (error) return;
-			refreshBranches();
+			RefreshBranches();
 		}
 
 		private void renameToolStripMenuItem_Click(object sender, EventArgs e)
@@ -806,7 +808,7 @@ namespace PaJaMa.GitStudio
 			if (result.Result == DialogResult.OK)
 			{
 				_helper.RunCommand("branch -m " + branch.BranchName + " " + result.Text, true);
-				refreshBranches();
+				RefreshBranches();
 			}
 		}
 
@@ -853,7 +855,7 @@ namespace PaJaMa.GitStudio
 			frm.RemoteBranches = _remoteBranches;
 			if (frm.ShowDialog() == DialogResult.OK)
 			{
-				refreshBranches();
+				RefreshBranches();
 			}
 		}
 
