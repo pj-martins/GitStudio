@@ -1,4 +1,5 @@
-﻿using System;
+﻿using PaJaMa.Common;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -86,11 +87,12 @@ namespace PaJaMa.GitStudio
 
 				var tmpDir = Path.Combine(Path.GetTempPath(), "GitStudio");
 				if (!Directory.Exists(tmpDir)) Directory.CreateDirectory(tmpDir);
-				var tmpFile1 = Path.Combine(tmpDir, Guid.NewGuid() + ".tmp");
-				var tmpFile2 = Path.Combine(tmpDir, Guid.NewGuid() + ".tmp");
+
+				var tmpFile1 = Path.Combine(tmpDir, FromBranch.BranchName.Replace("/", "_").FileSafeName() + "_" + Guid.NewGuid() + ".tmp");
+				var tmpFile2 = Path.Combine(tmpDir, ToBranch.BranchName.Replace("/", "_").FileSafeName() + "_" + Guid.NewGuid() + ".tmp");
 				File.WriteAllLines(tmpFile1, content1);
 				File.WriteAllLines(tmpFile2, content2);
-				Process.Start(settings.ExternalDiffApplication, string.Format(settings.ExternalDiffArgumentsFormat, tmpFile1, tmpFile2));
+				Process.Start(settings.ExternalDiffApplication, string.Format(settings.ExternalDiffArgumentsFormat, tmpFile2, tmpFile1));
 			}
 		}
 	}
