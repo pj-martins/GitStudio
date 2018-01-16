@@ -36,7 +36,7 @@ namespace PaJaMa.GitStudio
 
 		private void refreshDifferences()
 		{
-			lblDirection.Text = FromBranch.BranchName + " -> " + ToBranch.BranchName;
+			lblDirection.Text = ToBranch.BranchName + " -> " + FromBranch.BranchName;
 			var diffs = Helper.RunCommand("--no-pager diff --name-status " + FromBranch.BranchName + " " + ToBranch.BranchName);
 			gridMain.DataSource = diffs.Select(d => new
 			{
