@@ -61,8 +61,7 @@
             this.newToolStripMenuItem,
             this.openToolStripMenuItem,
             this.cloneToolStripMenuItem,
-            this.setupToolStripMenuItem,
-            this.setRemoteToolStripMenuItem});
+            this.setupToolStripMenuItem});
 			this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
 			this.fileToolStripMenuItem.Size = new System.Drawing.Size(37, 20);
 			this.fileToolStripMenuItem.Text = "&File";
@@ -99,9 +98,10 @@
 			// 
 			this.mnuTab.ImageScalingSize = new System.Drawing.Size(40, 40);
 			this.mnuTab.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.openInExplorerToolStripMenuItem});
+            this.openInExplorerToolStripMenuItem,
+            this.setRemoteToolStripMenuItem});
 			this.mnuTab.Name = "mnuTab";
-			this.mnuTab.Size = new System.Drawing.Size(162, 26);
+			this.mnuTab.Size = new System.Drawing.Size(162, 70);
 			// 
 			// openInExplorerToolStripMenuItem
 			// 
@@ -127,7 +127,7 @@
 			// setRemoteToolStripMenuItem
 			// 
 			this.setRemoteToolStripMenuItem.Name = "setRemoteToolStripMenuItem";
-			this.setRemoteToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+			this.setRemoteToolStripMenuItem.Size = new System.Drawing.Size(161, 22);
 			this.setRemoteToolStripMenuItem.Text = "Set &Remote";
 			this.setRemoteToolStripMenuItem.Click += new System.EventHandler(this.setRemoteToolStripMenuItem_Click);
 			// 
