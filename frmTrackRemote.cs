@@ -58,9 +58,8 @@ namespace PaJaMa.GitStudio
 				return;
 			}
 			var remoteBranchName = (cboTo.SelectedItem as RemoteBranch).BranchName;
-			string[] lines = new GitHelper(Repository.LocalPath).RunCommand(string.Format("branch --set-upstream-to={0} {1}",
+			new GitHelper(Repository.LocalPath).RunCommand(string.Format("branch --set-upstream-to={0} {1}",
 				remoteBranchName, txtFrom.Text), true);
-			if (lines.Any()) ScrollableMessageBox.Show(lines);
 			this.DialogResult = DialogResult.OK;
 			this.Close();
 		}

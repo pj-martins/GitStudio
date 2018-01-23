@@ -23,8 +23,7 @@ namespace PaJaMa.GitStudio
 		private void btnGo_Click(object sender, EventArgs e)
 		{
 			var helper = new GitHelper(Repository.LocalPath);
-			var lines = helper.RunCommand("stash save \"" + txtMessage.Text + "\"");
-			ScrollableMessageBox.Show(lines);
+			var lines = helper.RunCommand("stash save \"" + txtMessage.Text + "\"", true);
 			if (lines.Any(l => l.Contains("error"))) return;
 			this.DialogResult = DialogResult.OK;
 			this.Close();

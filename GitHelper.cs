@@ -15,16 +15,15 @@ namespace PaJaMa.GitStudio
 	public class GitHelper
 	{
 		public string WorkingDirectory { get; private set; }
+		private static object _lock = new object();
 		public GitHelper(string workingDirectory)
 		{
 			this.WorkingDirectory = workingDirectory;
 		}
 
-		private string[] runCommand(string[] arguments, bool showProgress, bool checkForErrors, ref bool hasError)
+		private string[] runCommand(string[] arguments, bool showProgress, bool checkForErrors, BackgroundWorker worker, ref bool hasError)
 		{
-			var lines = new List<string>();
-			var errorLines = new List<string>();
-			BackgroundWorker worker = null;
+			var lines = new List<Tuple<string, bool>>();
 			var action = new Action(() =>
 			{
 				int i = 1;
@@ -38,65 +37,85 @@ namespace PaJaMa.GitStudio
 					inf.CreateNoWindow = true;
 					if (WorkingDirectory != null)
 						inf.WorkingDirectory = WorkingDirectory;
-					var p = Process.Start(inf);
-					string line = string.Empty;
-					while ((line = p.StandardOutput.ReadLine()) != null)
+					var p = new Process();
+					p.StartInfo = inf;
+					p.OutputDataReceived += new DataReceivedEventHandler((sender, e) =>
 					{
-						if (worker != null) worker.ReportProgress(100 * i / argument.Length, line);
-						lines.Add(line);
-					}
-
-					while ((line = p.StandardError.ReadLine()) != null)
+						if (!string.IsNullOrEmpty(e.Data))
+						{
+							lock (_lock)
+							{
+								lines.Add(new Tuple<string, bool>(e.Data, false));
+								if (worker != null)
+									worker.ReportProgress(100 * i / argument.Length, e.Data);
+							}
+						}
+					});
+					p.ErrorDataReceived += new DataReceivedEventHandler((sender, e) =>
 					{
-						if (worker != null) worker.ReportProgress(100 * i / argument.Length, line);
-						errorLines.Add(line);
-					}
+						if (!string.IsNullOrEmpty(e.Data))
+						{
+							lock (_lock)
+							{
+								lines.Add(new Tuple<string, bool>(e.Data, true));
+								if (worker != null)
+									worker.ReportProgress(100 * i / argument.Length, e.Data);
+							}
+						}
+					});
+					p.Start();
+					p.BeginOutputReadLine();
+					p.BeginErrorReadLine();
 					p.WaitForExit();
 				}
 			});
 			if (showProgress)
 			{
-				worker = new BackgroundWorker();
+				if (worker == null)
+					worker = new BackgroundWorker();
 				worker.DoWork += (object sender, DoWorkEventArgs e) => action.Invoke();
-				WinControls.WinProgressBox.ShowProgress(worker, "Running command " + arguments, progressBarStyle: ProgressBarStyle.Marquee);
+				WinStatusBox.ShowProgress(worker, "Running command " + arguments, progressBarStyle: ProgressBarStyle.Marquee);
 			}
 			else
 			{
 				action.Invoke();
 			}
-			if (errorLines.Count > 0)
-			{
-				if (!checkForErrors)
-					lines.AddRange(errorLines);
-				else
-				{
-					hasError = true;
-					ScrollableMessageBox.ShowDialog(errorLines.ToArray());
-				}
-			}
-			return lines.ToArray();
-		}
 
-		public string[] RunCommand(string[] arguments, bool showProgress, ref bool hasError)
-		{
-			return runCommand(arguments, showProgress, true, ref hasError);
+			if (lines.Any(l => l.Item2) && checkForErrors)
+			{
+				hasError = true;
+			}
+
+			return lines.Select(l => l.Item1).ToArray();
 		}
 
 		public string[] RunCommand(string[] arguments, bool showProgress = false)
 		{
 			bool hasError = false;
-			return runCommand(arguments, showProgress, false, ref hasError);
+			return runCommand(arguments, showProgress, false, null, ref hasError);
 		}
 
 		public string[] RunCommand(string arguments, bool showProgress, ref bool hasError)
 		{
-			return runCommand(new string[] { arguments }, showProgress, true, ref hasError);
+			return runCommand(new string[] { arguments }, showProgress, true, null, ref hasError);
 		}
 
 		public string[] RunCommand(string arguments, bool showProgress = false)
 		{
 			bool hasError = false;
-			return runCommand(new string[] { arguments }, showProgress, false, ref hasError);
+			return runCommand(new string[] { arguments }, showProgress, false, null, ref hasError);
+		}
+
+		public string[] RunCommand(string[] arguments, BackgroundWorker worker)
+		{
+			bool hasError = false;
+			return runCommand(arguments, false, false, worker, ref hasError);
+		}
+
+		public string[] RunCommand(string arguments, BackgroundWorker worker)
+		{
+			bool hasError = false;
+			return runCommand(new string[] { arguments }, false, false, worker, ref hasError);
 		}
 
 		public List<Branch> GetBranches(bool showProgress = false)

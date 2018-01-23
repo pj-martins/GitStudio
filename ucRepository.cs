@@ -113,6 +113,7 @@ namespace PaJaMa.GitStudio
 			}
 
 			btnPull.Enabled = _currentBranch.TracksBranch != null;
+			timDiff_Tick(timDiff, new EventArgs());
 			return true;
 		}
 
@@ -130,8 +131,7 @@ namespace PaJaMa.GitStudio
 		private void checkoutToolStripMenuItem_Click(object sender, EventArgs e)
 		{
 			if (tvLocalBranches.SelectedNode == null || tvLocalBranches.SelectedNode.Tag == null) return;
-			bool error = false;
-			_helper.RunCommand("checkout " + tvLocalBranches.SelectedNode.Tag.ToString(), true, ref error);
+			_helper.RunCommand("checkout " + tvLocalBranches.SelectedNode.Tag.ToString(), true);
 			RefreshBranches();
 		}
 
@@ -164,9 +164,7 @@ namespace PaJaMa.GitStudio
 
 		private void fetchToolStripMenuItem_Click(object sender, EventArgs e)
 		{
-			bool error = false;
-			_helper.RunCommand("fetch " + tvRemoteBranches.SelectedNode.Text, true, ref error);
-			// if (error) return;
+			_helper.RunCommand("fetch " + tvRemoteBranches.SelectedNode.Text, true);
 			RefreshBranches();
 		}
 
@@ -184,9 +182,7 @@ namespace PaJaMa.GitStudio
 					arguments.Add("branch -D " + s.BranchName);
 				}
 
-				var lines = _helper.RunCommand(arguments.ToArray());
-				if (lines.Any())
-					ScrollableMessageBox.Show(lines);
+				_helper.RunCommand(arguments.ToArray(), true);
 				RefreshBranches();
 			}
 		}
@@ -208,9 +204,7 @@ namespace PaJaMa.GitStudio
 
 					arguments.Add("push -d origin " + branchName);
 				}
-				var lines = _helper.RunCommand(arguments.ToArray());
-				if (lines.Any())
-					ScrollableMessageBox.Show(lines);
+				_helper.RunCommand(arguments.ToArray(), true);
 				RefreshBranches();
 			}
 		}
@@ -551,8 +545,7 @@ namespace PaJaMa.GitStudio
 			if (MessageBox.Show("Are you sure you want to merge " + branch.BranchName + " into " + _currentBranch.BranchName + "?", "Warning!",
 				MessageBoxButtons.YesNo) == DialogResult.Yes)
 			{
-				bool error = false;
-				_helper.RunCommand("merge " + branch.BranchName, true, ref error);
+				_helper.RunCommand("merge " + branch.BranchName, true);
 			}
 		}
 
@@ -562,8 +555,7 @@ namespace PaJaMa.GitStudio
 			if (MessageBox.Show("Are you sure you want to merge " + branch.BranchName + " into " + _currentBranch.BranchName + "?", "Warning!",
 				MessageBoxButtons.YesNo) == DialogResult.Yes)
 			{
-				bool error = false;
-				_helper.RunCommand("merge " + branch.BranchName, true, ref error);
+				_helper.RunCommand("merge " + branch.BranchName, true);
 			}
 		}
 
@@ -571,8 +563,7 @@ namespace PaJaMa.GitStudio
 		{
 			var tv = tvUnStaged.Focused ? tvUnStaged : tvStaged;
 			var diff = tv.SelectedNode.Tag as Difference;
-			bool error = false;
-			_helper.RunCommand("add " + diff.FileName, false, ref error);
+			_helper.RunCommand("add " + diff.FileName, false);
 			_previousDifferences = null;
 			txtDiffText.Text = string.Empty;
 			timDiff_Tick(sender, e);
@@ -760,9 +751,7 @@ namespace PaJaMa.GitStudio
 
 		private void pruneToolStripMenuItem_Click(object sender, EventArgs e)
 		{
-			bool error = false;
-			_helper.RunCommand("remote prune " + tvRemoteBranches.SelectedNode.Text, true, ref error);
-			// if (error) return;
+			_helper.RunCommand("remote prune " + tvRemoteBranches.SelectedNode.Text, true);
 			RefreshBranches();
 		}
 
@@ -771,10 +760,7 @@ namespace PaJaMa.GitStudio
 			var branchName = _currentBranch.TracksBranch.BranchName;
 			if (branchName.StartsWith("origin/"))
 				branchName = branchName.Substring(7);
-			var lines = _helper.RunCommand("pull origin " + branchName, true);
-			if (lines.Length > 0)
-				ScrollableMessageBox.Show(lines);
-			// if (error) return;
+			_helper.RunCommand("pull origin " + branchName, true);
 			RefreshBranches();
 		}
 
@@ -794,10 +780,7 @@ namespace PaJaMa.GitStudio
 			var branchName = branch.BranchName;
 			if (branchName.StartsWith("origin/"))
 				branchName = branchName.Substring(7);
-			var lines = _helper.RunCommand("pull origin " + branchName, true);
-			if (lines.Length > 0)
-				ScrollableMessageBox.Show(lines);
-			// if (error) return;
+			_helper.RunCommand("pull origin " + branchName, true);
 			RefreshBranches();
 		}
 
