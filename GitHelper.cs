@@ -229,6 +229,7 @@ namespace PaJaMa.GitStudio
 						diff.IsConflict = true;
 						break;
 					case "UD":
+					case "DU":
 						diff.DifferenceType = DifferenceType.Delete;
 						diff.IsConflict = true;
 						break;

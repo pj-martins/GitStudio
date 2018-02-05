@@ -191,7 +191,8 @@ namespace PaJaMa.GitStudio
 				stashRow.Cells["StashID"].Value.ToString(), "Warning!", MessageBoxButtons.YesNo) != DialogResult.Yes)
 				return;
 
-			Helper.RunCommand("stash pop " + stashRow.Cells["StashID"].Value.ToString(), true);
+			bool hasError = false;
+			Helper.RunCommand("stash pop " + stashRow.Cells["StashID"].Value.ToString(), true, ref hasError);
 			refreshStashes();
 		}
 
