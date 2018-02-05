@@ -30,18 +30,19 @@
 		{
 			this.components = new System.ComponentModel.Container();
 			this.gridStashes = new System.Windows.Forms.DataGridView();
-			this.splitContainer1 = new System.Windows.Forms.SplitContainer();
-			this.splitContainer2 = new System.Windows.Forms.SplitContainer();
-			this.gridDetails = new System.Windows.Forms.DataGridView();
-			this.txtDifferences = new System.Windows.Forms.TextBox();
 			this.mnuStashes = new System.Windows.Forms.ContextMenuStrip(this.components);
 			this.deleteToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.createBranchToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.applyToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.popToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.splitContainer1 = new System.Windows.Forms.SplitContainer();
+			this.splitContainer2 = new System.Windows.Forms.SplitContainer();
+			this.gridDetails = new System.Windows.Forms.DataGridView();
 			this.mnuDetails = new System.Windows.Forms.ContextMenuStrip(this.components);
 			this.externalCompareToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-			this.popToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.txtDifferences = new System.Windows.Forms.TextBox();
 			((System.ComponentModel.ISupportInitialize)(this.gridStashes)).BeginInit();
+			this.mnuStashes.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
 			this.splitContainer1.Panel1.SuspendLayout();
 			this.splitContainer1.Panel2.SuspendLayout();
@@ -51,7 +52,6 @@
 			this.splitContainer2.Panel2.SuspendLayout();
 			this.splitContainer2.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.gridDetails)).BeginInit();
-			this.mnuStashes.SuspendLayout();
 			this.mnuDetails.SuspendLayout();
 			this.SuspendLayout();
 			// 
@@ -71,6 +71,45 @@
 			this.gridStashes.Size = new System.Drawing.Size(437, 640);
 			this.gridStashes.TabIndex = 0;
 			this.gridStashes.SelectionChanged += new System.EventHandler(this.gridStashes_SelectionChanged);
+			// 
+			// mnuStashes
+			// 
+			this.mnuStashes.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.deleteToolStripMenuItem,
+            this.createBranchToolStripMenuItem,
+            this.applyToolStripMenuItem,
+            this.popToolStripMenuItem});
+			this.mnuStashes.Name = "mnuStashes";
+			this.mnuStashes.Size = new System.Drawing.Size(149, 92);
+			this.mnuStashes.Opening += new System.ComponentModel.CancelEventHandler(this.mnuStashes_Opening);
+			// 
+			// deleteToolStripMenuItem
+			// 
+			this.deleteToolStripMenuItem.Name = "deleteToolStripMenuItem";
+			this.deleteToolStripMenuItem.Size = new System.Drawing.Size(148, 22);
+			this.deleteToolStripMenuItem.Text = "&Delete";
+			this.deleteToolStripMenuItem.Click += new System.EventHandler(this.deleteToolStripMenuItem_Click);
+			// 
+			// createBranchToolStripMenuItem
+			// 
+			this.createBranchToolStripMenuItem.Name = "createBranchToolStripMenuItem";
+			this.createBranchToolStripMenuItem.Size = new System.Drawing.Size(148, 22);
+			this.createBranchToolStripMenuItem.Text = "&Create Branch";
+			this.createBranchToolStripMenuItem.Click += new System.EventHandler(this.createBranchToolStripMenuItem_Click);
+			// 
+			// applyToolStripMenuItem
+			// 
+			this.applyToolStripMenuItem.Name = "applyToolStripMenuItem";
+			this.applyToolStripMenuItem.Size = new System.Drawing.Size(148, 22);
+			this.applyToolStripMenuItem.Text = "&Apply";
+			this.applyToolStripMenuItem.Click += new System.EventHandler(this.applyToolStripMenuItem_Click);
+			// 
+			// popToolStripMenuItem
+			// 
+			this.popToolStripMenuItem.Name = "popToolStripMenuItem";
+			this.popToolStripMenuItem.Size = new System.Drawing.Size(148, 22);
+			this.popToolStripMenuItem.Text = "&Pop";
+			this.popToolStripMenuItem.Click += new System.EventHandler(this.popToolStripMenuItem_Click);
 			// 
 			// splitContainer1
 			// 
@@ -123,48 +162,6 @@
 			this.gridDetails.SelectionChanged += new System.EventHandler(this.gridDetails_SelectionChanged);
 			this.gridDetails.DoubleClick += new System.EventHandler(this.gridDetails_DoubleClick);
 			// 
-			// txtDifferences
-			// 
-			this.txtDifferences.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.txtDifferences.Location = new System.Drawing.Point(0, 0);
-			this.txtDifferences.Multiline = true;
-			this.txtDifferences.Name = "txtDifferences";
-			this.txtDifferences.ReadOnly = true;
-			this.txtDifferences.Size = new System.Drawing.Size(329, 640);
-			this.txtDifferences.TabIndex = 0;
-			// 
-			// mnuStashes
-			// 
-			this.mnuStashes.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.deleteToolStripMenuItem,
-            this.createBranchToolStripMenuItem,
-            this.applyToolStripMenuItem,
-            this.popToolStripMenuItem});
-			this.mnuStashes.Name = "mnuStashes";
-			this.mnuStashes.Size = new System.Drawing.Size(149, 92);
-			this.mnuStashes.Opening += new System.ComponentModel.CancelEventHandler(this.mnuStashes_Opening);
-			// 
-			// deleteToolStripMenuItem
-			// 
-			this.deleteToolStripMenuItem.Name = "deleteToolStripMenuItem";
-			this.deleteToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
-			this.deleteToolStripMenuItem.Text = "&Delete";
-			this.deleteToolStripMenuItem.Click += new System.EventHandler(this.deleteToolStripMenuItem_Click);
-			// 
-			// createBranchToolStripMenuItem
-			// 
-			this.createBranchToolStripMenuItem.Name = "createBranchToolStripMenuItem";
-			this.createBranchToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
-			this.createBranchToolStripMenuItem.Text = "&Create Branch";
-			this.createBranchToolStripMenuItem.Click += new System.EventHandler(this.createBranchToolStripMenuItem_Click);
-			// 
-			// applyToolStripMenuItem
-			// 
-			this.applyToolStripMenuItem.Name = "applyToolStripMenuItem";
-			this.applyToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
-			this.applyToolStripMenuItem.Text = "&Apply";
-			this.applyToolStripMenuItem.Click += new System.EventHandler(this.applyToolStripMenuItem_Click);
-			// 
 			// mnuDetails
 			// 
 			this.mnuDetails.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
@@ -179,12 +176,15 @@
 			this.externalCompareToolStripMenuItem.Text = "&External Compare";
 			this.externalCompareToolStripMenuItem.Click += new System.EventHandler(this.externalCompareToolStripMenuItem_Click);
 			// 
-			// popToolStripMenuItem
+			// txtDifferences
 			// 
-			this.popToolStripMenuItem.Name = "popToolStripMenuItem";
-			this.popToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
-			this.popToolStripMenuItem.Text = "&Pop";
-			this.popToolStripMenuItem.Click += new System.EventHandler(this.popToolStripMenuItem_Click);
+			this.txtDifferences.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.txtDifferences.Location = new System.Drawing.Point(0, 0);
+			this.txtDifferences.Multiline = true;
+			this.txtDifferences.Name = "txtDifferences";
+			this.txtDifferences.ReadOnly = true;
+			this.txtDifferences.Size = new System.Drawing.Size(329, 640);
+			this.txtDifferences.TabIndex = 0;
 			// 
 			// frmStashes
 			// 
@@ -194,10 +194,11 @@
 			this.Controls.Add(this.splitContainer1);
 			this.Name = "frmStashes";
 			this.ShowIcon = false;
-			this.Text = "Commit History";
+			this.Text = "Stashes";
 			this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.frmStashes_FormClosing);
 			this.Load += new System.EventHandler(this.frmStashes_Load);
 			((System.ComponentModel.ISupportInitialize)(this.gridStashes)).EndInit();
+			this.mnuStashes.ResumeLayout(false);
 			this.splitContainer1.Panel1.ResumeLayout(false);
 			this.splitContainer1.Panel2.ResumeLayout(false);
 			this.splitContainer1.Panel2.PerformLayout();
@@ -208,7 +209,6 @@
 			((System.ComponentModel.ISupportInitialize)(this.splitContainer2)).EndInit();
 			this.splitContainer2.ResumeLayout(false);
 			((System.ComponentModel.ISupportInitialize)(this.gridDetails)).EndInit();
-			this.mnuStashes.ResumeLayout(false);
 			this.mnuDetails.ResumeLayout(false);
 			this.ResumeLayout(false);
 
