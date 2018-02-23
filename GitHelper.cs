@@ -218,6 +218,9 @@ namespace PaJaMa.GitStudio
 					case "AM":
 						diff.DifferenceType = DifferenceType.Modify;
 						break;
+					case "AD":
+						diff.DifferenceType = DifferenceType.Delete;
+						break;
 					case "D":
 						diff.DifferenceType = DifferenceType.Delete;
 						break;
