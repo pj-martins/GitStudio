@@ -17,6 +17,7 @@ namespace PaJaMa.GitStudio
 		public GitHelper Helper { get; set; }
 		public Branch Branch { get; set; }
 		public string FileName { get; set; }
+		public event EventHandler BranchCreated;
 
 		public frmCommitHistory()
 		{
@@ -218,6 +219,25 @@ namespace PaJaMa.GitStudio
 		{
 			if (!string.IsNullOrEmpty(FileName))
 				externalCompareToolStripMenuItem_Click(sender, e);
+		}
+
+		private void getToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+			var result = WinControls.InputBox.Show("Enter branch name");
+			if (result.Result == DialogResult.OK)
+			{
+				var commit = gridCommits.SelectedRows[0].DataBoundItem as Commit;
+				Helper.RunCommand(new string[] {
+				"checkout " + commit.CommitID,
+				"checkout -b " + result.Text
+				}, true);
+				BranchCreated?.Invoke(this, new EventArgs());
+			}
+		}
+
+		private void mnuCommits_Opening(object sender, CancelEventArgs e)
+		{
+			getToolStripMenuItem.Enabled = gridCommits.SelectedRows.Count == 1;
 		}
 	}
 }

@@ -688,6 +688,7 @@ namespace PaJaMa.GitStudio
 			if (tv.SelectedNode == null || tv.SelectedNode.Tag == null) return;
 			var branch = tv.SelectedNode.Tag as Branch;
 			var frm = new frmCommitHistory();
+			frm.BranchCreated += (object s, EventArgs e2) => RefreshBranches();
 			frm.Helper = _helper;
 			frm.Branch = branch;
 			frm.Show();
@@ -818,6 +819,7 @@ namespace PaJaMa.GitStudio
 			var tv = tvUnStaged.Focused ? tvUnStaged : tvStaged;
 			var diff = tv.SelectedNode == null ? null : tv.SelectedNode.Tag as Difference;
 			var frm = new frmCommitHistory();
+			frm.BranchCreated += (object s, EventArgs e2) => RefreshBranches();
 			frm.Helper = _helper;
 			frm.FileName = diff.FileName;
 			frm.Show();

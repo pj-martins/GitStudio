@@ -38,6 +38,8 @@
 			this.panel1 = new System.Windows.Forms.Panel();
 			this.lblCommits = new System.Windows.Forms.Label();
 			this.txtDifferences = new System.Windows.Forms.TextBox();
+			this.mnuCommits = new System.Windows.Forms.ContextMenuStrip(this.components);
+			this.getToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			((System.ComponentModel.ISupportInitialize)(this.gridCommits)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
 			this.splitContainer1.Panel1.SuspendLayout();
@@ -50,6 +52,7 @@
 			((System.ComponentModel.ISupportInitialize)(this.gridDetails)).BeginInit();
 			this.mnuDetails.SuspendLayout();
 			this.panel1.SuspendLayout();
+			this.mnuCommits.SuspendLayout();
 			this.SuspendLayout();
 			// 
 			// gridCommits
@@ -58,6 +61,7 @@
 			this.gridCommits.AllowUserToDeleteRows = false;
 			this.gridCommits.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.AllCells;
 			this.gridCommits.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+			this.gridCommits.ContextMenuStrip = this.mnuCommits;
 			this.gridCommits.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.gridCommits.Location = new System.Drawing.Point(0, 0);
 			this.gridCommits.Name = "gridCommits";
@@ -161,6 +165,21 @@
 			this.txtDifferences.Size = new System.Drawing.Size(269, 640);
 			this.txtDifferences.TabIndex = 0;
 			// 
+			// mnuCommits
+			// 
+			this.mnuCommits.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.getToolStripMenuItem});
+			this.mnuCommits.Name = "mnuCommits";
+			this.mnuCommits.Size = new System.Drawing.Size(153, 48);
+			this.mnuCommits.Opening += new System.ComponentModel.CancelEventHandler(this.mnuCommits_Opening);
+			// 
+			// getToolStripMenuItem
+			// 
+			this.getToolStripMenuItem.Name = "getToolStripMenuItem";
+			this.getToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+			this.getToolStripMenuItem.Text = "&Get";
+			this.getToolStripMenuItem.Click += new System.EventHandler(this.getToolStripMenuItem_Click);
+			// 
 			// frmCommitHistory
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -186,6 +205,7 @@
 			this.mnuDetails.ResumeLayout(false);
 			this.panel1.ResumeLayout(false);
 			this.panel1.PerformLayout();
+			this.mnuCommits.ResumeLayout(false);
 			this.ResumeLayout(false);
 
 		}
@@ -201,5 +221,7 @@
 		private System.Windows.Forms.ToolStripMenuItem externalCompareToolStripMenuItem;
 		private System.Windows.Forms.Panel panel1;
 		private System.Windows.Forms.Label lblCommits;
+		private System.Windows.Forms.ContextMenuStrip mnuCommits;
+		private System.Windows.Forms.ToolStripMenuItem getToolStripMenuItem;
 	}
 }
