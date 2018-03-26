@@ -149,10 +149,7 @@ namespace PaJaMa.GitStudio
 				return;
 			}
 
-			var selectedFile = tvFiles.SelectedNode == null ? null : tvFiles.SelectedNode.Tag;
-			if (selectedFile == null)
-				return;
-
+			var selectedFile = tvFiles.SelectedNode == null || tvFiles.SelectedNode.Tag == null ? null : tvFiles.SelectedNode.Tag.ToString().Replace("\\", "/");
 			var commitsToCompare = getCommitsToCompare();
 			if (commitsToCompare == null || commitsToCompare.Item1 == null)
 			{

@@ -32,10 +32,10 @@
 			this.gridCommits = new System.Windows.Forms.DataGridView();
 			this.splitContainer1 = new System.Windows.Forms.SplitContainer();
 			this.splitContainer2 = new System.Windows.Forms.SplitContainer();
+			this.tvFiles = new PaJaMa.WinControls.MultiSelectTreeView();
+			this.txtDifferences = new System.Windows.Forms.TextBox();
 			this.mnuDetails = new System.Windows.Forms.ContextMenuStrip(this.components);
 			this.externalCompareToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-			this.txtDifferences = new System.Windows.Forms.TextBox();
-			this.tvFiles = new PaJaMa.WinControls.MultiSelectTreeView();
 			((System.ComponentModel.ISupportInitialize)(this.gridCommits)).BeginInit();
 			((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
 			this.splitContainer1.Panel1.SuspendLayout();
@@ -54,6 +54,7 @@
 			this.gridCommits.AllowUserToDeleteRows = false;
 			this.gridCommits.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.AllCells;
 			this.gridCommits.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+			this.gridCommits.ContextMenuStrip = this.mnuDetails;
 			this.gridCommits.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.gridCommits.Location = new System.Drawing.Point(0, 0);
 			this.gridCommits.Name = "gridCommits";
@@ -98,6 +99,28 @@
 			this.splitContainer2.SplitterDistance = 420;
 			this.splitContainer2.TabIndex = 4;
 			// 
+			// tvFiles
+			// 
+			this.tvFiles.AllowDragNodes = false;
+			this.tvFiles.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.tvFiles.DrawMode = System.Windows.Forms.TreeViewDrawMode.OwnerDrawText;
+			this.tvFiles.Location = new System.Drawing.Point(0, 0);
+			this.tvFiles.Name = "tvFiles";
+			this.tvFiles.Size = new System.Drawing.Size(420, 640);
+			this.tvFiles.TabIndex = 0;
+			this.tvFiles.BeforeExpand += new System.Windows.Forms.TreeViewCancelEventHandler(this.tvFiles_BeforeExpand);
+			this.tvFiles.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.tvFiles_AfterSelect);
+			// 
+			// txtDifferences
+			// 
+			this.txtDifferences.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.txtDifferences.Location = new System.Drawing.Point(0, 0);
+			this.txtDifferences.Multiline = true;
+			this.txtDifferences.Name = "txtDifferences";
+			this.txtDifferences.ReadOnly = true;
+			this.txtDifferences.Size = new System.Drawing.Size(269, 640);
+			this.txtDifferences.TabIndex = 0;
+			// 
 			// mnuDetails
 			// 
 			this.mnuDetails.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
@@ -111,28 +134,6 @@
 			this.externalCompareToolStripMenuItem.Size = new System.Drawing.Size(167, 22);
 			this.externalCompareToolStripMenuItem.Text = "&External Compare";
 			this.externalCompareToolStripMenuItem.Click += new System.EventHandler(this.externalCompareToolStripMenuItem_Click);
-			// 
-			// txtDifferences
-			// 
-			this.txtDifferences.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.txtDifferences.Location = new System.Drawing.Point(0, 0);
-			this.txtDifferences.Multiline = true;
-			this.txtDifferences.Name = "txtDifferences";
-			this.txtDifferences.ReadOnly = true;
-			this.txtDifferences.Size = new System.Drawing.Size(269, 640);
-			this.txtDifferences.TabIndex = 0;
-			// 
-			// tvFiles
-			// 
-			this.tvFiles.AllowDragNodes = false;
-			this.tvFiles.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.tvFiles.DrawMode = System.Windows.Forms.TreeViewDrawMode.OwnerDrawText;
-			this.tvFiles.Location = new System.Drawing.Point(0, 0);
-			this.tvFiles.Name = "tvFiles";
-			this.tvFiles.Size = new System.Drawing.Size(420, 640);
-			this.tvFiles.TabIndex = 0;
-			this.tvFiles.BeforeExpand += new System.Windows.Forms.TreeViewCancelEventHandler(this.tvFiles_BeforeExpand);
-			this.tvFiles.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.tvFiles_AfterSelect);
 			// 
 			// frmFileHistory
 			// 
