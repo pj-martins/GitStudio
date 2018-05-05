@@ -210,6 +210,7 @@ namespace PaJaMa.GitStudio
 				switch (diffParts[0])
 				{
 					case "A":
+					case "C":
 					case "AA":
 					case "??":
 						diff.DifferenceType = DifferenceType.Add;
