@@ -218,29 +218,24 @@ namespace PaJaMa.GitStudio
 					case "M":
 					case "MM":
 					case "AM":
+					case "UU":
 						diff.DifferenceType = DifferenceType.Modify;
 						break;
 					case "AD":
-						diff.DifferenceType = DifferenceType.Delete;
-						break;
-					case "D":
+					case "UD":
+					case "DU":
+					case "DD":
 						diff.DifferenceType = DifferenceType.Delete;
 						break;
 					case "R":
 						diff.DifferenceType = DifferenceType.Rename;
 						break;
-					case "UU":
-						diff.DifferenceType = DifferenceType.Modify;
-						diff.IsConflict = true;
-						break;
-					case "UD":
-					case "DU":
-						diff.DifferenceType = DifferenceType.Delete;
-						diff.IsConflict = true;
-						break;
 					default:
 						throw new Exception(diffParts[0]);
 				}
+
+				if (diffParts[0].Contains("U") || diffParts[0] == "AA")
+					diff.IsConflict = true;
 
 				diffParts.RemoveAt(0);
 
