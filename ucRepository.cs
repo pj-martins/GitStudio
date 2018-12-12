@@ -308,6 +308,7 @@ namespace PaJaMa.GitStudio
 			tvStaged.EndUpdate();
 			btnCommit.Enabled = true; // TODO: tvStaged.Nodes.Count > 0;
 			btnStash.Enabled = true; // TODO: conditional
+			btnCommit.Enabled = tvStaged.Nodes.Count > 0;
 		}
 
 		private void viewExternalToolStripMenuItem_Click(object sender, EventArgs e)
