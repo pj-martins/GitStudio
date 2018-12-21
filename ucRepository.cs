@@ -31,9 +31,8 @@ namespace PaJaMa.GitStudio
 			}
 		}
 
-		private FileSystemWatcher _watcher;
-
 		private bool _inited = false;
+		private List<FileSystemWatcher> _watchers = new List<FileSystemWatcher>();
 
 		public ucRepository()
 		{
@@ -46,10 +45,16 @@ namespace PaJaMa.GitStudio
 			{
 				if (!RefreshBranches(true)) return;
 				_previousDifferences = null;
-				timDiff_Tick(this, new EventArgs());
-				timDiff.Enabled = true;
+				resetWatchers();
+				refreshPage();
 				_inited = true;
 			}
+		}
+
+		public void Deactivate()
+		{
+			_inited = false;
+			removeWatchers();
 		}
 
 		public bool RefreshBranches(bool initial = false)
@@ -115,8 +120,66 @@ namespace PaJaMa.GitStudio
 			}
 
 			btnPull.Enabled = _currentBranch.TracksBranch != null;
-			timDiff_Tick(timDiff, new EventArgs());
+			refreshPage();
 			return true;
+		}
+
+		private void removeWatchers()
+		{
+			for (int i = _watchers.Count - 1; i >= 0; i--)
+			{
+				var watcher = _watchers[i];
+				_watchers.RemoveAt(i);
+				watcher.EnableRaisingEvents = false;
+				watcher.Dispose();
+				watcher = null;
+			}
+		}
+
+		private void resetWatchers()
+		{
+			removeWatchers();
+			for (int i = _watchers.Count - 1; i >= 0; i--)
+			{
+				var watcher = _watchers[i];
+				_watchers.RemoveAt(i);
+				watcher.EnableRaisingEvents = false;
+				watcher.Dispose();
+				watcher = null;
+			}
+
+			var lst = _helper.RunCommand("ls-files");
+
+			var listedDirectories = new List<string>();
+			foreach (var l in lst)
+			{
+				var directory = Path.GetDirectoryName(Path.Combine(_repository.LocalPath, l.Replace("/", "\\")));
+				// if (directory == _repository.LocalPath) continue;
+				if (listedDirectories.Contains(l)) continue;
+				var watcher = new FileSystemWatcher(directory);
+				watcher.EnableRaisingEvents = true;
+				watcher.Deleted += Watcher_Changed;
+				watcher.Changed += Watcher_Changed;
+				watcher.Created += Watcher_Changed;
+				watcher.Renamed += Watcher_Changed;
+				_watchers.Add(watcher);
+			}
+		}
+
+		private DateTime _lastCheck = DateTime.MinValue;
+		private string _lastFile = string.Empty;
+		private void Watcher_Changed(object sender, FileSystemEventArgs e)
+		{
+			if (e.Name == ".git") return;
+			if (_lockChange) return;
+			if (_lastFile == e.FullPath && (DateTime.Now - _lastCheck).TotalMilliseconds < 500) return;
+			_lastCheck = DateTime.Now;
+			_lastFile = e.FullPath;
+
+			this.Invoke(new Action(() =>
+			{
+				this.refreshPage(e.FullPath);
+			}));
 		}
 
 		private void branchToolStripMenuItem_Click(object sender, EventArgs e)
@@ -133,8 +196,10 @@ namespace PaJaMa.GitStudio
 		private void checkoutToolStripMenuItem_Click(object sender, EventArgs e)
 		{
 			if (tvLocalBranches.SelectedNode == null || tvLocalBranches.SelectedNode.Tag == null) return;
+			_lockChange = true;
 			_helper.RunCommand("checkout " + tvLocalBranches.SelectedNode.Tag.ToString(), true);
 			RefreshBranches();
+			_lockChange = false;
 		}
 
 		private void mnuLocal_Opening(object sender, CancelEventArgs e)
@@ -215,13 +280,35 @@ namespace PaJaMa.GitStudio
 		{
 		}
 
+		private bool _lockChange = false;
 		private List<Difference> _previousDifferences;
-		private void timDiff_Tick(object sender, EventArgs e)
+		private void refreshPage(string forFile = null)
 		{
-			if (!this.Parent.Visible)
-				return;
 			var diffs = _helper.GetDifferences();
 			if (diffs == null) return;
+
+			var selectedDiff = tvUnStaged.SelectedNode == null ? null : tvUnStaged.SelectedNode.Tag as Difference;
+			var selectedStaged = tvStaged.SelectedNode == null ? null : tvStaged.SelectedNode.Tag as Difference;
+			if (selectedDiff != null) refreshDifferences(selectedDiff);
+
+			if (forFile != null)
+			{
+				var changedDiff = diffs.FirstOrDefault(d => d.IsStaged
+					&& new FileInfo(Path.Combine(_repository.LocalPath, d.FileName)).FullName == forFile);
+				if (changedDiff != null)
+				{
+					_lockChange = true;
+					_helper.RunCommand("reset -- " + changedDiff.FileName);
+					_helper.RunCommand("add " + changedDiff.FileName);
+					refreshPage();
+					if (selectedStaged != null && changedDiff.FileName == selectedStaged.FileName)
+					{
+						refreshDifferences(changedDiff);
+					}
+					_lockChange = false;
+					return;
+				}
+			}
 
 			if (_previousDifferences != null)
 			{
@@ -231,9 +318,6 @@ namespace PaJaMa.GitStudio
 			}
 
 			_previousDifferences = diffs;
-
-			var selectedDiff = tvUnStaged.SelectedNode == null ? null : tvUnStaged.SelectedNode.Tag as Difference;
-			var selectedStaged = tvStaged.SelectedNode == null ? null : tvStaged.SelectedNode.Tag as Difference;
 
 			tvUnStaged.BeginUpdate();
 			tvStaged.BeginUpdate();
@@ -410,7 +494,7 @@ namespace PaJaMa.GitStudio
 			};
 			WinControls.WinProgressBox.ShowProgress(worker, "Undoing changes");
 			clearDifferences();
-			timDiff_Tick(this, new EventArgs());
+			refreshPage();
 		}
 
 		private void ignoreToolStripMenuItem_Click(object sender, EventArgs e)
@@ -444,7 +528,7 @@ namespace PaJaMa.GitStudio
 			}
 			File.AppendAllLines(Path.Combine(Repository.LocalPath, ".gitignore"), selectedItems);
 			clearDifferences();
-			timDiff_Tick(this, new EventArgs());
+			refreshPage();
 		}
 
 		private void mnuDiffs_Opening(object sender, CancelEventArgs e)
@@ -483,16 +567,6 @@ namespace PaJaMa.GitStudio
 
 			var diff = e.Node.Tag as Difference;
 			refreshDifferences(diff);
-			if (diff != null)
-			{
-				var diffFilePath = Path.Combine(_repository.LocalPath, diff.FileName.Replace("/", "\\"));
-				_watcher = new FileSystemWatcher(Path.GetDirectoryName(diffFilePath), Path.GetFileName(diffFilePath));
-				_watcher.Changed += (object s2, FileSystemEventArgs e2) =>
-				{
-					this.Invoke(new Action(() => refreshDifferences(diff)));
-				};
-				_watcher.EnableRaisingEvents = true;
-			}
 		}
 
 		private void refreshDifferences(Difference diff)
@@ -505,11 +579,6 @@ namespace PaJaMa.GitStudio
 
 		private void clearDifferences()
 		{
-			if (_watcher != null)
-			{
-				_watcher.Dispose();
-				_watcher = null;
-			}
 			txtDiffText.Text = string.Empty;
 		}
 
@@ -565,7 +634,7 @@ namespace PaJaMa.GitStudio
 			RefreshBranches();
 			clearDifferences();
 			_previousDifferences = null;
-			timDiff_Tick(this, new EventArgs());
+			refreshPage();
 		}
 
 		private void btnStash_Click(object sender, EventArgs e)
@@ -576,7 +645,7 @@ namespace PaJaMa.GitStudio
 			RefreshBranches();
 			clearDifferences();
 			_previousDifferences = null;
-			timDiff_Tick(this, new EventArgs());
+			refreshPage();
 		}
 
 		private void mergeFromLocalToolStripMenuItem_Click(object sender, EventArgs e)
@@ -606,7 +675,7 @@ namespace PaJaMa.GitStudio
 			_helper.RunCommand("add " + diff.FileName, false);
 			_previousDifferences = null;
 			clearDifferences();
-			timDiff_Tick(sender, e);
+			refreshPage();
 		}
 
 		private void stageToolStripMenuItem_Click(object sender, EventArgs e)
@@ -616,7 +685,7 @@ namespace PaJaMa.GitStudio
 				_helper.RunCommand("add " + selectedItem.FileName);
 			}
 			clearDifferences();
-			timDiff_Tick(this, new EventArgs());
+			refreshPage();
 		}
 
 		private void unStageToolStripMenuItem_Click(object sender, EventArgs e)
@@ -626,7 +695,7 @@ namespace PaJaMa.GitStudio
 				_helper.RunCommand("reset -- " + selectedItem.FileName);
 			}
 			clearDifferences();
-			timDiff_Tick(this, new EventArgs());
+			refreshPage();
 		}
 
 		private void ignoreExtensionToolStripMenuItem_Click(object sender, EventArgs e)
@@ -650,7 +719,7 @@ namespace PaJaMa.GitStudio
 			}
 			File.AppendAllLines(Path.Combine(Repository.LocalPath, ".gitignore"), selectedItems);
 			clearDifferences();
-			timDiff_Tick(this, new EventArgs());
+			refreshPage();
 		}
 
 		private void abortMergeToolStripMenuItem_Click(object sender, EventArgs e)
@@ -689,7 +758,7 @@ namespace PaJaMa.GitStudio
 					_helper.RunCommand(cmd + selectedItem.FileName);
 				}
 				clearDifferences();
-				timDiff_Tick(this, new EventArgs());
+				refreshPage();
 			}
 		}
 
@@ -773,7 +842,7 @@ namespace PaJaMa.GitStudio
 			}
 			_helper.RunCommand(arguments.ToArray(), true);
 			clearDifferences();
-			timDiff_Tick(this, new EventArgs());
+			refreshPage();
 		}
 
 		private void unstageAllToolStripMenuItem_Click(object sender, EventArgs e)
@@ -787,7 +856,7 @@ namespace PaJaMa.GitStudio
 			}
 			_helper.RunCommand(arguments.ToArray(), true);
 			clearDifferences();
-			timDiff_Tick(this, new EventArgs());
+			refreshPage();
 		}
 
 		private void pruneToolStripMenuItem_Click(object sender, EventArgs e)
@@ -842,7 +911,7 @@ namespace PaJaMa.GitStudio
 			var diff = tv.SelectedNode == null ? null : tv.SelectedNode.Tag as Difference;
 			_helper.RunCommand("checkout --ours " + diff.FileName);
 			_previousDifferences = null;
-			timDiff_Tick(sender, e);
+			refreshPage();
 		}
 
 		private void resolveUsingTheirsToolStripMenuItem_Click(object sender, EventArgs e)
@@ -851,7 +920,7 @@ namespace PaJaMa.GitStudio
 			var diff = tv.SelectedNode == null ? null : tv.SelectedNode.Tag as Difference;
 			_helper.RunCommand("checkout --theirs " + diff.FileName);
 			_previousDifferences = null;
-			timDiff_Tick(sender, e);
+			refreshPage();
 		}
 
 		private void fileHistoryToolStripMenuItem_Click(object sender, EventArgs e)

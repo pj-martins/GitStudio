@@ -14,6 +14,7 @@ namespace PaJaMa.GitStudio
 {
 	public partial class frmMain : Form
 	{
+		private PaJaMa.WinControls.TabControl.TabPage _lastPage;
 		public frmMain()
 		{
 			InitializeComponent();
@@ -68,7 +69,10 @@ namespace PaJaMa.GitStudio
 			}
 
 			if (selectedTab != null)
+			{
 				tabMain.SelectedTab = selectedTab;
+				_lastPage = selectedTab;
+			}
 			if (tabMain.SelectedTab != null)
 				(tabMain.SelectedTab.Controls[0] as ucRepository).Init();
 		}
@@ -166,6 +170,8 @@ namespace PaJaMa.GitStudio
 		{
 			var settings = SettingsHelper.GetUserSettings<GitUserSettings>();
 			var tab = e.TabPage;
+			(tab.Controls[0] as ucRepository).Deactivate();
+			if (tab == _lastPage) _lastPage = null;
 			var repo = settings.Repositories.First(r => r.LocalPath == tab.Text);
 			settings.Repositories.Remove(repo);
 			tabMain.TabPages.Remove(tab);
@@ -174,6 +180,11 @@ namespace PaJaMa.GitStudio
 
 		private void tabMain_TabChanged(object sender, WinControls.TabControl.TabEventArgs e)
 		{
+			if (_lastPage != null)
+			{
+				(_lastPage.Controls[0] as ucRepository).Deactivate();
+			}
+			_lastPage = e.TabPage;
 			(e.TabPage.Controls[0] as ucRepository).Init();
 			var settings = SettingsHelper.GetUserSettings<GitUserSettings>();
 			settings.FocusedRepository = tabMain.SelectedTab.Text;

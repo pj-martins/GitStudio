@@ -77,7 +77,6 @@
 			this.label4 = new System.Windows.Forms.Label();
 			this.txtDiffText = new System.Windows.Forms.RichTextBox();
 			this.label5 = new System.Windows.Forms.Label();
-			this.timDiff = new System.Windows.Forms.Timer(this.components);
 			this.pnlButtons = new System.Windows.Forms.Panel();
 			this.btnPush = new System.Windows.Forms.Button();
 			this.btnPull = new System.Windows.Forms.Button();
@@ -578,11 +577,6 @@
 			this.label5.TabIndex = 4;
 			this.label5.Text = "Change Details";
 			// 
-			// timDiff
-			// 
-			this.timDiff.Interval = 5000;
-			this.timDiff.Tick += new System.EventHandler(this.timDiff_Tick);
-			// 
 			// pnlButtons
 			// 
 			this.pnlButtons.Controls.Add(this.btnPush);
@@ -716,7 +710,6 @@
 		private System.Windows.Forms.ToolStripMenuItem fetchToolStripMenuItem;
 		private PaJaMa.WinControls.MultiSelectTreeView tvLocalBranches;
 		private System.Windows.Forms.ToolStripMenuItem deleteToolStripMenuItem;
-		private System.Windows.Forms.Timer timDiff;
 		private System.Windows.Forms.SplitContainer splitContainer3;
 		private PaJaMa.WinControls.MultiSelectTreeView tvUnStaged;
 		private System.Windows.Forms.RichTextBox txtDiffText;
