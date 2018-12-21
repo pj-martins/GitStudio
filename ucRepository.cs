@@ -31,6 +31,8 @@ namespace PaJaMa.GitStudio
 			}
 		}
 
+		private FileSystemWatcher _watcher;
+
 		private bool _inited = false;
 
 		public ucRepository()
@@ -407,7 +409,7 @@ namespace PaJaMa.GitStudio
 				}
 			};
 			WinControls.WinProgressBox.ShowProgress(worker, "Undoing changes");
-			txtDiffText.Text = string.Empty;
+			clearDifferences();
 			timDiff_Tick(this, new EventArgs());
 		}
 
@@ -441,7 +443,7 @@ namespace PaJaMa.GitStudio
 				}
 			}
 			File.AppendAllLines(Path.Combine(Repository.LocalPath, ".gitignore"), selectedItems);
-			txtDiffText.Text = string.Empty;
+			clearDifferences();
 			timDiff_Tick(this, new EventArgs());
 		}
 
@@ -461,17 +463,54 @@ namespace PaJaMa.GitStudio
 
 		private void tv_AfterSelect(object sender, TreeViewEventArgs e)
 		{
+			if (sender == tvStaged)
+			{
+				tvUnStaged.SelectedNode = null;
+				tvUnStaged.SelectedNodes.Clear();
+				tvUnStaged.Invalidate();
+			}
+			else
+			{
+				tvStaged.SelectedNode = null;
+				tvStaged.SelectedNodes.Clear();
+				tvStaged.Invalidate();
+			}
 			if (e.Node.Tag == null)
 			{
-				txtDiffText.Text = string.Empty;
+				clearDifferences();
 				return;
 			}
 
 			var diff = e.Node.Tag as Difference;
+			refreshDifferences(diff);
+			if (diff != null)
+			{
+				var diffFilePath = Path.Combine(_repository.LocalPath, diff.FileName.Replace("/", "\\"));
+				_watcher = new FileSystemWatcher(Path.GetDirectoryName(diffFilePath), Path.GetFileName(diffFilePath));
+				_watcher.Changed += (object s2, FileSystemEventArgs e2) =>
+				{
+					this.Invoke(new Action(() => refreshDifferences(diff)));
+				};
+				_watcher.EnableRaisingEvents = true;
+			}
+		}
+
+		private void refreshDifferences(Difference diff)
+		{
 			var diffs = diff == null || diff.DifferenceType != DifferenceType.Modify ? new string[0] :
 				_helper.RunCommand("--no-pager diff " + (diff.IsStaged ? "--cached " : "") + "\"" + diff.FileName + "\"");
 			// if (error) return;
 			txtDiffText.Text = string.Join("\r\n", diffs);
+		}
+
+		private void clearDifferences()
+		{
+			if (_watcher != null)
+			{
+				_watcher.Dispose();
+				_watcher = null;
+			}
+			txtDiffText.Text = string.Empty;
 		}
 
 		private List<string> _collapsed = null;
@@ -524,7 +563,7 @@ namespace PaJaMa.GitStudio
 			frm.Repository = _repository;
 			frm.ShowDialog();
 			RefreshBranches();
-			txtDiffText.Text = string.Empty;
+			clearDifferences();
 			_previousDifferences = null;
 			timDiff_Tick(this, new EventArgs());
 		}
@@ -535,7 +574,7 @@ namespace PaJaMa.GitStudio
 			frm.Repository = _repository;
 			frm.ShowDialog();
 			RefreshBranches();
-			txtDiffText.Text = string.Empty;
+			clearDifferences();
 			_previousDifferences = null;
 			timDiff_Tick(this, new EventArgs());
 		}
@@ -566,7 +605,7 @@ namespace PaJaMa.GitStudio
 			var diff = tv.SelectedNode.Tag as Difference;
 			_helper.RunCommand("add " + diff.FileName, false);
 			_previousDifferences = null;
-			txtDiffText.Text = string.Empty;
+			clearDifferences();
 			timDiff_Tick(sender, e);
 		}
 
@@ -576,7 +615,7 @@ namespace PaJaMa.GitStudio
 			{
 				_helper.RunCommand("add " + selectedItem.FileName);
 			}
-			txtDiffText.Text = string.Empty;
+			clearDifferences();
 			timDiff_Tick(this, new EventArgs());
 		}
 
@@ -586,7 +625,7 @@ namespace PaJaMa.GitStudio
 			{
 				_helper.RunCommand("reset -- " + selectedItem.FileName);
 			}
-			txtDiffText.Text = string.Empty;
+			clearDifferences();
 			timDiff_Tick(this, new EventArgs());
 		}
 
@@ -610,7 +649,7 @@ namespace PaJaMa.GitStudio
 				}
 			}
 			File.AppendAllLines(Path.Combine(Repository.LocalPath, ".gitignore"), selectedItems);
-			txtDiffText.Text = string.Empty;
+			clearDifferences();
 			timDiff_Tick(this, new EventArgs());
 		}
 
@@ -649,7 +688,7 @@ namespace PaJaMa.GitStudio
 					var cmd = _draggingTreeView == tvUnStaged ? "add " : "reset -- ";
 					_helper.RunCommand(cmd + selectedItem.FileName);
 				}
-				txtDiffText.Text = string.Empty;
+				clearDifferences();
 				timDiff_Tick(this, new EventArgs());
 			}
 		}
@@ -733,7 +772,7 @@ namespace PaJaMa.GitStudio
 				arguments.Add("add " + flat.FileName);
 			}
 			_helper.RunCommand(arguments.ToArray(), true);
-			txtDiffText.Text = string.Empty;
+			clearDifferences();
 			timDiff_Tick(this, new EventArgs());
 		}
 
@@ -747,7 +786,7 @@ namespace PaJaMa.GitStudio
 				arguments.Add("reset -- " + flat.FileName);
 			}
 			_helper.RunCommand(arguments.ToArray(), true);
-			txtDiffText.Text = string.Empty;
+			clearDifferences();
 			timDiff_Tick(this, new EventArgs());
 		}
 

@@ -170,76 +170,76 @@
             this.fileHistoryToolStripMenuItem1,
             this.trackRemoteToolStripMenuItem});
 			this.mnuLocal.Name = "mnuLocal";
-			this.mnuLocal.Size = new System.Drawing.Size(148, 224);
+			this.mnuLocal.Size = new System.Drawing.Size(147, 224);
 			this.mnuLocal.Opening += new System.ComponentModel.CancelEventHandler(this.mnuLocal_Opening);
 			// 
 			// checkoutToolStripMenuItem
 			// 
 			this.checkoutToolStripMenuItem.Name = "checkoutToolStripMenuItem";
-			this.checkoutToolStripMenuItem.Size = new System.Drawing.Size(147, 22);
+			this.checkoutToolStripMenuItem.Size = new System.Drawing.Size(146, 22);
 			this.checkoutToolStripMenuItem.Text = "&Checkout";
 			this.checkoutToolStripMenuItem.Click += new System.EventHandler(this.checkoutToolStripMenuItem_Click);
 			// 
 			// deleteToolStripMenuItem
 			// 
 			this.deleteToolStripMenuItem.Name = "deleteToolStripMenuItem";
-			this.deleteToolStripMenuItem.Size = new System.Drawing.Size(147, 22);
+			this.deleteToolStripMenuItem.Size = new System.Drawing.Size(146, 22);
 			this.deleteToolStripMenuItem.Text = "&Delete";
 			this.deleteToolStripMenuItem.Click += new System.EventHandler(this.deleteToolStripMenuItem_Click);
 			// 
 			// branchLocalToolStripMenuItem
 			// 
 			this.branchLocalToolStripMenuItem.Name = "branchLocalToolStripMenuItem";
-			this.branchLocalToolStripMenuItem.Size = new System.Drawing.Size(147, 22);
+			this.branchLocalToolStripMenuItem.Size = new System.Drawing.Size(146, 22);
 			this.branchLocalToolStripMenuItem.Text = "&Branch";
 			this.branchLocalToolStripMenuItem.Click += new System.EventHandler(this.branchLocalToolStripMenuItem_Click);
 			// 
 			// mergeFromLocalToolStripMenuItem
 			// 
 			this.mergeFromLocalToolStripMenuItem.Name = "mergeFromLocalToolStripMenuItem";
-			this.mergeFromLocalToolStripMenuItem.Size = new System.Drawing.Size(147, 22);
+			this.mergeFromLocalToolStripMenuItem.Size = new System.Drawing.Size(146, 22);
 			this.mergeFromLocalToolStripMenuItem.Text = "&Merge From";
 			this.mergeFromLocalToolStripMenuItem.Click += new System.EventHandler(this.mergeFromLocalToolStripMenuItem_Click);
 			// 
 			// abortMergeToolStripMenuItem
 			// 
 			this.abortMergeToolStripMenuItem.Name = "abortMergeToolStripMenuItem";
-			this.abortMergeToolStripMenuItem.Size = new System.Drawing.Size(147, 22);
+			this.abortMergeToolStripMenuItem.Size = new System.Drawing.Size(146, 22);
 			this.abortMergeToolStripMenuItem.Text = "&Abort Merge";
 			this.abortMergeToolStripMenuItem.Click += new System.EventHandler(this.abortMergeToolStripMenuItem_Click);
 			// 
 			// compareToolStripMenuItem
 			// 
 			this.compareToolStripMenuItem.Name = "compareToolStripMenuItem";
-			this.compareToolStripMenuItem.Size = new System.Drawing.Size(147, 22);
+			this.compareToolStripMenuItem.Size = new System.Drawing.Size(146, 22);
 			this.compareToolStripMenuItem.Text = "&Compare";
 			this.compareToolStripMenuItem.Click += new System.EventHandler(this.compareToolStripMenuItem_Click);
 			// 
 			// historyToolStripMenuItem1
 			// 
 			this.historyToolStripMenuItem1.Name = "historyToolStripMenuItem1";
-			this.historyToolStripMenuItem1.Size = new System.Drawing.Size(147, 22);
+			this.historyToolStripMenuItem1.Size = new System.Drawing.Size(146, 22);
 			this.historyToolStripMenuItem1.Text = "&History";
 			this.historyToolStripMenuItem1.Click += new System.EventHandler(this.historyToolStripMenuItem_Click);
 			// 
 			// renameToolStripMenuItem
 			// 
 			this.renameToolStripMenuItem.Name = "renameToolStripMenuItem";
-			this.renameToolStripMenuItem.Size = new System.Drawing.Size(147, 22);
+			this.renameToolStripMenuItem.Size = new System.Drawing.Size(146, 22);
 			this.renameToolStripMenuItem.Text = "&Rename";
 			this.renameToolStripMenuItem.Click += new System.EventHandler(this.renameToolStripMenuItem_Click);
 			// 
 			// fileHistoryToolStripMenuItem1
 			// 
 			this.fileHistoryToolStripMenuItem1.Name = "fileHistoryToolStripMenuItem1";
-			this.fileHistoryToolStripMenuItem1.Size = new System.Drawing.Size(147, 22);
+			this.fileHistoryToolStripMenuItem1.Size = new System.Drawing.Size(146, 22);
 			this.fileHistoryToolStripMenuItem1.Text = "&File History";
 			this.fileHistoryToolStripMenuItem1.Click += new System.EventHandler(this.fileHistoryToolStripMenuItem1_Click);
 			// 
 			// trackRemoteToolStripMenuItem
 			// 
 			this.trackRemoteToolStripMenuItem.Name = "trackRemoteToolStripMenuItem";
-			this.trackRemoteToolStripMenuItem.Size = new System.Drawing.Size(147, 22);
+			this.trackRemoteToolStripMenuItem.Size = new System.Drawing.Size(146, 22);
 			this.trackRemoteToolStripMenuItem.Text = "&Track Remote";
 			this.trackRemoteToolStripMenuItem.Click += new System.EventHandler(this.trackRemoteToolStripMenuItem_Click);
 			// 
