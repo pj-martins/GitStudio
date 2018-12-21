@@ -9,6 +9,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -166,20 +167,42 @@ namespace PaJaMa.GitStudio
 			}
 		}
 
-		private DateTime _lastCheck = DateTime.MinValue;
-		private string _lastFile = string.Empty;
+		private bool _wait = false;
+		private List<string> _changedFiles = new List<string>();
+		private object _lockObject = new object();
 		private void Watcher_Changed(object sender, FileSystemEventArgs e)
 		{
 			if (e.Name == ".git") return;
 			if (_lockChange) return;
-			if (_lastFile == e.FullPath && (DateTime.Now - _lastCheck).TotalMilliseconds < 500) return;
-			_lastCheck = DateTime.Now;
-			_lastFile = e.FullPath;
-
-			this.Invoke(new Action(() =>
+			lock (_lockObject)
 			{
-				this.refreshPage(e.FullPath);
-			}));
+				if (!_changedFiles.Contains(e.FullPath))
+					_changedFiles.Add(e.FullPath);
+				_wait = true;
+			}
+		}
+
+		private void timDebounce_Tick(object sender, EventArgs e)
+		{
+			lock (_lockObject)
+			{
+				if (_wait)
+				{
+					_wait = false;
+					return;
+				}
+
+				if (_changedFiles.Any())
+				{
+					this.Invoke(new Action(() =>
+					{
+						Console.WriteLine("REFRESHING");
+						var arr = _changedFiles.ToArray();
+						_changedFiles.Clear();
+						this.refreshPage(arr);
+					}));
+				}
+			}
 		}
 
 		private void branchToolStripMenuItem_Click(object sender, EventArgs e)
@@ -282,7 +305,7 @@ namespace PaJaMa.GitStudio
 
 		private bool _lockChange = false;
 		private List<Difference> _previousDifferences;
-		private void refreshPage(string forFile = null)
+		private void refreshPage(string[] forFiles = null)
 		{
 			var diffs = _helper.GetDifferences();
 			if (diffs == null) return;
@@ -291,10 +314,10 @@ namespace PaJaMa.GitStudio
 			var selectedStaged = tvStaged.SelectedNode == null ? null : tvStaged.SelectedNode.Tag as Difference;
 			if (selectedDiff != null) refreshDifferences(selectedDiff);
 
-			if (forFile != null)
+			if (forFiles != null)
 			{
 				var changedDiff = diffs.FirstOrDefault(d => d.IsStaged
-					&& new FileInfo(Path.Combine(_repository.LocalPath, d.FileName)).FullName == forFile);
+					&& forFiles.Any(f => new FileInfo(Path.Combine(_repository.LocalPath, d.FileName)).FullName == f));
 				if (changedDiff != null)
 				{
 					_lockChange = true;

@@ -84,6 +84,7 @@
 			this.btnStash = new System.Windows.Forms.Button();
 			this.btnRefresh = new System.Windows.Forms.Button();
 			this.btnCommit = new System.Windows.Forms.Button();
+			this.timDebounce = new System.Windows.Forms.Timer(this.components);
 			((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
 			this.splitContainer1.Panel1.SuspendLayout();
 			this.splitContainer1.Panel2.SuspendLayout();
@@ -660,6 +661,12 @@
 			this.btnCommit.UseVisualStyleBackColor = true;
 			this.btnCommit.Click += new System.EventHandler(this.btnCommit_Click);
 			// 
+			// timDebounce
+			// 
+			this.timDebounce.Enabled = true;
+			this.timDebounce.Interval = 300;
+			this.timDebounce.Tick += new System.EventHandler(this.timDebounce_Tick);
+			// 
 			// ucRepository
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -755,5 +762,6 @@
 		private System.Windows.Forms.ToolStripMenuItem fileHistoryToolStripMenuItem1;
 		private System.Windows.Forms.ToolStripMenuItem trackRemoteToolStripMenuItem;
 		private System.Windows.Forms.ToolStripMenuItem downloadToToolStripMenuItem;
+		private System.Windows.Forms.Timer timDebounce;
 	}
 }
