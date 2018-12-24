@@ -121,6 +121,7 @@ namespace PaJaMa.GitStudio
 			}
 
 			btnPull.Enabled = _currentBranch.TracksBranch != null;
+			_previousDifferences = null;
 			refreshPage();
 			return true;
 		}
@@ -569,18 +570,24 @@ namespace PaJaMa.GitStudio
 		}
 
 		private void tv_AfterSelect(object sender, TreeViewEventArgs e)
-		{
+		{ 
 			if (sender == tvStaged)
 			{
-				tvUnStaged.SelectedNode = null;
-				tvUnStaged.SelectedNodes.Clear();
-				tvUnStaged.Invalidate();
+				if (tvStaged.SelectedNode != null || tvStaged.SelectedNodes.Any())
+				{
+					tvStaged.SelectedNode = null;
+					tvStaged.SelectedNodes.Clear();
+					tvStaged.Invalidate();
+				}
 			}
 			else
 			{
-				tvStaged.SelectedNode = null;
-				tvStaged.SelectedNodes.Clear();
-				tvStaged.Invalidate();
+				if (tvStaged.SelectedNode != null || tvStaged.SelectedNodes.Any())
+				{
+					tvStaged.SelectedNode = null;
+					tvStaged.SelectedNodes.Clear();
+					tvStaged.Invalidate();
+				}
 			}
 			if (e.Node.Tag == null)
 			{
@@ -707,6 +714,7 @@ namespace PaJaMa.GitStudio
 			{
 				_helper.RunCommand("add " + selectedItem.FileName);
 			}
+			_previousDifferences = null;
 			clearDifferences();
 			refreshPage();
 		}
@@ -717,6 +725,7 @@ namespace PaJaMa.GitStudio
 			{
 				_helper.RunCommand("reset -- " + selectedItem.FileName);
 			}
+			_previousDifferences = null;
 			clearDifferences();
 			refreshPage();
 		}
@@ -780,6 +789,7 @@ namespace PaJaMa.GitStudio
 					var cmd = _draggingTreeView == tvUnStaged ? "add " : "reset -- ";
 					_helper.RunCommand(cmd + selectedItem.FileName);
 				}
+				_previousDifferences = null;
 				clearDifferences();
 				refreshPage();
 			}
@@ -864,6 +874,7 @@ namespace PaJaMa.GitStudio
 				arguments.Add("add " + flat.FileName);
 			}
 			_helper.RunCommand(arguments.ToArray(), true);
+			_previousDifferences = null;
 			clearDifferences();
 			refreshPage();
 		}
@@ -878,6 +889,7 @@ namespace PaJaMa.GitStudio
 				arguments.Add("reset -- " + flat.FileName);
 			}
 			_helper.RunCommand(arguments.ToArray(), true);
+			_previousDifferences = null;
 			clearDifferences();
 			refreshPage();
 		}
