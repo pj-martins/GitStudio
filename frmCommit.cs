@@ -54,7 +54,7 @@ namespace PaJaMa.GitStudio
 				cboRemote.SelectedItem = null;
 				cboRemote.Text = string.Empty;
 			}
-			else
+			else if (_localBranch != null)
 			{
 				if (_localBranch.TracksBranch != null)
 				{
