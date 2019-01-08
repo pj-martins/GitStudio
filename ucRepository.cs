@@ -573,11 +573,11 @@ namespace PaJaMa.GitStudio
 		{ 
 			if (sender == tvStaged)
 			{
-				if (tvStaged.SelectedNode != null || tvStaged.SelectedNodes.Any())
+				if (tvUnStaged.SelectedNode != null || tvUnStaged.SelectedNodes.Any())
 				{
-					tvStaged.SelectedNode = null;
-					tvStaged.SelectedNodes.Clear();
-					tvStaged.Invalidate();
+					tvUnStaged.SelectedNode = null;
+					tvUnStaged.SelectedNodes.Clear();
+					tvUnStaged.Invalidate();
 				}
 			}
 			else
