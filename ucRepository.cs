@@ -158,6 +158,7 @@ namespace PaJaMa.GitStudio
 				var directory = Path.GetDirectoryName(Path.Combine(_repository.LocalPath, l.Replace("/", "\\")));
 				// if (directory == _repository.LocalPath) continue;
 				if (listedDirectories.Contains(l)) continue;
+				if (!Directory.Exists(directory)) continue;
 				var watcher = new FileSystemWatcher(directory);
 				watcher.EnableRaisingEvents = true;
 				watcher.Deleted += Watcher_Changed;
