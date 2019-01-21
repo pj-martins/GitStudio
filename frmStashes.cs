@@ -37,7 +37,13 @@ namespace PaJaMa.GitStudio
 
 		private void refreshStashes()
 		{
-			var items = Helper.RunCommand("stash list", false);
+			string[] items = null;
+			var worker = new BackgroundWorker();
+			worker.DoWork += (object sender2, DoWorkEventArgs e2) =>
+			{
+				items = Helper.RunCommand("stash list", false);
+			};
+			WinStatusBox.ShowProgress(worker, "Committing", progressBarStyle: ProgressBarStyle.Marquee);
 			var stashes = new List<Stash>();
 			foreach (var item in items)
 			{

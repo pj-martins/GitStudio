@@ -323,8 +323,11 @@ namespace PaJaMa.GitStudio
 				if (changedDiff != null)
 				{
 					_lockChange = true;
-					_helper.RunCommand("reset -- " + changedDiff.FileName);
-					_helper.RunCommand("add " + changedDiff.FileName);
+					if (!changedDiff.IsConflict)
+					{
+						_helper.RunCommand("reset -- " + changedDiff.FileName);
+						_helper.RunCommand("add " + changedDiff.FileName);
+					}
 					refreshPage();
 					if (selectedStaged != null && changedDiff.FileName == selectedStaged.FileName)
 					{

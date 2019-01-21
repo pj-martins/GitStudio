@@ -33,6 +33,8 @@ namespace PaJaMa.GitStudio
 					inf.UseShellExecute = false;
 					inf.RedirectStandardOutput = true;
 					inf.RedirectStandardError = true;
+					inf.StandardOutputEncoding = Encoding.UTF8;
+					inf.StandardErrorEncoding = Encoding.UTF8;
 					inf.WindowStyle = ProcessWindowStyle.Hidden;
 					inf.CreateNoWindow = true;
 					if (WorkingDirectory != null)
