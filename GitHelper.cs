@@ -130,11 +130,11 @@ namespace PaJaMa.GitStudio
 				{
 					bool error = false;
 					var branchLines = RunCommand("branch " + (remote ? "-r" : "-l") + " -vv", false, ref error);
-					if (error)
-					{
-						branches = null;
-						break;
-					}
+					//if (error)
+					//{
+					//	branches = null;
+					//	break;
+					//}
 					foreach (var b in branchLines.Select(bl => bl.Trim()))
 					{
 						var branchParts = b.Split(new string[] { " " }, StringSplitOptions.RemoveEmptyEntries).ToList();
