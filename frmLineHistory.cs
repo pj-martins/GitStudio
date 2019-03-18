@@ -12,19 +12,20 @@ using System.Windows.Forms;
 
 namespace PaJaMa.GitStudio
 {
-	public partial class frmFileHistory : Form
+	public partial class frmLineHistory : Form
 	{
 		public GitHelper Helper { get; set; }
+		public string SelectedFile { get; set; }
 
-		public frmFileHistory()
+		public frmLineHistory()
 		{
 			InitializeComponent();
 		}
 
-		private void frmFileHistory_Load(object sender, EventArgs e)
+		private void frmLineHistory_Load(object sender, EventArgs e)
 		{
 			PaJaMa.Common.FormSettings.LoadSettings(this);
-			refreshFiles(new DirectoryInfo(Helper.WorkingDirectory), tvFiles.Nodes);
+			refreshLines(new DirectoryInfo(Helper.WorkingDirectory));
 		}
 
 		private void frmCompareBranches_FormClosing(object sender, FormClosingEventArgs e)
@@ -32,25 +33,33 @@ namespace PaJaMa.GitStudio
 			PaJaMa.Common.FormSettings.SaveSettings(this);
 		}
 
-		private void refreshFiles(DirectoryInfo dinf, TreeNodeCollection nodes)
+		private void refreshLines(DirectoryInfo dinf)
 		{
-			foreach (var dinf2 in dinf.GetDirectories())
+			var lines = File.ReadAllLines(Path.Combine(dinf.FullName, SelectedFile));
+			var ds = new List<Line>();
+			for (int i = 0; i < lines.Length; i++)
 			{
-				var dirNode = nodes.Add(dinf2.Name);
-				dirNode.Tag = dinf2;
-				dirNode.Nodes.Add("__");
+				ds.Add(new GitStudio.Line() { Number = i + 1, Text = lines[i] });
 			}
-
-			foreach (var finf in dinf.GetFiles())
-			{
-				var fileNode = nodes.Add(finf.Name);
-				fileNode.Tag = finf.FullName.Replace(Helper.WorkingDirectory + "\\", "");
-			}
+			gridLines.DataSource = ds;
 		}
 
-		private void selectFile(string fileName)
+		private void selectLines()
 		{
-			var logs = Helper.RunCommand("--no-pager log " + fileName);
+			int start = 0;
+			int stop = 0;
+			for (int i = 1; i <= gridLines.Rows.Count; i++)
+			{
+				var row = gridLines.Rows[i - 1];
+				if (row.Selected)
+				{
+					if (start == 0 || i < start)
+						start = i;
+					if (stop == 0 || i > stop)
+						stop = i;
+				}
+			}
+			var logs = Helper.RunCommand($"--no-pager log -L {start},{stop}:{SelectedFile.Replace("\\", "/")}");
 			var commits = new List<Commit>();
 			//commits.Add(new Commit()
 			//{
@@ -62,11 +71,18 @@ namespace PaJaMa.GitStudio
 			// int index = 2;
 			int index = 1;
 			Commit current = null;
+			StringBuilder runningSb = new StringBuilder();
 			foreach (var log in logs)
 			{
 				if (log.StartsWith("commit "))
 				{
-					if (current != null) current.Comment = current.Comment.Trim();
+					if (current != null)
+					{
+						current.Comment = current.Comment.Trim();
+						current.DiffText = runningSb.ToString();
+						runningSb = new StringBuilder();
+					}
+
 					current = new Commit();
 					current.Index = index++;
 					commits.Add(current);
@@ -78,6 +94,11 @@ namespace PaJaMa.GitStudio
 					current.Date = log.Substring(5);
 				else if (log.StartsWith("    "))
 					current.Comment += log.Trim() + "\r\n";
+				runningSb.AppendLine(log.Trim());
+			}
+			if (current != null)
+			{
+				current.DiffText = runningSb.ToString();
 			}
 			_refreshing = true;
 			gridCommits.DataSource = commits;
@@ -122,17 +143,7 @@ namespace PaJaMa.GitStudio
 				return;
 			}
 
-			var selectedFile = tvFiles.SelectedNode == null ? null : tvFiles.SelectedNode.Tag;
-			if (selectedFile == null)
-			{
-				txtDifferences.Text = string.Empty;
-				return;
-			}
-
-			var diffs = Helper.RunCommand("--no-pager diff " +
-				(commitsToCompare.Item1 != null ? commitsToCompare.Item1.CommitID + " " : "") +
-				commitsToCompare.Item2.CommitID + " -- " + selectedFile.ToString());
-			txtDifferences.Text = string.Join("\r\n", diffs);
+			txtDifferences.Text = commitsToCompare.Item2.DiffText;
 		}
 
 		private void gridDetails_DoubleClick(object sender, EventArgs e)
@@ -149,7 +160,6 @@ namespace PaJaMa.GitStudio
 				return;
 			}
 
-			var selectedFile = tvFiles.SelectedNode == null || tvFiles.SelectedNode.Tag == null ? null : tvFiles.SelectedNode.Tag.ToString().Replace("\\", "/");
 			var commitsToCompare = getCommitsToCompare();
 			if (commitsToCompare == null || commitsToCompare.Item1 == null)
 			{
@@ -157,8 +167,8 @@ namespace PaJaMa.GitStudio
 				return;
 			}
 
-			var content1 = Helper.RunCommand("--no-pager show " + commitsToCompare.Item2.CommitID + ":" + selectedFile);
-			var content2 = Helper.RunCommand("--no-pager show " + commitsToCompare.Item1.CommitID + ":" + selectedFile);
+			var content1 = Helper.RunCommand("--no-pager show " + commitsToCompare.Item2.CommitID + ":" + SelectedFile.Replace("\\", "/"));
+			var content2 = Helper.RunCommand("--no-pager show " + commitsToCompare.Item1.CommitID + ":" + SelectedFile.Replace("\\", "/"));
 
 			var tmpDir = Path.Combine(Path.GetTempPath(), "GitStudio");
 			if (!Directory.Exists(tmpDir)) Directory.CreateDirectory(tmpDir);
@@ -174,28 +184,9 @@ namespace PaJaMa.GitStudio
 			externalCompareToolStripMenuItem_Click(sender, e);
 		}
 
-		private void tvFiles_AfterSelect(object sender, TreeViewEventArgs e)
+		private void gridLines_SelectionChanged(object sender, EventArgs e)
 		{
-			if (e.Node.Tag != null)
-				selectFile(e.Node.Tag.ToString());
-		}
-
-		private void tvFiles_BeforeExpand(object sender, TreeViewCancelEventArgs e)
-		{
-			if (e.Node.Nodes.Count == 1 && e.Node.Nodes[0].Text == "__")
-			{
-				e.Node.Nodes.Clear();
-				refreshFiles(e.Node.Tag as DirectoryInfo, e.Node.Nodes);
-			}
-		}
-
-		private void lineHistoryToolStripMenuItem_Click(object sender, EventArgs e)
-		{
-			if (tvFiles.SelectedNode == null) return;
-			var lineHistory = new frmLineHistory();
-			lineHistory.Helper = this.Helper;
-			lineHistory.SelectedFile = tvFiles.SelectedNode.Tag.ToString();
-			lineHistory.Show();
+			selectLines();
 		}
 	}
 }

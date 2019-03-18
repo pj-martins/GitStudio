@@ -54,6 +54,7 @@ namespace PaJaMa.GitStudio
 		public string Author { get; set; }
 		public string Date { get; set; }
 		public string Comment { get; set; }
+		public string DiffText { get; set; }
 
 		[Browsable(false)]
 		public int Index { get; set; }
@@ -62,5 +63,11 @@ namespace PaJaMa.GitStudio
 		{
 			Comment = "";
 		}
+	}
+
+	public class Line
+	{
+		public int Number { get; set; }
+		public string Text { get; set; }
 	}
 }

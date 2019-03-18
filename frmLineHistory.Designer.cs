@@ -1,6 +1,6 @@
 ﻿namespace PaJaMa.GitStudio
 {
-	partial class frmFileHistory
+	partial class frmLineHistory
 	{
 		/// <summary>
 		/// Required designer variable.
@@ -32,11 +32,12 @@
 			this.gridCommits = new System.Windows.Forms.DataGridView();
 			this.mnuDetails = new System.Windows.Forms.ContextMenuStrip(this.components);
 			this.externalCompareToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-			this.lineHistoryToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.splitContainer1 = new System.Windows.Forms.SplitContainer();
 			this.splitContainer2 = new System.Windows.Forms.SplitContainer();
-			this.tvFiles = new PaJaMa.WinControls.MultiSelectTreeView();
 			this.txtDifferences = new System.Windows.Forms.TextBox();
+			this.gridLines = new System.Windows.Forms.DataGridView();
+			this.Num = new System.Windows.Forms.DataGridViewTextBoxColumn();
+			this.Line = new System.Windows.Forms.DataGridViewTextBoxColumn();
 			((System.ComponentModel.ISupportInitialize)(this.gridCommits)).BeginInit();
 			this.mnuDetails.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
@@ -47,6 +48,7 @@
 			this.splitContainer2.Panel1.SuspendLayout();
 			this.splitContainer2.Panel2.SuspendLayout();
 			this.splitContainer2.SuspendLayout();
+			((System.ComponentModel.ISupportInitialize)(this.gridLines)).BeginInit();
 			this.SuspendLayout();
 			// 
 			// gridCommits
@@ -69,24 +71,16 @@
 			// mnuDetails
 			// 
 			this.mnuDetails.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.externalCompareToolStripMenuItem,
-            this.lineHistoryToolStripMenuItem});
+            this.externalCompareToolStripMenuItem});
 			this.mnuDetails.Name = "mnuDetails";
-			this.mnuDetails.Size = new System.Drawing.Size(168, 48);
+			this.mnuDetails.Size = new System.Drawing.Size(168, 26);
 			// 
 			// externalCompareToolStripMenuItem
 			// 
 			this.externalCompareToolStripMenuItem.Name = "externalCompareToolStripMenuItem";
-			this.externalCompareToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+			this.externalCompareToolStripMenuItem.Size = new System.Drawing.Size(167, 22);
 			this.externalCompareToolStripMenuItem.Text = "&External Compare";
 			this.externalCompareToolStripMenuItem.Click += new System.EventHandler(this.externalCompareToolStripMenuItem_Click);
-			// 
-			// lineHistoryToolStripMenuItem
-			// 
-			this.lineHistoryToolStripMenuItem.Name = "lineHistoryToolStripMenuItem";
-			this.lineHistoryToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-			this.lineHistoryToolStripMenuItem.Text = "&Line History";
-			this.lineHistoryToolStripMenuItem.Click += new System.EventHandler(this.lineHistoryToolStripMenuItem_Click);
 			// 
 			// splitContainer1
 			// 
@@ -113,7 +107,7 @@
 			// 
 			// splitContainer2.Panel1
 			// 
-			this.splitContainer2.Panel1.Controls.Add(this.tvFiles);
+			this.splitContainer2.Panel1.Controls.Add(this.gridLines);
 			// 
 			// splitContainer2.Panel2
 			// 
@@ -121,19 +115,6 @@
 			this.splitContainer2.Size = new System.Drawing.Size(787, 640);
 			this.splitContainer2.SplitterDistance = 420;
 			this.splitContainer2.TabIndex = 4;
-			// 
-			// tvFiles
-			// 
-			this.tvFiles.AllowDragNodes = false;
-			this.tvFiles.ContextMenuStrip = this.mnuDetails;
-			this.tvFiles.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.tvFiles.DrawMode = System.Windows.Forms.TreeViewDrawMode.OwnerDrawText;
-			this.tvFiles.Location = new System.Drawing.Point(0, 0);
-			this.tvFiles.Name = "tvFiles";
-			this.tvFiles.Size = new System.Drawing.Size(420, 640);
-			this.tvFiles.TabIndex = 0;
-			this.tvFiles.BeforeExpand += new System.Windows.Forms.TreeViewCancelEventHandler(this.tvFiles_BeforeExpand);
-			this.tvFiles.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.tvFiles_AfterSelect);
 			// 
 			// txtDifferences
 			// 
@@ -145,17 +126,52 @@
 			this.txtDifferences.Size = new System.Drawing.Size(269, 640);
 			this.txtDifferences.TabIndex = 0;
 			// 
-			// frmFileHistory
+			// gridLines
+			// 
+			this.gridLines.AllowUserToAddRows = false;
+			this.gridLines.AllowUserToDeleteRows = false;
+			this.gridLines.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.AllCells;
+			this.gridLines.CellBorderStyle = System.Windows.Forms.DataGridViewCellBorderStyle.None;
+			this.gridLines.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+			this.gridLines.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.Num,
+            this.Line});
+			this.gridLines.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.gridLines.Location = new System.Drawing.Point(0, 0);
+			this.gridLines.Name = "gridLines";
+			this.gridLines.ReadOnly = true;
+			this.gridLines.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
+			this.gridLines.Size = new System.Drawing.Size(420, 640);
+			this.gridLines.TabIndex = 1;
+			this.gridLines.SelectionChanged += new System.EventHandler(this.gridLines_SelectionChanged);
+			// 
+			// Num
+			// 
+			this.Num.DataPropertyName = "Number";
+			this.Num.HeaderText = "#";
+			this.Num.Name = "Num";
+			this.Num.ReadOnly = true;
+			this.Num.Width = 39;
+			// 
+			// Line
+			// 
+			this.Line.DataPropertyName = "Text";
+			this.Line.HeaderText = "Line";
+			this.Line.Name = "Line";
+			this.Line.ReadOnly = true;
+			this.Line.Width = 52;
+			// 
+			// frmLineHistory
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.ClientSize = new System.Drawing.Size(1060, 640);
 			this.Controls.Add(this.splitContainer1);
-			this.Name = "frmFileHistory";
+			this.Name = "frmLineHistory";
 			this.ShowIcon = false;
-			this.Text = "File History";
+			this.Text = "Line History";
 			this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.frmCompareBranches_FormClosing);
-			this.Load += new System.EventHandler(this.frmFileHistory_Load);
+			this.Load += new System.EventHandler(this.frmLineHistory_Load);
 			((System.ComponentModel.ISupportInitialize)(this.gridCommits)).EndInit();
 			this.mnuDetails.ResumeLayout(false);
 			this.splitContainer1.Panel1.ResumeLayout(false);
@@ -167,6 +183,7 @@
 			this.splitContainer2.Panel2.ResumeLayout(false);
 			((System.ComponentModel.ISupportInitialize)(this.splitContainer2)).EndInit();
 			this.splitContainer2.ResumeLayout(false);
+			((System.ComponentModel.ISupportInitialize)(this.gridLines)).EndInit();
 			this.ResumeLayout(false);
 
 		}
@@ -179,7 +196,8 @@
 		private System.Windows.Forms.SplitContainer splitContainer2;
 		private System.Windows.Forms.ContextMenuStrip mnuDetails;
 		private System.Windows.Forms.ToolStripMenuItem externalCompareToolStripMenuItem;
-		private WinControls.MultiSelectTreeView tvFiles;
-		private System.Windows.Forms.ToolStripMenuItem lineHistoryToolStripMenuItem;
+		private System.Windows.Forms.DataGridView gridLines;
+		private System.Windows.Forms.DataGridViewTextBoxColumn Num;
+		private System.Windows.Forms.DataGridViewTextBoxColumn Line;
 	}
 }

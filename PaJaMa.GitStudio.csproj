@@ -62,6 +62,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="frmLineHistory.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="frmLineHistory.Designer.cs">
+      <DependentUpon>frmLineHistory.cs</DependentUpon>
+    </Compile>
     <Compile Include="frmTrackRemote.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -150,6 +156,9 @@
     <Compile Include="GitUserSettings.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <EmbeddedResource Include="frmLineHistory.resx">
+      <DependentUpon>frmLineHistory.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="frmTrackRemote.resx">
       <DependentUpon>frmTrackRemote.cs</DependentUpon>
     </EmbeddedResource>
