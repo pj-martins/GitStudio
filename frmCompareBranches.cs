@@ -39,10 +39,18 @@ namespace PaJaMa.GitStudio
 		{
 			lblDirection.Text = ToBranch.BranchName + " -> " + FromBranch.BranchName;
 			var diffs = Helper.RunCommand("--no-pager diff --name-status " + FromBranch.BranchName + " " + ToBranch.BranchName);
-			gridMain.DataSource = diffs.Select(d => new
+			gridMain.DataSource = diffs.Select(d => d.Contains('\t')
+			?
+			new
 			{
 				File = d.Split('\t')[1],
 				Action = d.Split('\t')[0] == "A" ? "Add" : (d.Split('\t')[0] == "M" ? "Modify" : "Delete")
+			}
+			:
+			new
+			{
+				File = d,
+				Action = "ERROR"
 			}).ToList();
 		}
 
