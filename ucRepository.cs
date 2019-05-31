@@ -64,7 +64,7 @@ namespace PaJaMa.GitStudio
 			if (branches == null) return false;
 			if (branches.Count < 1) return true;
 
-			_currentBranch = branches.OfType<LocalBranch>().First(b => b.IsCurrent);
+			_currentBranch = branches.OfType<LocalBranch>().FirstOrDefault(b => b.IsCurrent);
 			_remoteBranches = branches.OfType<RemoteBranch>().ToList();
 
 			bool remote = true;
@@ -120,7 +120,7 @@ namespace PaJaMa.GitStudio
 				else break;
 			}
 
-			btnPull.Enabled = _currentBranch.TracksBranch != null;
+			btnPull.Enabled = _currentBranch != null && _currentBranch.TracksBranch != null;
 			_previousDifferences = null;
 			refreshPage();
 			return true;

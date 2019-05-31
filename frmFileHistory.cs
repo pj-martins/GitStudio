@@ -176,8 +176,8 @@ namespace PaJaMa.GitStudio
 
 		private void tvFiles_AfterSelect(object sender, TreeViewEventArgs e)
 		{
-			if (e.Node.Tag != null)
-				selectFile(e.Node.Tag.ToString());
+			//if (e.Node.Tag != null)
+			//	selectFile(e.Node.Tag.ToString());
 		}
 
 		private void tvFiles_BeforeExpand(object sender, TreeViewCancelEventArgs e)
@@ -196,6 +196,12 @@ namespace PaJaMa.GitStudio
 			lineHistory.Helper = this.Helper;
 			lineHistory.SelectedFile = tvFiles.SelectedNode.Tag.ToString();
 			lineHistory.Show();
+		}
+
+		private void HistoryToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+			if (tvFiles.SelectedNode == null) return;
+			selectFile(tvFiles.SelectedNode.Tag.ToString());
 		}
 	}
 }

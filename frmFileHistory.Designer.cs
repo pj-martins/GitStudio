@@ -37,6 +37,7 @@
 			this.splitContainer2 = new System.Windows.Forms.SplitContainer();
 			this.tvFiles = new PaJaMa.WinControls.MultiSelectTreeView();
 			this.txtDifferences = new System.Windows.Forms.TextBox();
+			this.historyToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			((System.ComponentModel.ISupportInitialize)(this.gridCommits)).BeginInit();
 			this.mnuDetails.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
@@ -70,9 +71,10 @@
 			// 
 			this.mnuDetails.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.externalCompareToolStripMenuItem,
+            this.historyToolStripMenuItem,
             this.lineHistoryToolStripMenuItem});
 			this.mnuDetails.Name = "mnuDetails";
-			this.mnuDetails.Size = new System.Drawing.Size(168, 48);
+			this.mnuDetails.Size = new System.Drawing.Size(181, 92);
 			// 
 			// externalCompareToolStripMenuItem
 			// 
@@ -145,6 +147,13 @@
 			this.txtDifferences.Size = new System.Drawing.Size(269, 640);
 			this.txtDifferences.TabIndex = 0;
 			// 
+			// historyToolStripMenuItem
+			// 
+			this.historyToolStripMenuItem.Name = "historyToolStripMenuItem";
+			this.historyToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+			this.historyToolStripMenuItem.Text = "&History";
+			this.historyToolStripMenuItem.Click += new System.EventHandler(this.HistoryToolStripMenuItem_Click);
+			// 
 			// frmFileHistory
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -181,5 +190,6 @@
 		private System.Windows.Forms.ToolStripMenuItem externalCompareToolStripMenuItem;
 		private WinControls.MultiSelectTreeView tvFiles;
 		private System.Windows.Forms.ToolStripMenuItem lineHistoryToolStripMenuItem;
+		private System.Windows.Forms.ToolStripMenuItem historyToolStripMenuItem;
 	}
 }

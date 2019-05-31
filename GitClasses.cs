@@ -40,12 +40,13 @@ namespace PaJaMa.GitStudio
 		public bool IsConflict { get; set; }
 	}
 
-	public enum DifferenceType
+	public enum DifferenceType : int
 	{
 		Add,
 		Modify,
 		Delete,
-		Rename
+		Rename,
+		Unknown = 1000
 	}
 
 	public class Commit

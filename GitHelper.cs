@@ -209,7 +209,7 @@ namespace PaJaMa.GitStudio
 				}
 
 				var diffParts = d.Split(new string[] { " " }, StringSplitOptions.RemoveEmptyEntries).ToList();
-				switch (diffParts[0])
+				switch (diffParts[0].ToUpper())
 				{
 					case "A":
 					case "C":
@@ -232,6 +232,9 @@ namespace PaJaMa.GitStudio
 						break;
 					case "R":
 						diff.DifferenceType = DifferenceType.Rename;
+						break;
+					case "?":
+						diff.DifferenceType = DifferenceType.Unknown;
 						break;
 					default:
 						throw new Exception(diffParts[0]);
