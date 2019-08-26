@@ -68,6 +68,12 @@
     <Compile Include="frmLineHistory.Designer.cs">
       <DependentUpon>frmLineHistory.cs</DependentUpon>
     </Compile>
+    <Compile Include="frmOutput.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="frmOutput.Designer.cs">
+      <DependentUpon>frmOutput.cs</DependentUpon>
+    </Compile>
     <Compile Include="frmTrackRemote.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -158,6 +164,9 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="frmLineHistory.resx">
       <DependentUpon>frmLineHistory.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="frmOutput.resx">
+      <DependentUpon>frmOutput.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="frmTrackRemote.resx">
       <DependentUpon>frmTrackRemote.cs</DependentUpon>

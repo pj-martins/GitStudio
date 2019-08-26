@@ -78,6 +78,7 @@
 			this.txtDiffText = new System.Windows.Forms.RichTextBox();
 			this.label5 = new System.Windows.Forms.Label();
 			this.pnlButtons = new System.Windows.Forms.Panel();
+			this.lblStatus = new System.Windows.Forms.Label();
 			this.btnPush = new System.Windows.Forms.Button();
 			this.btnPull = new System.Windows.Forms.Button();
 			this.btnViewStashes = new System.Windows.Forms.Button();
@@ -85,6 +86,7 @@
 			this.btnRefresh = new System.Windows.Forms.Button();
 			this.btnCommit = new System.Windows.Forms.Button();
 			this.timDebounce = new System.Windows.Forms.Timer(this.components);
+			this.btnViewOutput = new System.Windows.Forms.Button();
 			((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
 			this.splitContainer1.Panel1.SuspendLayout();
 			this.splitContainer1.Panel2.SuspendLayout();
@@ -120,8 +122,8 @@
 			// splitContainer1.Panel2
 			// 
 			this.splitContainer1.Panel2.Controls.Add(this.splitContainer3);
-			this.splitContainer1.Size = new System.Drawing.Size(909, 618);
-			this.splitContainer1.SplitterDistance = 303;
+			this.splitContainer1.Size = new System.Drawing.Size(1028, 618);
+			this.splitContainer1.SplitterDistance = 342;
 			this.splitContainer1.TabIndex = 0;
 			// 
 			// splitContainer2
@@ -140,7 +142,7 @@
 			// 
 			this.splitContainer2.Panel2.Controls.Add(this.tvRemoteBranches);
 			this.splitContainer2.Panel2.Controls.Add(this.label2);
-			this.splitContainer2.Size = new System.Drawing.Size(303, 618);
+			this.splitContainer2.Size = new System.Drawing.Size(342, 618);
 			this.splitContainer2.SplitterDistance = 300;
 			this.splitContainer2.TabIndex = 0;
 			// 
@@ -152,7 +154,7 @@
 			this.tvLocalBranches.DrawMode = System.Windows.Forms.TreeViewDrawMode.OwnerDrawText;
 			this.tvLocalBranches.Location = new System.Drawing.Point(0, 17);
 			this.tvLocalBranches.Name = "tvLocalBranches";
-			this.tvLocalBranches.Size = new System.Drawing.Size(303, 283);
+			this.tvLocalBranches.Size = new System.Drawing.Size(342, 283);
 			this.tvLocalBranches.TabIndex = 2;
 			this.tvLocalBranches.DoubleClick += new System.EventHandler(this.tvLocalBranches_DoubleClick);
 			// 
@@ -262,7 +264,7 @@
 			this.tvRemoteBranches.DrawMode = System.Windows.Forms.TreeViewDrawMode.OwnerDrawText;
 			this.tvRemoteBranches.Location = new System.Drawing.Point(0, 17);
 			this.tvRemoteBranches.Name = "tvRemoteBranches";
-			this.tvRemoteBranches.Size = new System.Drawing.Size(303, 297);
+			this.tvRemoteBranches.Size = new System.Drawing.Size(342, 297);
 			this.tvRemoteBranches.TabIndex = 1;
 			// 
 			// mnuRemote
@@ -370,7 +372,7 @@
 			// 
 			this.splitContainer3.Panel2.Controls.Add(this.txtDiffText);
 			this.splitContainer3.Panel2.Controls.Add(this.label5);
-			this.splitContainer3.Size = new System.Drawing.Size(602, 618);
+			this.splitContainer3.Size = new System.Drawing.Size(682, 618);
 			this.splitContainer3.SplitterDistance = 336;
 			this.splitContainer3.TabIndex = 0;
 			// 
@@ -389,8 +391,8 @@
 			// 
 			this.splitContainer4.Panel2.Controls.Add(this.tvStaged);
 			this.splitContainer4.Panel2.Controls.Add(this.label4);
-			this.splitContainer4.Size = new System.Drawing.Size(602, 336);
-			this.splitContainer4.SplitterDistance = 283;
+			this.splitContainer4.Size = new System.Drawing.Size(682, 336);
+			this.splitContainer4.SplitterDistance = 320;
 			this.splitContainer4.TabIndex = 1;
 			// 
 			// tvUnStaged
@@ -403,7 +405,7 @@
 			this.tvUnStaged.Indent = 10;
 			this.tvUnStaged.Location = new System.Drawing.Point(0, 17);
 			this.tvUnStaged.Name = "tvUnStaged";
-			this.tvUnStaged.Size = new System.Drawing.Size(283, 319);
+			this.tvUnStaged.Size = new System.Drawing.Size(320, 319);
 			this.tvUnStaged.TabIndex = 0;
 			this.tvUnStaged.NodesDrag += new System.Windows.Forms.DragEventHandler(this.tv_NodesDrag);
 			this.tvUnStaged.AfterCollapse += new System.Windows.Forms.TreeViewEventHandler(this.tv_AfterCollapse);
@@ -537,7 +539,7 @@
 			this.tvStaged.Indent = 10;
 			this.tvStaged.Location = new System.Drawing.Point(0, 17);
 			this.tvStaged.Name = "tvStaged";
-			this.tvStaged.Size = new System.Drawing.Size(315, 319);
+			this.tvStaged.Size = new System.Drawing.Size(358, 319);
 			this.tvStaged.TabIndex = 2;
 			this.tvStaged.NodesDrag += new System.Windows.Forms.DragEventHandler(this.tv_NodesDrag);
 			this.tvStaged.AfterCollapse += new System.Windows.Forms.TreeViewEventHandler(this.tv_AfterCollapse);
@@ -563,7 +565,7 @@
 			this.txtDiffText.Location = new System.Drawing.Point(0, 17);
 			this.txtDiffText.Name = "txtDiffText";
 			this.txtDiffText.ReadOnly = true;
-			this.txtDiffText.Size = new System.Drawing.Size(602, 261);
+			this.txtDiffText.Size = new System.Drawing.Size(682, 261);
 			this.txtDiffText.TabIndex = 0;
 			this.txtDiffText.Text = "";
 			// 
@@ -580,6 +582,8 @@
 			// 
 			// pnlButtons
 			// 
+			this.pnlButtons.Controls.Add(this.btnViewOutput);
+			this.pnlButtons.Controls.Add(this.lblStatus);
 			this.pnlButtons.Controls.Add(this.btnPush);
 			this.pnlButtons.Controls.Add(this.btnPull);
 			this.pnlButtons.Controls.Add(this.btnViewStashes);
@@ -589,13 +593,22 @@
 			this.pnlButtons.Dock = System.Windows.Forms.DockStyle.Bottom;
 			this.pnlButtons.Location = new System.Drawing.Point(0, 618);
 			this.pnlButtons.Name = "pnlButtons";
-			this.pnlButtons.Size = new System.Drawing.Size(909, 34);
+			this.pnlButtons.Size = new System.Drawing.Size(1028, 34);
 			this.pnlButtons.TabIndex = 4;
+			// 
+			// lblStatus
+			// 
+			this.lblStatus.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+			this.lblStatus.AutoSize = true;
+			this.lblStatus.Location = new System.Drawing.Point(13, 11);
+			this.lblStatus.Name = "lblStatus";
+			this.lblStatus.Size = new System.Drawing.Size(0, 13);
+			this.lblStatus.TabIndex = 7;
 			// 
 			// btnPush
 			// 
 			this.btnPush.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-			this.btnPush.Location = new System.Drawing.Point(662, 6);
+			this.btnPush.Location = new System.Drawing.Point(781, 6);
 			this.btnPush.Name = "btnPush";
 			this.btnPush.Size = new System.Drawing.Size(119, 23);
 			this.btnPush.TabIndex = 6;
@@ -607,7 +620,7 @@
 			// 
 			this.btnPull.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
 			this.btnPull.Enabled = false;
-			this.btnPull.Location = new System.Drawing.Point(537, 6);
+			this.btnPull.Location = new System.Drawing.Point(656, 6);
 			this.btnPull.Name = "btnPull";
 			this.btnPull.Size = new System.Drawing.Size(119, 23);
 			this.btnPull.TabIndex = 5;
@@ -618,7 +631,7 @@
 			// btnViewStashes
 			// 
 			this.btnViewStashes.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-			this.btnViewStashes.Location = new System.Drawing.Point(288, 6);
+			this.btnViewStashes.Location = new System.Drawing.Point(407, 6);
 			this.btnViewStashes.Name = "btnViewStashes";
 			this.btnViewStashes.Size = new System.Drawing.Size(119, 23);
 			this.btnViewStashes.TabIndex = 4;
@@ -630,7 +643,7 @@
 			// 
 			this.btnStash.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
 			this.btnStash.Enabled = false;
-			this.btnStash.Location = new System.Drawing.Point(412, 6);
+			this.btnStash.Location = new System.Drawing.Point(531, 6);
 			this.btnStash.Name = "btnStash";
 			this.btnStash.Size = new System.Drawing.Size(119, 23);
 			this.btnStash.TabIndex = 3;
@@ -641,7 +654,7 @@
 			// btnRefresh
 			// 
 			this.btnRefresh.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-			this.btnRefresh.Location = new System.Drawing.Point(163, 6);
+			this.btnRefresh.Location = new System.Drawing.Point(282, 6);
 			this.btnRefresh.Name = "btnRefresh";
 			this.btnRefresh.Size = new System.Drawing.Size(119, 23);
 			this.btnRefresh.TabIndex = 2;
@@ -653,7 +666,7 @@
 			// 
 			this.btnCommit.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
 			this.btnCommit.Enabled = false;
-			this.btnCommit.Location = new System.Drawing.Point(787, 6);
+			this.btnCommit.Location = new System.Drawing.Point(906, 6);
 			this.btnCommit.Name = "btnCommit";
 			this.btnCommit.Size = new System.Drawing.Size(119, 23);
 			this.btnCommit.TabIndex = 1;
@@ -667,6 +680,17 @@
 			this.timDebounce.Interval = 300;
 			this.timDebounce.Tick += new System.EventHandler(this.timDebounce_Tick);
 			// 
+			// btnViewOutput
+			// 
+			this.btnViewOutput.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+			this.btnViewOutput.Location = new System.Drawing.Point(157, 6);
+			this.btnViewOutput.Name = "btnViewOutput";
+			this.btnViewOutput.Size = new System.Drawing.Size(119, 23);
+			this.btnViewOutput.TabIndex = 8;
+			this.btnViewOutput.Text = "View Output";
+			this.btnViewOutput.UseVisualStyleBackColor = true;
+			this.btnViewOutput.Click += new System.EventHandler(this.BtnViewOutput_Click);
+			// 
 			// ucRepository
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -674,7 +698,7 @@
 			this.Controls.Add(this.splitContainer1);
 			this.Controls.Add(this.pnlButtons);
 			this.Name = "ucRepository";
-			this.Size = new System.Drawing.Size(909, 652);
+			this.Size = new System.Drawing.Size(1028, 652);
 			this.Load += new System.EventHandler(this.ucRepository_Load);
 			this.splitContainer1.Panel1.ResumeLayout(false);
 			this.splitContainer1.Panel2.ResumeLayout(false);
@@ -701,6 +725,7 @@
 			this.splitContainer4.ResumeLayout(false);
 			this.mnuDiffs.ResumeLayout(false);
 			this.pnlButtons.ResumeLayout(false);
+			this.pnlButtons.PerformLayout();
 			this.ResumeLayout(false);
 
 		}
@@ -763,5 +788,7 @@
 		private System.Windows.Forms.ToolStripMenuItem trackRemoteToolStripMenuItem;
 		private System.Windows.Forms.ToolStripMenuItem downloadToToolStripMenuItem;
 		private System.Windows.Forms.Timer timDebounce;
+		private System.Windows.Forms.Label lblStatus;
+		private System.Windows.Forms.Button btnViewOutput;
 	}
 }
