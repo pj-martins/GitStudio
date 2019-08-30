@@ -37,6 +37,7 @@
 			this.deleteToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.branchLocalToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.mergeFromLocalToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.rebaseFromToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
 			this.abortMergeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.compareToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.historyToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
@@ -51,6 +52,7 @@
 			this.pullIntoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.pruneToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.mergeFromToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.rebaseFromToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.deleteRemoteToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.compareToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
 			this.historyToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -78,6 +80,7 @@
 			this.txtDiffText = new System.Windows.Forms.RichTextBox();
 			this.label5 = new System.Windows.Forms.Label();
 			this.pnlButtons = new System.Windows.Forms.Panel();
+			this.btnViewOutput = new System.Windows.Forms.Button();
 			this.lblStatus = new System.Windows.Forms.Label();
 			this.btnPush = new System.Windows.Forms.Button();
 			this.btnPull = new System.Windows.Forms.Button();
@@ -86,7 +89,7 @@
 			this.btnRefresh = new System.Windows.Forms.Button();
 			this.btnCommit = new System.Windows.Forms.Button();
 			this.timDebounce = new System.Windows.Forms.Timer(this.components);
-			this.btnViewOutput = new System.Windows.Forms.Button();
+			this.progMain = new System.Windows.Forms.ProgressBar();
 			((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
 			this.splitContainer1.Panel1.SuspendLayout();
 			this.splitContainer1.Panel2.SuspendLayout();
@@ -165,6 +168,7 @@
             this.deleteToolStripMenuItem,
             this.branchLocalToolStripMenuItem,
             this.mergeFromLocalToolStripMenuItem,
+            this.rebaseFromToolStripMenuItem1,
             this.abortMergeToolStripMenuItem,
             this.compareToolStripMenuItem,
             this.historyToolStripMenuItem1,
@@ -172,7 +176,7 @@
             this.fileHistoryToolStripMenuItem1,
             this.trackRemoteToolStripMenuItem});
 			this.mnuLocal.Name = "mnuLocal";
-			this.mnuLocal.Size = new System.Drawing.Size(147, 224);
+			this.mnuLocal.Size = new System.Drawing.Size(147, 246);
 			this.mnuLocal.Opening += new System.ComponentModel.CancelEventHandler(this.mnuLocal_Opening);
 			// 
 			// checkoutToolStripMenuItem
@@ -202,6 +206,13 @@
 			this.mergeFromLocalToolStripMenuItem.Size = new System.Drawing.Size(146, 22);
 			this.mergeFromLocalToolStripMenuItem.Text = "&Merge From";
 			this.mergeFromLocalToolStripMenuItem.Click += new System.EventHandler(this.mergeFromLocalToolStripMenuItem_Click);
+			// 
+			// rebaseFromToolStripMenuItem1
+			// 
+			this.rebaseFromToolStripMenuItem1.Name = "rebaseFromToolStripMenuItem1";
+			this.rebaseFromToolStripMenuItem1.Size = new System.Drawing.Size(146, 22);
+			this.rebaseFromToolStripMenuItem1.Text = "&Rebase From";
+			this.rebaseFromToolStripMenuItem1.Click += new System.EventHandler(this.rebaseFromLocalToolStripMenuItem_Click);
 			// 
 			// abortMergeToolStripMenuItem
 			// 
@@ -275,12 +286,13 @@
             this.pullIntoToolStripMenuItem,
             this.pruneToolStripMenuItem,
             this.mergeFromToolStripMenuItem,
+            this.rebaseFromToolStripMenuItem,
             this.deleteRemoteToolStripMenuItem,
             this.compareToolStripMenuItem1,
             this.historyToolStripMenuItem,
             this.downloadToToolStripMenuItem});
 			this.mnuRemote.Name = "mnuRemote";
-			this.mnuRemote.Size = new System.Drawing.Size(162, 202);
+			this.mnuRemote.Size = new System.Drawing.Size(162, 224);
 			this.mnuRemote.Opening += new System.ComponentModel.CancelEventHandler(this.mnuRemote_Opening);
 			// 
 			// branchToolStripMenuItem
@@ -317,6 +329,13 @@
 			this.mergeFromToolStripMenuItem.Size = new System.Drawing.Size(161, 22);
 			this.mergeFromToolStripMenuItem.Text = "&Merge From";
 			this.mergeFromToolStripMenuItem.Click += new System.EventHandler(this.mergeFromToolStripMenuItem_Click);
+			// 
+			// rebaseFromToolStripMenuItem
+			// 
+			this.rebaseFromToolStripMenuItem.Name = "rebaseFromToolStripMenuItem";
+			this.rebaseFromToolStripMenuItem.Size = new System.Drawing.Size(161, 22);
+			this.rebaseFromToolStripMenuItem.Text = "&Rebase From";
+			this.rebaseFromToolStripMenuItem.Click += new System.EventHandler(this.rebaseFromToolStripMenuItem_Click);
 			// 
 			// deleteRemoteToolStripMenuItem
 			// 
@@ -582,6 +601,7 @@
 			// 
 			// pnlButtons
 			// 
+			this.pnlButtons.Controls.Add(this.progMain);
 			this.pnlButtons.Controls.Add(this.btnViewOutput);
 			this.pnlButtons.Controls.Add(this.lblStatus);
 			this.pnlButtons.Controls.Add(this.btnPush);
@@ -596,11 +616,22 @@
 			this.pnlButtons.Size = new System.Drawing.Size(1028, 34);
 			this.pnlButtons.TabIndex = 4;
 			// 
+			// btnViewOutput
+			// 
+			this.btnViewOutput.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+			this.btnViewOutput.Location = new System.Drawing.Point(325, 6);
+			this.btnViewOutput.Name = "btnViewOutput";
+			this.btnViewOutput.Size = new System.Drawing.Size(95, 23);
+			this.btnViewOutput.TabIndex = 8;
+			this.btnViewOutput.Text = "View Output";
+			this.btnViewOutput.UseVisualStyleBackColor = true;
+			this.btnViewOutput.Click += new System.EventHandler(this.BtnViewOutput_Click);
+			// 
 			// lblStatus
 			// 
 			this.lblStatus.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
 			this.lblStatus.AutoSize = true;
-			this.lblStatus.Location = new System.Drawing.Point(13, 11);
+			this.lblStatus.Location = new System.Drawing.Point(278, 11);
 			this.lblStatus.Name = "lblStatus";
 			this.lblStatus.Size = new System.Drawing.Size(0, 13);
 			this.lblStatus.TabIndex = 7;
@@ -608,9 +639,9 @@
 			// btnPush
 			// 
 			this.btnPush.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-			this.btnPush.Location = new System.Drawing.Point(781, 6);
+			this.btnPush.Location = new System.Drawing.Point(827, 6);
 			this.btnPush.Name = "btnPush";
-			this.btnPush.Size = new System.Drawing.Size(119, 23);
+			this.btnPush.Size = new System.Drawing.Size(93, 23);
 			this.btnPush.TabIndex = 6;
 			this.btnPush.Text = "Push";
 			this.btnPush.UseVisualStyleBackColor = true;
@@ -620,9 +651,9 @@
 			// 
 			this.btnPull.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
 			this.btnPull.Enabled = false;
-			this.btnPull.Location = new System.Drawing.Point(656, 6);
+			this.btnPull.Location = new System.Drawing.Point(736, 6);
 			this.btnPull.Name = "btnPull";
-			this.btnPull.Size = new System.Drawing.Size(119, 23);
+			this.btnPull.Size = new System.Drawing.Size(85, 23);
 			this.btnPull.TabIndex = 5;
 			this.btnPull.Text = "Pull";
 			this.btnPull.UseVisualStyleBackColor = true;
@@ -631,9 +662,9 @@
 			// btnViewStashes
 			// 
 			this.btnViewStashes.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-			this.btnViewStashes.Location = new System.Drawing.Point(407, 6);
+			this.btnViewStashes.Location = new System.Drawing.Point(530, 6);
 			this.btnViewStashes.Name = "btnViewStashes";
-			this.btnViewStashes.Size = new System.Drawing.Size(119, 23);
+			this.btnViewStashes.Size = new System.Drawing.Size(95, 23);
 			this.btnViewStashes.TabIndex = 4;
 			this.btnViewStashes.Text = "View Stashes";
 			this.btnViewStashes.UseVisualStyleBackColor = true;
@@ -643,9 +674,9 @@
 			// 
 			this.btnStash.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
 			this.btnStash.Enabled = false;
-			this.btnStash.Location = new System.Drawing.Point(531, 6);
+			this.btnStash.Location = new System.Drawing.Point(631, 6);
 			this.btnStash.Name = "btnStash";
-			this.btnStash.Size = new System.Drawing.Size(119, 23);
+			this.btnStash.Size = new System.Drawing.Size(99, 23);
 			this.btnStash.TabIndex = 3;
 			this.btnStash.Text = "Stash";
 			this.btnStash.UseVisualStyleBackColor = true;
@@ -654,9 +685,9 @@
 			// btnRefresh
 			// 
 			this.btnRefresh.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-			this.btnRefresh.Location = new System.Drawing.Point(282, 6);
+			this.btnRefresh.Location = new System.Drawing.Point(426, 6);
 			this.btnRefresh.Name = "btnRefresh";
-			this.btnRefresh.Size = new System.Drawing.Size(119, 23);
+			this.btnRefresh.Size = new System.Drawing.Size(98, 23);
 			this.btnRefresh.TabIndex = 2;
 			this.btnRefresh.Text = "Refresh";
 			this.btnRefresh.UseVisualStyleBackColor = true;
@@ -666,9 +697,9 @@
 			// 
 			this.btnCommit.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
 			this.btnCommit.Enabled = false;
-			this.btnCommit.Location = new System.Drawing.Point(906, 6);
+			this.btnCommit.Location = new System.Drawing.Point(926, 6);
 			this.btnCommit.Name = "btnCommit";
-			this.btnCommit.Size = new System.Drawing.Size(119, 23);
+			this.btnCommit.Size = new System.Drawing.Size(99, 23);
 			this.btnCommit.TabIndex = 1;
 			this.btnCommit.Text = "Commit";
 			this.btnCommit.UseVisualStyleBackColor = true;
@@ -680,16 +711,14 @@
 			this.timDebounce.Interval = 300;
 			this.timDebounce.Tick += new System.EventHandler(this.timDebounce_Tick);
 			// 
-			// btnViewOutput
+			// progMain
 			// 
-			this.btnViewOutput.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-			this.btnViewOutput.Location = new System.Drawing.Point(157, 6);
-			this.btnViewOutput.Name = "btnViewOutput";
-			this.btnViewOutput.Size = new System.Drawing.Size(119, 23);
-			this.btnViewOutput.TabIndex = 8;
-			this.btnViewOutput.Text = "View Output";
-			this.btnViewOutput.UseVisualStyleBackColor = true;
-			this.btnViewOutput.Click += new System.EventHandler(this.BtnViewOutput_Click);
+			this.progMain.Location = new System.Drawing.Point(3, 6);
+			this.progMain.Name = "progMain";
+			this.progMain.Size = new System.Drawing.Size(269, 23);
+			this.progMain.Style = System.Windows.Forms.ProgressBarStyle.Marquee;
+			this.progMain.TabIndex = 9;
+			this.progMain.Visible = false;
 			// 
 			// ucRepository
 			// 
@@ -790,5 +819,8 @@
 		private System.Windows.Forms.Timer timDebounce;
 		private System.Windows.Forms.Label lblStatus;
 		private System.Windows.Forms.Button btnViewOutput;
+		private System.Windows.Forms.ToolStripMenuItem rebaseFromToolStripMenuItem;
+		private System.Windows.Forms.ToolStripMenuItem rebaseFromToolStripMenuItem1;
+		private System.Windows.Forms.ProgressBar progMain;
 	}
 }

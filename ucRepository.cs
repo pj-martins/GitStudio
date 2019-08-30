@@ -34,6 +34,7 @@ namespace PaJaMa.GitStudio
 		}
 
 		private bool _inited = false;
+		private FileSystemWatcher _selectedWatcher;
 		private List<FileSystemWatcher> _watchers = new List<FileSystemWatcher>();
 
 		public ucRepository()
@@ -50,6 +51,7 @@ namespace PaJaMa.GitStudio
 				_inited = true;
 				if (!Repository.SuspendWatchingFiles)
 				{
+					progMain.Visible = true;
 					lblStatus.Text = "Watching files...";
 					Common.Common.RunInThread(() =>
 					{
@@ -317,6 +319,7 @@ namespace PaJaMa.GitStudio
 
 		private void refreshPage(string[] forFiles = null)
 		{
+			progMain.Visible = true;
 			lblStatus.Text = "Loading differences...";
 
 			var bw = new BackgroundWorker();
@@ -336,16 +339,18 @@ namespace PaJaMa.GitStudio
 			};
 			bw.RunWorkerCompleted += (object sender, RunWorkerCompletedEventArgs e) =>
 			{
+				progMain.Visible = false;
 				lblStatus.Text = string.Empty;
+
+				var selectedDiff = tvUnStaged.SelectedNode == null ? null : tvUnStaged.SelectedNode.Tag as Difference;
+				var selectedStaged = tvStaged.SelectedNode == null ? null : tvStaged.SelectedNode.Tag as Difference;
+				if (selectedDiff != null) refreshDifferences(selectedDiff);
 
 				if (e.Result == null) return;
 
 				var diffs = e.Result as List<Difference>;
 				_previousDifferences = diffs;
 
-				var selectedDiff = tvUnStaged.SelectedNode == null ? null : tvUnStaged.SelectedNode.Tag as Difference;
-				var selectedStaged = tvStaged.SelectedNode == null ? null : tvStaged.SelectedNode.Tag as Difference;
-				if (selectedDiff != null) refreshDifferences(selectedDiff);
 
 				if (forFiles != null)
 				{
@@ -448,6 +453,7 @@ namespace PaJaMa.GitStudio
 				btnCommit.Enabled = true; // TODO: tvStaged.Nodes.Count > 0;
 				btnStash.Enabled = true; // TODO: conditional
 				btnCommit.Enabled = tvStaged.Nodes.Count > 0;
+				progMain.Visible = false;
 				lblStatus.Text = string.Empty;
 			};
 
@@ -604,6 +610,13 @@ namespace PaJaMa.GitStudio
 
 		private void tv_AfterSelect(object sender, TreeViewEventArgs e)
 		{
+			if (_selectedWatcher != null)
+			{
+				_selectedWatcher.EnableRaisingEvents = false;
+				_selectedWatcher.Dispose();
+				_selectedWatcher = null;
+			}
+
 			if (sender == tvStaged)
 			{
 				if (tvUnStaged.SelectedNode != null || tvUnStaged.SelectedNodes.Any())
@@ -629,11 +642,23 @@ namespace PaJaMa.GitStudio
 			}
 
 			var diff = e.Node.Tag as Difference;
+			if (Repository.SuspendWatchingFiles)
+			{
+				var fileToWatch = Path.GetDirectoryName(Path.Combine(_repository.LocalPath, diff.FileName.Replace("/", "\\")));
+				_selectedWatcher = new FileSystemWatcher(fileToWatch);
+				_selectedWatcher.EnableRaisingEvents = true;
+				_selectedWatcher.Changed += (object sender2, FileSystemEventArgs e2) =>
+				{
+					this.Invoke(new Action(() => refreshDifferences(diff)));
+				};
+
+			}
 			refreshDifferences(diff);
 		}
 
 		private void refreshDifferences(Difference diff)
 		{
+			progMain.Visible = true;
 			lblStatus.Text = "Retrieving difference for " + diff.FileName;
 			Common.Common.RunInThread(new Action(() =>
 			{
@@ -643,6 +668,7 @@ namespace PaJaMa.GitStudio
 				this.Invoke(new Action(() =>
 				{
 					txtDiffText.Text = string.Join("\r\n", diffs);
+					progMain.Visible = false;
 					lblStatus.Text = string.Empty;
 				}));
 			}));
@@ -736,6 +762,26 @@ namespace PaJaMa.GitStudio
 				MessageBoxButtons.YesNo) == DialogResult.Yes)
 			{
 				processCommand(_helper.RunCommand("merge " + branch.BranchName, true));
+			}
+		}
+
+		private void rebaseFromLocalToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+			var branch = tvLocalBranches.SelectedNode.Tag as LocalBranch;
+			if (MessageBox.Show("Are you sure you want to rebase " + branch.BranchName + " into " + _currentBranch.BranchName + "?", "Warning!",
+				MessageBoxButtons.YesNo) == DialogResult.Yes)
+			{
+				processCommand(_helper.RunCommand("rebase " + branch.BranchName, true));
+			}
+		}
+
+		private void rebaseFromToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+			var branch = tvRemoteBranches.SelectedNode.Tag as RemoteBranch;
+			if (MessageBox.Show("Are you sure you want to rebase " + branch.BranchName + " into " + _currentBranch.BranchName + "?", "Warning!",
+				MessageBoxButtons.YesNo) == DialogResult.Yes)
+			{
+				processCommand(_helper.RunCommand("rebase " + branch.BranchName, true));
 			}
 		}
 
