@@ -346,15 +346,13 @@ namespace PaJaMa.GitStudio
 				var selectedStaged = tvStaged.SelectedNode == null ? null : tvStaged.SelectedNode.Tag as Difference;
 				if (selectedDiff != null) refreshDifferences(selectedDiff);
 
-				if (e.Result == null) return;
-
 				var diffs = e.Result as List<Difference>;
-				_previousDifferences = diffs;
 
+				var checkForStaged = diffs ?? _previousDifferences;
 
-				if (forFiles != null)
+				if (checkForStaged != null && forFiles != null)
 				{
-					var changedDiff = diffs.FirstOrDefault(d => d.IsStaged
+					var changedDiff = checkForStaged.FirstOrDefault(d => d.IsStaged
 						&& forFiles.Any(f => new FileInfo(Path.Combine(_repository.LocalPath, d.FileName)).FullName == f));
 					if (changedDiff != null)
 					{
@@ -374,6 +372,8 @@ namespace PaJaMa.GitStudio
 					}
 				}
 
+				if (diffs == null) return;
+				_previousDifferences = diffs;
 
 
 				tvUnStaged.BeginUpdate();
