@@ -768,7 +768,7 @@ namespace PaJaMa.GitStudio
 		private void rebaseFromLocalToolStripMenuItem_Click(object sender, EventArgs e)
 		{
 			var branch = tvLocalBranches.SelectedNode.Tag as LocalBranch;
-			if (MessageBox.Show("Are you sure you want to rebase " + branch.BranchName + " into " + _currentBranch.BranchName + "?", "Warning!",
+			if (MessageBox.Show("Are you sure you want to rebase " + branch.BranchName + " onto " + _currentBranch.BranchName + "?", "Warning!",
 				MessageBoxButtons.YesNo) == DialogResult.Yes)
 			{
 				processCommand(_helper.RunCommand("rebase " + branch.BranchName, true));
@@ -778,7 +778,7 @@ namespace PaJaMa.GitStudio
 		private void rebaseFromToolStripMenuItem_Click(object sender, EventArgs e)
 		{
 			var branch = tvRemoteBranches.SelectedNode.Tag as RemoteBranch;
-			if (MessageBox.Show("Are you sure you want to rebase " + branch.BranchName + " into " + _currentBranch.BranchName + "?", "Warning!",
+			if (MessageBox.Show("Are you sure you want to rebase " + branch.BranchName + " onto " + _currentBranch.BranchName + "?", "Warning!",
 				MessageBoxButtons.YesNo) == DialogResult.Yes)
 			{
 				processCommand(_helper.RunCommand("rebase " + branch.BranchName, true));
