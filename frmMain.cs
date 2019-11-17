@@ -79,6 +79,12 @@ namespace PaJaMa.GitStudio
 				tabMain.SelectedTab = selectedTab;
 				_lastPage = selectedTab;
 			}
+            else if (tabMain.TabPages.Count > 0)
+            {
+                selectedTab = tabMain.TabPages[0];
+                tabMain.SelectedTab = selectedTab;
+                _lastPage = selectedTab;
+            }
 			if (tabMain.SelectedTab != null)
 				(tabMain.SelectedTab.Controls[0] as ucRepository).Init();
 		}
