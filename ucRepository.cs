@@ -480,7 +480,7 @@ namespace PaJaMa.GitStudio
 				if (!Directory.Exists(tmpDir)) Directory.CreateDirectory(tmpDir);
 				var tmpFile = Path.Combine(tmpDir, Guid.NewGuid() + ".tmp");
 				bool error = false;
-				var oldContent = processCommand(_helper.RunCommand("--no-pager show " + _currentBranch + ":\"" + diff.FileName + "\"", false, ref error));
+				var oldContent = processCommand(_helper.RunCommand("--no-pager show " + _currentBranch + ":\"" + diff.FileName + "\"", true, false, ref error));
 				if (error) return;
 				File.WriteAllLines(tmpFile, oldContent);
 
