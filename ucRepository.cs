@@ -352,7 +352,7 @@ namespace PaJaMa.GitStudio
 
 				if (checkForStaged != null && forFiles != null)
 				{
-					var changedDiff = checkForStaged.FirstOrDefault(d => d.IsStaged
+					var changedDiff = checkForStaged.FirstOrDefault(d => d.IsStaged && !d.FileName.Contains(" -> ")
 						&& forFiles.Any(f => new FileInfo(Path.Combine(_repository.LocalPath, d.FileName)).FullName == f));
 					if (changedDiff != null)
 					{
