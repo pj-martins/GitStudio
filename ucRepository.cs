@@ -342,6 +342,8 @@ namespace PaJaMa.GitStudio
 				progMain.Visible = false;
 				lblStatus.Text = string.Empty;
 
+				TreeNode selectedNode = null;
+
 				var selectedDiff = tvUnStaged.SelectedNode == null ? null : tvUnStaged.SelectedNode.Tag as Difference;
 				var selectedStaged = tvStaged.SelectedNode == null ? null : tvStaged.SelectedNode.Tag as Difference;
 				if (selectedDiff != null) refreshDifferences(selectedDiff);
@@ -435,6 +437,8 @@ namespace PaJaMa.GitStudio
 						tv.SelectedNode = node;
 					if (selectedStaged != null && diff.FileName == selectedStaged.FileName)
 						tv.SelectedNode = node;
+					if (tv.SelectedNode != null)
+						selectedNode = tv.SelectedNode;
 				}
 				//if (_expandeds == null)
 				//{
@@ -455,6 +459,9 @@ namespace PaJaMa.GitStudio
 				btnCommit.Enabled = tvStaged.Nodes.Count > 0;
 				progMain.Visible = false;
 				lblStatus.Text = string.Empty;
+
+				if (selectedNode != null)
+					selectedNode.EnsureVisible();
 			};
 
 			bw.RunWorkerAsync();
@@ -795,6 +802,23 @@ namespace PaJaMa.GitStudio
 			refreshPage();
 		}
 
+		private void NextConflictToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+			var tv = tvUnStaged.Focused ? tvUnStaged : tvStaged;
+			var flattened = tv.GetFlattenedNodes();
+			foreach (var node in flattened)
+			{
+				if (node.Tag is Difference diff && diff.IsConflict)
+				{
+					tv.SelectedNode = node;
+					node.EnsureVisible();
+					return;
+				}
+			}
+
+			MessageBox.Show("No conflicts!");
+		}
+
 		private void stageToolStripMenuItem_Click(object sender, EventArgs e)
 		{
 			foreach (var selectedItem in getSelectedNodeTags<Difference>(tvUnStaged))
@@ -1029,8 +1053,11 @@ namespace PaJaMa.GitStudio
 		private void resolveUsingMineToolStripMenuItem_Click(object sender, EventArgs e)
 		{
 			var tv = tvUnStaged.Focused ? tvUnStaged : tvStaged;
-			var diff = tv.SelectedNode == null ? null : tv.SelectedNode.Tag as Difference;
-			processCommand(_helper.RunCommand("checkout --ours " + diff.FileName));
+			foreach (var selectedItem in getSelectedNodeTags<Difference>(tv))
+			{
+				processCommand(_helper.RunCommand("checkout --ours " + selectedItem.FileName));
+				processCommand(_helper.RunCommand("add " + selectedItem.FileName, false));
+			}
 			_previousDifferences = null;
 			refreshPage();
 		}
@@ -1038,8 +1065,12 @@ namespace PaJaMa.GitStudio
 		private void resolveUsingTheirsToolStripMenuItem_Click(object sender, EventArgs e)
 		{
 			var tv = tvUnStaged.Focused ? tvUnStaged : tvStaged;
-			var diff = tv.SelectedNode == null ? null : tv.SelectedNode.Tag as Difference;
-			processCommand(_helper.RunCommand("checkout --theirs " + diff.FileName));
+			foreach (var selectedItem in getSelectedNodeTags<Difference>(tv))
+			{
+				processCommand(_helper.RunCommand("checkout --theirs " + selectedItem.FileName));
+				processCommand(_helper.RunCommand("add " + selectedItem.FileName, false));
+			}
+			
 			_previousDifferences = null;
 			refreshPage();
 		}

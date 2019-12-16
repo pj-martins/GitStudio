@@ -80,6 +80,7 @@
 			this.txtDiffText = new System.Windows.Forms.RichTextBox();
 			this.label5 = new System.Windows.Forms.Label();
 			this.pnlButtons = new System.Windows.Forms.Panel();
+			this.progMain = new System.Windows.Forms.ProgressBar();
 			this.btnViewOutput = new System.Windows.Forms.Button();
 			this.lblStatus = new System.Windows.Forms.Label();
 			this.btnPush = new System.Windows.Forms.Button();
@@ -89,7 +90,7 @@
 			this.btnRefresh = new System.Windows.Forms.Button();
 			this.btnCommit = new System.Windows.Forms.Button();
 			this.timDebounce = new System.Windows.Forms.Timer(this.components);
-			this.progMain = new System.Windows.Forms.ProgressBar();
+			this.nextConflictToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
 			this.splitContainer1.Panel1.SuspendLayout();
 			this.splitContainer1.Panel2.SuspendLayout();
@@ -444,13 +445,14 @@
             this.resolveConflictToolStripMenuItem,
             this.resolveUsingMineToolStripMenuItem,
             this.resolveUsingTheirsToolStripMenuItem,
+            this.nextConflictToolStripMenuItem,
             this.stageToolStripMenuItem,
             this.unStageToolStripMenuItem,
             this.stageAllToolStripMenuItem,
             this.unstageAllToolStripMenuItem,
             this.fileHistoryToolStripMenuItem});
 			this.mnuDiffs.Name = "mnuDiffs";
-			this.mnuDiffs.Size = new System.Drawing.Size(183, 268);
+			this.mnuDiffs.Size = new System.Drawing.Size(183, 312);
 			this.mnuDiffs.Opening += new System.ComponentModel.CancelEventHandler(this.mnuDiffs_Opening);
 			// 
 			// viewExternalToolStripMenuItem
@@ -616,6 +618,15 @@
 			this.pnlButtons.Size = new System.Drawing.Size(1028, 34);
 			this.pnlButtons.TabIndex = 4;
 			// 
+			// progMain
+			// 
+			this.progMain.Location = new System.Drawing.Point(3, 6);
+			this.progMain.Name = "progMain";
+			this.progMain.Size = new System.Drawing.Size(269, 23);
+			this.progMain.Style = System.Windows.Forms.ProgressBarStyle.Marquee;
+			this.progMain.TabIndex = 9;
+			this.progMain.Visible = false;
+			// 
 			// btnViewOutput
 			// 
 			this.btnViewOutput.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
@@ -711,14 +722,12 @@
 			this.timDebounce.Interval = 300;
 			this.timDebounce.Tick += new System.EventHandler(this.timDebounce_Tick);
 			// 
-			// progMain
+			// nextConflictToolStripMenuItem
 			// 
-			this.progMain.Location = new System.Drawing.Point(3, 6);
-			this.progMain.Name = "progMain";
-			this.progMain.Size = new System.Drawing.Size(269, 23);
-			this.progMain.Style = System.Windows.Forms.ProgressBarStyle.Marquee;
-			this.progMain.TabIndex = 9;
-			this.progMain.Visible = false;
+			this.nextConflictToolStripMenuItem.Name = "nextConflictToolStripMenuItem";
+			this.nextConflictToolStripMenuItem.Size = new System.Drawing.Size(182, 22);
+			this.nextConflictToolStripMenuItem.Text = "&Next Conflict";
+			this.nextConflictToolStripMenuItem.Click += new System.EventHandler(this.NextConflictToolStripMenuItem_Click);
 			// 
 			// ucRepository
 			// 
@@ -822,5 +831,6 @@
 		private System.Windows.Forms.ToolStripMenuItem rebaseFromToolStripMenuItem;
 		private System.Windows.Forms.ToolStripMenuItem rebaseFromToolStripMenuItem1;
 		private System.Windows.Forms.ProgressBar progMain;
+		private System.Windows.Forms.ToolStripMenuItem nextConflictToolStripMenuItem;
 	}
 }
