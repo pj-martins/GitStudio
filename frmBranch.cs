@@ -41,7 +41,7 @@ namespace PaJaMa.GitStudio
 			if ((BranchFrom is LocalBranch) && (BranchFrom as LocalBranch).TracksBranch != null && txtFrom.Text == txtTo.Text)
 				new GitHelper(Repository.LocalPath).RunCommand("branch --unset-upstream " + txtTo.Text, true);
 			else
-				new GitHelper(Repository.LocalPath).RunCommand((chkCheckout.Checked ? "checkout -b " : "branch ") + txtTo.Text
+				new GitHelper(Repository.LocalPath).RunCommand((chkCheckout.Checked ? "checkout -b " + (chkForce.Checked ? " -f " : "") : "branch ") + txtTo.Text
 					+ (chkTrack.Checked ? " --track " : " --no-track ") + txtFrom.Text, true);
 			this.DialogResult = DialogResult.OK;
 			this.Close();

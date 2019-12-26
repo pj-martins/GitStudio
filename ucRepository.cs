@@ -144,22 +144,17 @@ namespace PaJaMa.GitStudio
 				_watchers.RemoveAt(i);
 				watcher.EnableRaisingEvents = false;
 				watcher.Dispose();
-				watcher = null;
 			}
 		}
 
 		private void resetWatchers()
 		{
 			removeWatchers();
-			for (int i = _watchers.Count - 1; i >= 0; i--)
-			{
-				var watcher = _watchers[i];
-				_watchers.RemoveAt(i);
-				watcher.EnableRaisingEvents = false;
-				watcher.Dispose();
-				watcher = null;
-			}
+			addWatchers();
+		}
 
+		private void addWatchers()
+		{
 			var lst = processCommand(_helper.RunCommand("ls-files"));
 
 			var listedDirectories = new List<string>();
@@ -231,8 +226,10 @@ namespace PaJaMa.GitStudio
 		{
 			if (tvLocalBranches.SelectedNode == null || tvLocalBranches.SelectedNode.Tag == null) return;
 			_lockChange = true;
+			removeWatchers();
 			processCommand(_helper.RunCommand("checkout " + tvLocalBranches.SelectedNode.Tag.ToString(), true));
 			RefreshBranches();
+			addWatchers();
 			_lockChange = false;
 		}
 
@@ -551,10 +548,11 @@ namespace PaJaMa.GitStudio
 						processCommand(_helper.RunCommand("reset -- " + selectedItem.FileName));
 					if (selectedItem.DifferenceType == DifferenceType.Add)
 					{
+						var path = Path.Combine(Repository.LocalPath, selectedItem.FileName);
 						if (selectedItem.FileName.EndsWith("/"))
-							Directory.Delete(Path.Combine(Repository.LocalPath, selectedItem.FileName), true);
-						else
-							File.Delete(Path.Combine(Repository.LocalPath, selectedItem.FileName));
+							Directory.Delete(path, true);
+						else if (File.Exists(path))
+							File.Delete(path);
 					}
 					else
 					{
@@ -1015,8 +1013,10 @@ namespace PaJaMa.GitStudio
 			var branchName = _currentBranch.TracksBranch.BranchName;
 			if (branchName.StartsWith("origin/"))
 				branchName = branchName.Substring(7);
+			removeWatchers();
 			processCommand(_helper.RunCommand("pull origin " + branchName, true));
 			RefreshBranches();
+			addWatchers();
 		}
 
 		private void btnPush_Click(object sender, EventArgs e)
@@ -1137,6 +1137,17 @@ namespace PaJaMa.GitStudio
 		private void _outputForm_FormClosed(object sender, FormClosedEventArgs e)
 		{
 			_outputForm = null;
+		}
+
+		private void CheckoutForceToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+			if (tvLocalBranches.SelectedNode == null || tvLocalBranches.SelectedNode.Tag == null) return;
+			_lockChange = true;
+			removeWatchers();
+			processCommand(_helper.RunCommand("checkout -f " + tvLocalBranches.SelectedNode.Tag.ToString(), true));
+			RefreshBranches();
+			addWatchers();
+			_lockChange = false;
 		}
 	}
 }

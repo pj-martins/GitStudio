@@ -36,6 +36,7 @@
 			this.label1 = new System.Windows.Forms.Label();
 			this.btnCancel = new System.Windows.Forms.Button();
 			this.label2 = new System.Windows.Forms.Label();
+			this.chkForce = new System.Windows.Forms.CheckBox();
 			this.SuspendLayout();
 			// 
 			// txtFrom
@@ -124,11 +125,23 @@
 			this.label2.TabIndex = 7;
 			this.label2.Text = "Local";
 			// 
+			// chkForce
+			// 
+			this.chkForce.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+			this.chkForce.AutoSize = true;
+			this.chkForce.Location = new System.Drawing.Point(75, 80);
+			this.chkForce.Name = "chkForce";
+			this.chkForce.Size = new System.Drawing.Size(53, 17);
+			this.chkForce.TabIndex = 8;
+			this.chkForce.Text = "Force";
+			this.chkForce.UseVisualStyleBackColor = true;
+			// 
 			// frmBranch
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.ClientSize = new System.Drawing.Size(500, 111);
+			this.Controls.Add(this.chkForce);
 			this.Controls.Add(this.label2);
 			this.Controls.Add(this.btnCancel);
 			this.Controls.Add(this.label1);
@@ -156,5 +169,6 @@
 		private System.Windows.Forms.Label label1;
 		private System.Windows.Forms.Button btnCancel;
 		private System.Windows.Forms.Label label2;
+		private System.Windows.Forms.CheckBox chkForce;
 	}
 }
