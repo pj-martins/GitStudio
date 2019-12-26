@@ -23,13 +23,13 @@ namespace PaJaMa.GitStudio
 
 		private void frmFileHistory_Load(object sender, EventArgs e)
 		{
-			PaJaMa.Common.FormSettings.LoadSettings(this);
+			PaJaMa.WinControls.FormSettings.LoadSettings(this);
 			refreshFiles(new DirectoryInfo(Helper.WorkingDirectory), tvFiles.Nodes);
 		}
 
 		private void frmCompareBranches_FormClosing(object sender, FormClosingEventArgs e)
 		{
-			PaJaMa.Common.FormSettings.SaveSettings(this);
+			PaJaMa.WinControls.FormSettings.SaveSettings(this);
 		}
 
 		private void refreshFiles(DirectoryInfo dinf, TreeNodeCollection nodes)
