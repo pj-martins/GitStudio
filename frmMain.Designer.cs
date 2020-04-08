@@ -38,8 +38,10 @@
 			this.setupToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.mnuTab = new System.Windows.Forms.ContextMenuStrip(this.components);
 			this.openInExplorerToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-			this.tabMain = new PaJaMa.WinControls.TabControl.TabControl();
 			this.setRemoteToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.enableFileWatchingToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.disableFileWatchingToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.tabMain = new PaJaMa.WinControls.TabControl.TabControl();
 			this.menuStrip1.SuspendLayout();
 			this.mnuTab.SuspendLayout();
 			this.SuspendLayout();
@@ -69,28 +71,28 @@
 			// newToolStripMenuItem
 			// 
 			this.newToolStripMenuItem.Name = "newToolStripMenuItem";
-			this.newToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+			this.newToolStripMenuItem.Size = new System.Drawing.Size(105, 22);
 			this.newToolStripMenuItem.Text = "&New";
 			this.newToolStripMenuItem.Click += new System.EventHandler(this.newToolStripMenuItem_Click);
 			// 
 			// openToolStripMenuItem
 			// 
 			this.openToolStripMenuItem.Name = "openToolStripMenuItem";
-			this.openToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+			this.openToolStripMenuItem.Size = new System.Drawing.Size(105, 22);
 			this.openToolStripMenuItem.Text = "&Open";
 			this.openToolStripMenuItem.Click += new System.EventHandler(this.openToolStripMenuItem_Click);
 			// 
 			// cloneToolStripMenuItem
 			// 
 			this.cloneToolStripMenuItem.Name = "cloneToolStripMenuItem";
-			this.cloneToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+			this.cloneToolStripMenuItem.Size = new System.Drawing.Size(105, 22);
 			this.cloneToolStripMenuItem.Text = "&Clone";
 			this.cloneToolStripMenuItem.Click += new System.EventHandler(this.cloneToolStripMenuItem_Click);
 			// 
 			// setupToolStripMenuItem
 			// 
 			this.setupToolStripMenuItem.Name = "setupToolStripMenuItem";
-			this.setupToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+			this.setupToolStripMenuItem.Size = new System.Drawing.Size(105, 22);
 			this.setupToolStripMenuItem.Text = "&Setup";
 			this.setupToolStripMenuItem.Click += new System.EventHandler(this.setupToolStripMenuItem_Click);
 			// 
@@ -99,21 +101,44 @@
 			this.mnuTab.ImageScalingSize = new System.Drawing.Size(40, 40);
 			this.mnuTab.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.openInExplorerToolStripMenuItem,
-            this.setRemoteToolStripMenuItem});
+            this.setRemoteToolStripMenuItem,
+            this.enableFileWatchingToolStripMenuItem,
+            this.disableFileWatchingToolStripMenuItem});
 			this.mnuTab.Name = "mnuTab";
-			this.mnuTab.Size = new System.Drawing.Size(162, 70);
+			this.mnuTab.Size = new System.Drawing.Size(188, 92);
+			this.mnuTab.Opening += new System.ComponentModel.CancelEventHandler(this.MnuTab_Opening);
 			// 
 			// openInExplorerToolStripMenuItem
 			// 
 			this.openInExplorerToolStripMenuItem.Name = "openInExplorerToolStripMenuItem";
-			this.openInExplorerToolStripMenuItem.Size = new System.Drawing.Size(161, 22);
+			this.openInExplorerToolStripMenuItem.Size = new System.Drawing.Size(187, 22);
 			this.openInExplorerToolStripMenuItem.Text = "&Open In Explorer";
 			this.openInExplorerToolStripMenuItem.Click += new System.EventHandler(this.openInExplorerToolStripMenuItem_Click);
+			// 
+			// setRemoteToolStripMenuItem
+			// 
+			this.setRemoteToolStripMenuItem.Name = "setRemoteToolStripMenuItem";
+			this.setRemoteToolStripMenuItem.Size = new System.Drawing.Size(187, 22);
+			this.setRemoteToolStripMenuItem.Text = "Set &Remote";
+			this.setRemoteToolStripMenuItem.Click += new System.EventHandler(this.setRemoteToolStripMenuItem_Click);
+			// 
+			// enableFileWatchingToolStripMenuItem
+			// 
+			this.enableFileWatchingToolStripMenuItem.Name = "enableFileWatchingToolStripMenuItem";
+			this.enableFileWatchingToolStripMenuItem.Size = new System.Drawing.Size(187, 22);
+			this.enableFileWatchingToolStripMenuItem.Text = "&Enable File Watching";
+			this.enableFileWatchingToolStripMenuItem.Click += new System.EventHandler(this.EnableFileWatchingToolStripMenuItem_Click);
+			// 
+			// disableFileWatchingToolStripMenuItem
+			// 
+			this.disableFileWatchingToolStripMenuItem.Name = "disableFileWatchingToolStripMenuItem";
+			this.disableFileWatchingToolStripMenuItem.Size = new System.Drawing.Size(187, 22);
+			this.disableFileWatchingToolStripMenuItem.Text = "&Disable File Watching";
+			this.disableFileWatchingToolStripMenuItem.Click += new System.EventHandler(this.DisableFileWatchingToolStripMenuItem_Click);
 			// 
 			// tabMain
 			// 
 			this.tabMain.AllowRemove = true;
-			this.tabMain.ContextMenuStrip = this.mnuTab;
 			this.tabMain.Dock = System.Windows.Forms.DockStyle.Fill;
 			this.tabMain.Location = new System.Drawing.Point(0, 24);
 			this.tabMain.Name = "tabMain";
@@ -123,13 +148,6 @@
 			this.tabMain.TabClosing += new PaJaMa.WinControls.TabControl.TabEventHandler(this.tabMain_TabClosing);
 			this.tabMain.TabChanged += new PaJaMa.WinControls.TabControl.TabEventHandler(this.tabMain_TabChanged);
 			this.tabMain.TabOrderChanged += new PaJaMa.WinControls.TabControl.TabEventHandler(this.tabMain_TabOrderChanged);
-			// 
-			// setRemoteToolStripMenuItem
-			// 
-			this.setRemoteToolStripMenuItem.Name = "setRemoteToolStripMenuItem";
-			this.setRemoteToolStripMenuItem.Size = new System.Drawing.Size(161, 22);
-			this.setRemoteToolStripMenuItem.Text = "Set &Remote";
-			this.setRemoteToolStripMenuItem.Click += new System.EventHandler(this.setRemoteToolStripMenuItem_Click);
 			// 
 			// frmMain
 			// 
@@ -164,6 +182,8 @@
 		private System.Windows.Forms.ToolStripMenuItem setupToolStripMenuItem;
 		private System.Windows.Forms.ToolStripMenuItem newToolStripMenuItem;
 		private System.Windows.Forms.ToolStripMenuItem setRemoteToolStripMenuItem;
+		private System.Windows.Forms.ToolStripMenuItem enableFileWatchingToolStripMenuItem;
+		private System.Windows.Forms.ToolStripMenuItem disableFileWatchingToolStripMenuItem;
 	}
 }
 

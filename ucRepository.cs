@@ -7,6 +7,7 @@ using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
@@ -17,6 +18,14 @@ namespace PaJaMa.GitStudio
 {
 	public partial class ucRepository : UserControl
 	{
+		[DllImport("user32.dll", CharSet = CharSet.Unicode)]
+		public static extern int GetScrollPos(IntPtr hWnd, int nBar);
+
+		[DllImport("user32.dll", CharSet = CharSet.Unicode)]
+		public static extern int SetScrollPos(IntPtr hWnd, int nBar, int nPos, bool bRedraw);
+
+		private const int SB_VERT = 0x1;
+
 		private GitHelper _helper;
 		private LocalBranch _currentBranch;
 		private List<RemoteBranch> _remoteBranches;
@@ -82,6 +91,7 @@ namespace PaJaMa.GitStudio
 			{
 				bool nodeSelected = false;
 				var tv = remote ? tvRemoteBranches : tvLocalBranches;
+				var scrollY = GetScrollPos(tv.Handle, SB_VERT);
 				tv.BeginUpdate();
 				tv.Nodes.Clear();
 				tv.SelectedNodes.Clear();
@@ -126,6 +136,7 @@ namespace PaJaMa.GitStudio
 				}
 				tv.ExpandAll();
 				tv.EndUpdate();
+				SetScrollPos(tv.Handle, SB_VERT, scrollY, true);
 				if (remote) remote = false;
 				else break;
 			}
@@ -373,7 +384,6 @@ namespace PaJaMa.GitStudio
 
 				if (diffs == null) return;
 				_previousDifferences = diffs;
-
 
 				tvUnStaged.BeginUpdate();
 				tvStaged.BeginUpdate();

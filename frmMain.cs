@@ -98,6 +98,7 @@ namespace PaJaMa.GitStudio
 			var tab = new WinControls.TabControl.TabPage(repo.LocalPath);
 			tab.Controls.Add(uc);
 			tabMain.TabPages.Add(tab);
+			tab.Tab.ContextMenuStrip = mnuTab;
 			return tab;
 		}
 
@@ -231,6 +232,30 @@ namespace PaJaMa.GitStudio
 				SettingsHelper.SaveUserSettings<GitUserSettings>(settings);
 				(tab.Controls[0] as ucRepository).RefreshBranches(true);
 			}
+		}
+
+		private void EnableFileWatchingToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+			var settings = SettingsHelper.GetUserSettings<GitUserSettings>();
+			var tab = tabMain.SelectedTab;
+			var repo = settings.Repositories.First(r => r.LocalPath == tab.Text);
+			repo.SuspendWatchingFiles = false;
+			SettingsHelper.SaveUserSettings<GitUserSettings>(settings);
+
+		}
+
+		private void DisableFileWatchingToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+			var settings = SettingsHelper.GetUserSettings<GitUserSettings>();
+			var tab = tabMain.SelectedTab;
+			var repo = settings.Repositories.First(r => r.LocalPath == tab.Text);
+			repo.SuspendWatchingFiles = true;
+			SettingsHelper.SaveUserSettings<GitUserSettings>(settings);
+		}
+
+		private void MnuTab_Opening(object sender, CancelEventArgs e)
+		{
+
 		}
 	}
 }

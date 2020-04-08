@@ -90,14 +90,19 @@ namespace PaJaMa.GitStudio
 			foreach (var selectedRow in gridMain.SelectedRows.OfType<DataGridViewRow>())
 			{
 				if (selectedRow.Cells["Action"].Value.ToString() != "Modify") continue;
-				var content1 = Helper.RunCommand("--no-pager show " + FromBranch.BranchName + ":" + selectedRow.Cells["File"].Value.ToString());
-				var content2 = Helper.RunCommand("--no-pager show " + ToBranch.BranchName + ":" + selectedRow.Cells["File"].Value.ToString());
+				bool hasError = false;
+				var content1 = Helper.RunCommand("--no-pager show " + FromBranch.BranchName + ":" + selectedRow.Cells["File"].Value.ToString(), true, false, ref hasError);
+				var content2 = Helper.RunCommand("--no-pager show " + ToBranch.BranchName + ":" + selectedRow.Cells["File"].Value.ToString(), true, false, ref hasError);
 
 				var tmpDir = Path.Combine(Path.GetTempPath(), "GitStudio");
 				if (!Directory.Exists(tmpDir)) Directory.CreateDirectory(tmpDir);
 
-				var tmpFile1 = Path.Combine(tmpDir, FromBranch.BranchName.Replace("/", "_").FileSafeName() + "_" + Guid.NewGuid() + ".tmp");
-				var tmpFile2 = Path.Combine(tmpDir, ToBranch.BranchName.Replace("/", "_").FileSafeName() + "_" + Guid.NewGuid() + ".tmp");
+				var tmpFile1 = Path.Combine(tmpDir, FromBranch.BranchName.Replace("/", "_").FileSafeName() + "_" + 
+					Path.GetFileName(selectedRow.Cells["File"].Value.ToString()).Replace(".", "_") + "_" +
+					Guid.NewGuid() + ".tmp");
+				var tmpFile2 = Path.Combine(tmpDir, ToBranch.BranchName.Replace("/", "_").FileSafeName() + "_" +
+					Path.GetFileName(selectedRow.Cells["File"].Value.ToString()).Replace(".", "_") + "_" +
+					Guid.NewGuid() + ".tmp");
 				File.WriteAllLines(tmpFile1, content1);
 				File.WriteAllLines(tmpFile2, content2);
 				Process.Start(settings.ExternalDiffApplication, string.Format(settings.ExternalDiffArgumentsFormat, tmpFile2, tmpFile1));
