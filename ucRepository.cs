@@ -91,7 +91,16 @@ namespace PaJaMa.GitStudio
 			{
 				bool nodeSelected = false;
 				var tv = remote ? tvRemoteBranches : tvLocalBranches;
-				var scrollY = GetScrollPos(tv.Handle, SB_VERT);
+				int scrollY;
+				try
+				{
+					scrollY = GetScrollPos(tv.Handle, SB_VERT);
+				}
+				catch
+				{
+					// MONO?
+					scrollY = -1;
+				}
 				tv.BeginUpdate();
 				tv.Nodes.Clear();
 				tv.SelectedNodes.Clear();
@@ -136,7 +145,14 @@ namespace PaJaMa.GitStudio
 				}
 				tv.ExpandAll();
 				tv.EndUpdate();
-				SetScrollPos(tv.Handle, SB_VERT, scrollY, true);
+				if (scrollY >= 0)
+				{
+					SetScrollPos(tv.Handle, SB_VERT, scrollY, true);
+				}
+				else
+				{
+					// TODO
+				}
 				if (remote) remote = false;
 				else break;
 			}
@@ -149,12 +165,15 @@ namespace PaJaMa.GitStudio
 
 		private void removeWatchers()
 		{
-			for (int i = _watchers.Count - 1; i >= 0; i--)
+			if (_watchers != null)
 			{
-				var watcher = _watchers[i];
-				_watchers.RemoveAt(i);
-				watcher.EnableRaisingEvents = false;
-				watcher.Dispose();
+				for (int i = _watchers.Count - 1; i >= 0; i--)
+				{
+					var watcher = _watchers[i];
+					_watchers.RemoveAt(i);
+					watcher.EnableRaisingEvents = false;
+					watcher.Dispose();
+				}
 			}
 		}
 

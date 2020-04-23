@@ -29,7 +29,7 @@ namespace PaJaMa.GitStudio
 				int i = 1;
 				foreach (var argument in arguments)
 				{
-					var inf = new ProcessStartInfo("git.exe", argument);
+					var inf = new ProcessStartInfo("git", argument);
 					inf.UseShellExecute = false;
 					inf.RedirectStandardOutput = true;
 					inf.RedirectStandardError = true;
