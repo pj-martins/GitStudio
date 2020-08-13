@@ -163,16 +163,20 @@ namespace PaJaMa.GitStudio
 			return true;
 		}
 
+		private object _lockWatchers = new object();
 		private void removeWatchers()
 		{
-			if (_watchers != null)
+			lock (_lockWatchers)
 			{
-				for (int i = _watchers.Count - 1; i >= 0; i--)
+				if (_watchers != null)
 				{
-					var watcher = _watchers[i];
-					_watchers.RemoveAt(i);
-					watcher.EnableRaisingEvents = false;
-					watcher.Dispose();
+					for (int i = _watchers.Count - 1; i >= 0; i--)
+					{
+						var watcher = _watchers[i];
+						_watchers.RemoveAt(i);
+						watcher.EnableRaisingEvents = false;
+						watcher.Dispose();
+					}
 				}
 			}
 		}
@@ -185,22 +189,25 @@ namespace PaJaMa.GitStudio
 
 		private void addWatchers()
 		{
-			var lst = processCommand(_helper.RunCommand("ls-files"));
-
-			var listedDirectories = new List<string>();
-			foreach (var l in lst)
+			lock (_lockWatchers)
 			{
-				var directory = Path.GetDirectoryName(Path.Combine(_repository.LocalPath, l.Replace("/", "\\")));
-				// if (directory == _repository.LocalPath) continue;
-				if (listedDirectories.Contains(l)) continue;
-				if (!Directory.Exists(directory)) continue;
-				var watcher = new FileSystemWatcher(directory);
-				watcher.EnableRaisingEvents = true;
-				watcher.Deleted += Watcher_Changed;
-				watcher.Changed += Watcher_Changed;
-				watcher.Created += Watcher_Changed;
-				watcher.Renamed += Watcher_Changed;
-				_watchers.Add(watcher);
+				var lst = processCommand(_helper.RunCommand("ls-files"));
+
+				var listedDirectories = new List<string>();
+				foreach (var l in lst)
+				{
+					var directory = Path.GetDirectoryName(Path.Combine(_repository.LocalPath, l.Replace("/", "\\")));
+					// if (directory == _repository.LocalPath) continue;
+					if (listedDirectories.Contains(l)) continue;
+					if (!Directory.Exists(directory)) continue;
+					var watcher = new FileSystemWatcher(directory);
+					watcher.EnableRaisingEvents = true;
+					watcher.Deleted += Watcher_Changed;
+					watcher.Changed += Watcher_Changed;
+					watcher.Created += Watcher_Changed;
+					watcher.Renamed += Watcher_Changed;
+					_watchers.Add(watcher);
+				}
 			}
 		}
 
