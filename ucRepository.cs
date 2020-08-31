@@ -378,6 +378,20 @@ namespace PaJaMa.GitStudio
 
 				TreeNode selectedNode = null;
 
+				int scrollStagedY;
+				int scrollUnStagedY;
+				try
+				{
+					scrollStagedY = GetScrollPos(tvStaged.Handle, SB_VERT);
+					scrollUnStagedY = GetScrollPos(tvUnStaged.Handle, SB_VERT);
+				}
+				catch
+				{
+					// MONO?
+					scrollStagedY = -1;
+					scrollUnStagedY = -1;
+				}
+
 				var selectedDiff = tvUnStaged.SelectedNode == null ? null : tvUnStaged.SelectedNode.Tag as Difference;
 				var selectedStaged = tvStaged.SelectedNode == null ? null : tvStaged.SelectedNode.Tag as Difference;
 				if (selectedDiff != null) refreshDifferences(selectedDiff);
@@ -487,6 +501,25 @@ namespace PaJaMa.GitStudio
 				//}
 				tvUnStaged.EndUpdate();
 				tvStaged.EndUpdate();
+
+				if (scrollStagedY >= 0)
+				{
+					SetScrollPos(tvStaged.Handle, SB_VERT, scrollStagedY, true);
+				}
+				else
+				{
+					// TODO
+				}
+
+				if (scrollUnStagedY >= 0)
+				{
+					SetScrollPos(tvUnStaged.Handle, SB_VERT, scrollUnStagedY, true);
+				}
+				else
+				{
+					// TODO
+				}
+
 				btnCommit.Enabled = true; // TODO: tvStaged.Nodes.Count > 0;
 				btnStash.Enabled = true; // TODO: conditional
 				btnCommit.Enabled = tvStaged.Nodes.Count > 0;
@@ -515,7 +548,7 @@ namespace PaJaMa.GitStudio
 				if (node.Tag == null) continue;
 				var diff = node.Tag as Difference;
 				if (diff.DifferenceType != DifferenceType.Modify) continue;
-				var currFile = Path.Combine(Repository.LocalPath, diff.FileName);
+				var currFile = Path.Combine(Repository.LocalPath, diff.FileName.Replace("\"", ""));
 				var tmpDir = Path.Combine(Path.GetTempPath(), "GitStudio");
 				if (!Directory.Exists(tmpDir)) Directory.CreateDirectory(tmpDir);
 				var tmpFile = Path.Combine(tmpDir, Guid.NewGuid() + ".tmp");
