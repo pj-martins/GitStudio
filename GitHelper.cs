@@ -254,6 +254,10 @@ namespace PaJaMa.GitStudio
 				diffParts.RemoveAt(0);
 
 				var remaining = string.Join(" ", diffParts.ToArray());
+				if (remaining.StartsWith("\"") && remaining.EndsWith("\""))
+				{
+					remaining = remaining.Substring(1, remaining.Length - 2);
+				}
 				diff.FileName = remaining;
 				diffs.Add(diff);
 				if (diff.DifferenceType == DifferenceType.Add && !diff.IsStaged)

@@ -409,8 +409,8 @@ namespace PaJaMa.GitStudio
 						_lockChange = true;
 						if (!changedDiff.IsConflict)
 						{
-							processCommand(_helper.RunCommand("reset -- " + changedDiff.FileName));
-							processCommand(_helper.RunCommand("add " + changedDiff.FileName));
+							processCommand(_helper.RunCommand("reset -- \"" + changedDiff.FileName + "\""));
+							processCommand(_helper.RunCommand("add \"" + changedDiff.FileName + "\""));
 						}
 						refreshPage();
 						if (selectedStaged != null && changedDiff.FileName == selectedStaged.FileName)
@@ -614,7 +614,7 @@ namespace PaJaMa.GitStudio
 				{
 					worker.ReportProgress(100 * i++ / differences.Count, "Undoing " + selectedItem.FileName);
 					if (tv == tvStaged)
-						processCommand(_helper.RunCommand("reset -- " + selectedItem.FileName));
+						processCommand(_helper.RunCommand("reset -- \"" + selectedItem.FileName + "\""));
 					if (selectedItem.DifferenceType == DifferenceType.Add)
 					{
 						var path = Path.Combine(Repository.LocalPath, selectedItem.FileName);
@@ -625,7 +625,7 @@ namespace PaJaMa.GitStudio
 					}
 					else
 					{
-						processCommand(_helper.RunCommand("checkout -- " + selectedItem.FileName));
+						processCommand(_helper.RunCommand("checkout -- \"" + selectedItem.FileName + "\""));
 					}
 				}
 			};
@@ -645,7 +645,7 @@ namespace PaJaMa.GitStudio
 			foreach (var node in nodes)
 			{
 				if (tv == tvStaged && node.Tag is Difference)
-					processCommand(_helper.RunCommand("reset " + (node.Tag as Difference).FileName));
+					processCommand(_helper.RunCommand("reset \"" + (node.Tag as Difference).FileName + "\""));
 
 				var runningNode = node;
 				if (node.Tag is Difference)
@@ -863,7 +863,7 @@ namespace PaJaMa.GitStudio
 		{
 			var tv = tvUnStaged.Focused ? tvUnStaged : tvStaged;
 			var diff = tv.SelectedNode.Tag as Difference;
-			processCommand(_helper.RunCommand("add " + diff.FileName, false));
+			processCommand(_helper.RunCommand("add \"" + diff.FileName + "\"", false));
 			_previousDifferences = null;
 			clearDifferences();
 			refreshPage();
@@ -890,7 +890,7 @@ namespace PaJaMa.GitStudio
 		{
 			foreach (var selectedItem in getSelectedNodeTags<Difference>(tvUnStaged))
 			{
-				processCommand(_helper.RunCommand("add " + selectedItem.FileName));
+				processCommand(_helper.RunCommand("add \"" + selectedItem.FileName + "\""));
 			}
 			_previousDifferences = null;
 			clearDifferences();
@@ -901,7 +901,7 @@ namespace PaJaMa.GitStudio
 		{
 			foreach (var selectedItem in getSelectedNodeTags<Difference>(tvStaged))
 			{
-				processCommand(_helper.RunCommand("reset -- " + selectedItem.FileName));
+				processCommand(_helper.RunCommand("reset -- \"" + selectedItem.FileName + "\""));
 			}
 			_previousDifferences = null;
 			clearDifferences();
@@ -919,7 +919,7 @@ namespace PaJaMa.GitStudio
 			foreach (var diff in differences)
 			{
 				if (tv == tvStaged)
-					processCommand(_helper.RunCommand("reset " + diff.FileName));
+					processCommand(_helper.RunCommand("reset \"" + diff.FileName + "\""));
 
 				var finf = new FileInfo(Path.Combine(Repository.LocalPath, diff.FileName));
 				if (finf.Exists)
@@ -1048,7 +1048,7 @@ namespace PaJaMa.GitStudio
 					.Where(f => f.Tag is Difference).Select(f => f.Tag as Difference).ToList();
 			foreach (var flat in flattened)
 			{
-				arguments.Add("add " + flat.FileName);
+				arguments.Add("add \"" + flat.FileName + "\"");
 			}
 			processCommand(_helper.RunCommand(arguments.ToArray(), true));
 			_previousDifferences = null;
@@ -1063,7 +1063,7 @@ namespace PaJaMa.GitStudio
 				.Where(f => f.Tag is Difference).Select(f => f.Tag as Difference).ToList();
 			foreach (var flat in flattened)
 			{
-				arguments.Add("reset -- " + flat.FileName);
+				arguments.Add("reset -- \"" + flat.FileName + "\"");
 			}
 			processCommand(_helper.RunCommand(arguments.ToArray(), true));
 			_previousDifferences = null;

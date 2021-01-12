@@ -20,7 +20,7 @@ namespace PaJaMa.GitStudio
         public GitUserSettings()
 		{
 			Repositories = new List<GitRepository>();
-			ExternalDiffArgumentsFormat = "{0} {1}";
+			ExternalDiffArgumentsFormat = "\"{0}\" \"{1}\"";
 		}
 	}
 

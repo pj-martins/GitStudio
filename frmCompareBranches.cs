@@ -75,7 +75,7 @@ namespace PaJaMa.GitStudio
 				txtDifferences.Text = string.Empty;
 				return;
 			}
-			var diffs = Helper.RunCommand("--no-pager diff " + FromBranch.BranchName + " " + ToBranch.BranchName + " -- " + selectedRow.Cells["File"].Value.ToString());
+			var diffs = Helper.RunCommand("--no-pager diff " + FromBranch.BranchName + " " + ToBranch.BranchName + " -- \"" + selectedRow.Cells["File"].Value.ToString() + "\"");
 			txtDifferences.Text = string.Join("\r\n", diffs);
 		}
 
@@ -91,8 +91,8 @@ namespace PaJaMa.GitStudio
 			{
 				if (selectedRow.Cells["Action"].Value.ToString() != "Modify") continue;
 				bool hasError = false;
-				var content1 = Helper.RunCommand("--no-pager show " + FromBranch.BranchName + ":" + selectedRow.Cells["File"].Value.ToString(), true, false, ref hasError);
-				var content2 = Helper.RunCommand("--no-pager show " + ToBranch.BranchName + ":" + selectedRow.Cells["File"].Value.ToString(), true, false, ref hasError);
+				var content1 = Helper.RunCommand("--no-pager show " + FromBranch.BranchName + ":\"" + selectedRow.Cells["File"].Value.ToString() + "\"", true, false, ref hasError);
+				var content2 = Helper.RunCommand("--no-pager show " + ToBranch.BranchName + ":\"" + selectedRow.Cells["File"].Value.ToString() + "\"", true, false, ref hasError);
 
 				var tmpDir = Path.Combine(Path.GetTempPath(), "GitStudio");
 				if (!Directory.Exists(tmpDir)) Directory.CreateDirectory(tmpDir);
