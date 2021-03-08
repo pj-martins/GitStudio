@@ -965,7 +965,7 @@ namespace PaJaMa.GitStudio
 				foreach (var selectedItem in items)
 				{
 					var cmd = _draggingTreeView == tvUnStaged ? "add " : "reset -- ";
-					processCommand(_helper.RunCommand(cmd + selectedItem.FileName));
+					processCommand(_helper.RunCommand(cmd + "\"" + selectedItem.FileName + "\""));
 				}
 				_previousDifferences = null;
 				clearDifferences();
