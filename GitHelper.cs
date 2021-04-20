@@ -7,7 +7,6 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace PaJaMa.GitStudio
@@ -76,7 +75,7 @@ namespace PaJaMa.GitStudio
 				if (worker == null)
 					worker = new BackgroundWorker();
 				worker.DoWork += (object sender, DoWorkEventArgs e) => action.Invoke();
-				WinStatusBox.ShowProgress(worker, "Running command " + arguments, progressBarStyle: ProgressBarStyle.Marquee);
+				new frmOutput().ShowProgress(worker, "Running command(s)\r\n" + string.Join("\r\n", arguments));
 			}
 			else
 			{

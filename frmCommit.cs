@@ -1,5 +1,4 @@
-﻿using PaJaMa.WinControls;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -100,7 +99,7 @@ namespace PaJaMa.GitStudio
 				if (push)
 					lines.AddRange(helper.RunCommand("push -u origin " + branchName, worker));
 			};
-			WinStatusBox.ShowProgress(worker, "Committing", progressBarStyle: ProgressBarStyle.Marquee);
+			new frmOutput().ShowProgress(worker, "Committing");
 
 			this.DialogResult = DialogResult.OK;
 			this.Close();

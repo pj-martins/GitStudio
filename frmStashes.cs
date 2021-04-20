@@ -43,7 +43,7 @@ namespace PaJaMa.GitStudio
 			{
 				items = Helper.RunCommand("stash list", false);
 			};
-			WinStatusBox.ShowProgress(worker, "Committing", progressBarStyle: ProgressBarStyle.Marquee);
+			new frmOutput().ShowProgress(worker, "Committing");
 			var stashes = new List<Stash>();
 			foreach (var item in items)
 			{
