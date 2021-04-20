@@ -656,7 +656,7 @@ namespace PaJaMa.GitStudio
 					var runningText = string.Empty;
 					while (runningNode != null)
 					{
-						runningText = runningNode.Text + (string.IsNullOrEmpty(runningText) ? "" : "/") + runningText;
+						runningText = runningNode.Text + (string.IsNullOrEmpty(runningText) && runningNode.Nodes.Count <= 0 ? "" : "/") + runningText;
 						runningNode = runningNode.Parent;
 					}
 					selectedItems.Add(runningText);
