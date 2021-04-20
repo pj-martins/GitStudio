@@ -75,7 +75,7 @@ namespace PaJaMa.GitStudio
 				if (worker == null)
 					worker = new BackgroundWorker();
 				worker.DoWork += (object sender, DoWorkEventArgs e) => action.Invoke();
-				new frmOutput().ShowProgress(worker, "Running command(s)\r\n" + string.Join("\r\n", arguments));
+				new frmOutput().ShowProgress(worker, "Running command(s)\r\n" + string.Join("\r\n", arguments), false);
 			}
 			else
 			{

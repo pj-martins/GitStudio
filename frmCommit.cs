@@ -99,7 +99,7 @@ namespace PaJaMa.GitStudio
 				if (push)
 					lines.AddRange(helper.RunCommand("push -u origin " + branchName, worker));
 			};
-			new frmOutput().ShowProgress(worker, "Committing");
+			new frmOutput().ShowProgress(worker, "Committing", false);
 
 			this.DialogResult = DialogResult.OK;
 			this.Close();
