@@ -18,35 +18,26 @@ namespace PaJaMa.GitStudio
 
         private BackgroundWorker _worker;
         private string _command;
-        private bool _closeOnComplete;
 
         public frmOutput()
         {
             InitializeComponent();
         }
 
-        public void ShowProgress(BackgroundWorker worker, string command, bool closeOnComplete)
+        public void ShowProgress(BackgroundWorker worker, string command)
         {
             worker.WorkerReportsProgress = true;
             worker.ProgressChanged += Worker_ProgressChanged;
             worker.RunWorkerCompleted += Worker_RunWorkerCompleted;
             _worker = worker;
             _command = command;
-            _closeOnComplete = closeOnComplete;
             this.ShowDialog();
         }
 
         private void Worker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
-            if (_closeOnComplete)
-            {
-                this.Close();
-            }
-            else
-            {
-                progressMain.Visible = false;
-                btnOK.Visible = true;
-            }
+            progressMain.Visible = false;
+            btnOK.Visible = true;
         }
 
         private void Worker_ProgressChanged(object sender, ProgressChangedEventArgs e)
