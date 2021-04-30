@@ -226,6 +226,7 @@ namespace PaJaMa.GitStudio
 					case "AM":
 					case "UU":
 					case "T":
+					case "RM":
 						diff.DifferenceType = DifferenceType.Modify;
 						break;
 					case "AD":

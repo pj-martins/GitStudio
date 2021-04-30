@@ -97,8 +97,12 @@ namespace PaJaMa.GitStudio
 			uc.Dock = DockStyle.Fill;
 			var tab = new WinControls.TabControl.TabPage(repo.LocalPath);
 			tab.Controls.Add(uc);
+			tab.ContextMenuStrip = new ContextMenuStrip();
+			tab.ContextMenuStrip.Items.Add("&Open In Explorer", null, new EventHandler(this.openInExplorerToolStripMenuItem_Click));
+			tab.ContextMenuStrip.Items.Add("Set &Remote", null, new EventHandler(this.setRemoteToolStripMenuItem_Click));
+			tab.ContextMenuStrip.Items.Add("&Enable File Watching", null, new EventHandler(this.EnableFileWatchingToolStripMenuItem_Click));
+			tab.ContextMenuStrip.Items.Add("&Disable File Watching", null, new EventHandler(this.DisableFileWatchingToolStripMenuItem_Click));
 			tabMain.TabPages.Add(tab);
-			tab.Tab.ContextMenuStrip = mnuTab;
 			return tab;
 		}
 
@@ -218,12 +222,12 @@ namespace PaJaMa.GitStudio
 
 		private void setRemoteToolStripMenuItem_Click(object sender, EventArgs e)
 		{
-			var result = WinControls.InputBox.Show("Enter remote URL", "Remote URL");
+			var settings = SettingsHelper.GetUserSettings<GitUserSettings>();
+			var tab = tabMain.SelectedTab;
+			var repo = settings.Repositories.First(r => r.LocalPath == tab.Text);
+			var result = WinControls.InputBox.Show("Enter remote URL", "Remote URL", repo.RemoteURL);
 			if (result.Result == System.Windows.Forms.DialogResult.OK)
 			{
-				var settings = SettingsHelper.GetUserSettings<GitUserSettings>();
-				var tab = tabMain.SelectedTab;
-				var repo = settings.Repositories.First(r => r.LocalPath == tab.Text);
 				bool error = false;
 				var helper = new GitHelper(repo.LocalPath);
 				helper.RunCommand("remote add origin " + result.Text, true, ref error);
