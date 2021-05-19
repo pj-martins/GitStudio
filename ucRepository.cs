@@ -1189,5 +1189,16 @@ namespace PaJaMa.GitStudio
 			addWatchers();
 			_lockChange = false;
 		}
-	}
+
+        private void pullAndMergeFromToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+			var branch = tvLocalBranches.SelectedNode.Tag as LocalBranch;
+			if (MessageBox.Show("Are you sure you want to merge " + branch.BranchName + " into " + _currentBranch.BranchName + "?", "Warning!",
+				MessageBoxButtons.YesNo) == DialogResult.Yes)
+			{
+				_helper.RunCommand("pull origin " + branch.BranchName, true);
+				_helper.RunCommand("merge " + branch.BranchName, true);
+			}
+		}
+    }
 }
