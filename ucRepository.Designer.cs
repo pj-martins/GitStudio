@@ -37,6 +37,7 @@
             this.deleteToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.branchLocalToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.mergeFromLocalToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.pullAndMergeFromToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.rebaseFromToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.abortMergeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.compareToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -91,7 +92,7 @@
             this.btnRefresh = new System.Windows.Forms.Button();
             this.btnCommit = new System.Windows.Forms.Button();
             this.timDebounce = new System.Windows.Forms.Timer(this.components);
-            this.pullAndMergeFromToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.chkIgnoreWhiteSpace = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
@@ -127,8 +128,8 @@
             // splitContainer1.Panel2
             // 
             this.splitContainer1.Panel2.Controls.Add(this.splitContainer3);
-            this.splitContainer1.Size = new System.Drawing.Size(1028, 618);
-            this.splitContainer1.SplitterDistance = 342;
+            this.splitContainer1.Size = new System.Drawing.Size(1163, 627);
+            this.splitContainer1.SplitterDistance = 386;
             this.splitContainer1.TabIndex = 0;
             // 
             // splitContainer2
@@ -147,8 +148,8 @@
             // 
             this.splitContainer2.Panel2.Controls.Add(this.tvRemoteBranches);
             this.splitContainer2.Panel2.Controls.Add(this.label2);
-            this.splitContainer2.Size = new System.Drawing.Size(342, 618);
-            this.splitContainer2.SplitterDistance = 300;
+            this.splitContainer2.Size = new System.Drawing.Size(386, 627);
+            this.splitContainer2.SplitterDistance = 304;
             this.splitContainer2.TabIndex = 0;
             // 
             // tvLocalBranches
@@ -159,7 +160,7 @@
             this.tvLocalBranches.DrawMode = System.Windows.Forms.TreeViewDrawMode.OwnerDrawText;
             this.tvLocalBranches.Location = new System.Drawing.Point(0, 17);
             this.tvLocalBranches.Name = "tvLocalBranches";
-            this.tvLocalBranches.Size = new System.Drawing.Size(342, 283);
+            this.tvLocalBranches.Size = new System.Drawing.Size(386, 287);
             this.tvLocalBranches.TabIndex = 2;
             this.tvLocalBranches.DoubleClick += new System.EventHandler(this.tvLocalBranches_DoubleClick);
             // 
@@ -180,90 +181,97 @@
             this.trackRemoteToolStripMenuItem,
             this.checkoutForceToolStripMenuItem});
             this.mnuLocal.Name = "mnuLocal";
-            this.mnuLocal.Size = new System.Drawing.Size(188, 312);
+            this.mnuLocal.Size = new System.Drawing.Size(188, 290);
             this.mnuLocal.Opening += new System.ComponentModel.CancelEventHandler(this.mnuLocal_Opening);
             // 
             // checkoutToolStripMenuItem
             // 
             this.checkoutToolStripMenuItem.Name = "checkoutToolStripMenuItem";
-            this.checkoutToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.checkoutToolStripMenuItem.Size = new System.Drawing.Size(187, 22);
             this.checkoutToolStripMenuItem.Text = "&Checkout";
             this.checkoutToolStripMenuItem.Click += new System.EventHandler(this.checkoutToolStripMenuItem_Click);
             // 
             // deleteToolStripMenuItem
             // 
             this.deleteToolStripMenuItem.Name = "deleteToolStripMenuItem";
-            this.deleteToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.deleteToolStripMenuItem.Size = new System.Drawing.Size(187, 22);
             this.deleteToolStripMenuItem.Text = "&Delete";
             this.deleteToolStripMenuItem.Click += new System.EventHandler(this.deleteToolStripMenuItem_Click);
             // 
             // branchLocalToolStripMenuItem
             // 
             this.branchLocalToolStripMenuItem.Name = "branchLocalToolStripMenuItem";
-            this.branchLocalToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.branchLocalToolStripMenuItem.Size = new System.Drawing.Size(187, 22);
             this.branchLocalToolStripMenuItem.Text = "&Branch";
             this.branchLocalToolStripMenuItem.Click += new System.EventHandler(this.branchLocalToolStripMenuItem_Click);
             // 
             // mergeFromLocalToolStripMenuItem
             // 
             this.mergeFromLocalToolStripMenuItem.Name = "mergeFromLocalToolStripMenuItem";
-            this.mergeFromLocalToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.mergeFromLocalToolStripMenuItem.Size = new System.Drawing.Size(187, 22);
             this.mergeFromLocalToolStripMenuItem.Text = "&Merge From";
             this.mergeFromLocalToolStripMenuItem.Click += new System.EventHandler(this.mergeFromLocalToolStripMenuItem_Click);
+            // 
+            // pullAndMergeFromToolStripMenuItem
+            // 
+            this.pullAndMergeFromToolStripMenuItem.Name = "pullAndMergeFromToolStripMenuItem";
+            this.pullAndMergeFromToolStripMenuItem.Size = new System.Drawing.Size(187, 22);
+            this.pullAndMergeFromToolStripMenuItem.Text = "&Pull And Merge From";
+            this.pullAndMergeFromToolStripMenuItem.Click += new System.EventHandler(this.pullAndMergeFromToolStripMenuItem_Click);
             // 
             // rebaseFromToolStripMenuItem1
             // 
             this.rebaseFromToolStripMenuItem1.Name = "rebaseFromToolStripMenuItem1";
-            this.rebaseFromToolStripMenuItem1.Size = new System.Drawing.Size(180, 22);
+            this.rebaseFromToolStripMenuItem1.Size = new System.Drawing.Size(187, 22);
             this.rebaseFromToolStripMenuItem1.Text = "&Rebase From";
             this.rebaseFromToolStripMenuItem1.Click += new System.EventHandler(this.rebaseFromLocalToolStripMenuItem_Click);
             // 
             // abortMergeToolStripMenuItem
             // 
             this.abortMergeToolStripMenuItem.Name = "abortMergeToolStripMenuItem";
-            this.abortMergeToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.abortMergeToolStripMenuItem.Size = new System.Drawing.Size(187, 22);
             this.abortMergeToolStripMenuItem.Text = "&Abort Merge";
             this.abortMergeToolStripMenuItem.Click += new System.EventHandler(this.abortMergeToolStripMenuItem_Click);
             // 
             // compareToolStripMenuItem
             // 
             this.compareToolStripMenuItem.Name = "compareToolStripMenuItem";
-            this.compareToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.compareToolStripMenuItem.Size = new System.Drawing.Size(187, 22);
             this.compareToolStripMenuItem.Text = "&Compare";
             this.compareToolStripMenuItem.Click += new System.EventHandler(this.compareToolStripMenuItem_Click);
             // 
             // historyToolStripMenuItem1
             // 
             this.historyToolStripMenuItem1.Name = "historyToolStripMenuItem1";
-            this.historyToolStripMenuItem1.Size = new System.Drawing.Size(180, 22);
+            this.historyToolStripMenuItem1.Size = new System.Drawing.Size(187, 22);
             this.historyToolStripMenuItem1.Text = "&History";
             this.historyToolStripMenuItem1.Click += new System.EventHandler(this.historyToolStripMenuItem_Click);
             // 
             // renameToolStripMenuItem
             // 
             this.renameToolStripMenuItem.Name = "renameToolStripMenuItem";
-            this.renameToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.renameToolStripMenuItem.Size = new System.Drawing.Size(187, 22);
             this.renameToolStripMenuItem.Text = "&Rename";
             this.renameToolStripMenuItem.Click += new System.EventHandler(this.renameToolStripMenuItem_Click);
             // 
             // fileHistoryToolStripMenuItem1
             // 
             this.fileHistoryToolStripMenuItem1.Name = "fileHistoryToolStripMenuItem1";
-            this.fileHistoryToolStripMenuItem1.Size = new System.Drawing.Size(180, 22);
+            this.fileHistoryToolStripMenuItem1.Size = new System.Drawing.Size(187, 22);
             this.fileHistoryToolStripMenuItem1.Text = "&File History";
             this.fileHistoryToolStripMenuItem1.Click += new System.EventHandler(this.fileHistoryToolStripMenuItem1_Click);
             // 
             // trackRemoteToolStripMenuItem
             // 
             this.trackRemoteToolStripMenuItem.Name = "trackRemoteToolStripMenuItem";
-            this.trackRemoteToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.trackRemoteToolStripMenuItem.Size = new System.Drawing.Size(187, 22);
             this.trackRemoteToolStripMenuItem.Text = "&Track Remote";
             this.trackRemoteToolStripMenuItem.Click += new System.EventHandler(this.trackRemoteToolStripMenuItem_Click);
             // 
             // checkoutForceToolStripMenuItem
             // 
             this.checkoutForceToolStripMenuItem.Name = "checkoutForceToolStripMenuItem";
-            this.checkoutForceToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.checkoutForceToolStripMenuItem.Size = new System.Drawing.Size(187, 22);
             this.checkoutForceToolStripMenuItem.Text = "Checkout F&orce";
             this.checkoutForceToolStripMenuItem.Click += new System.EventHandler(this.CheckoutForceToolStripMenuItem_Click);
             // 
@@ -286,7 +294,7 @@
             this.tvRemoteBranches.DrawMode = System.Windows.Forms.TreeViewDrawMode.OwnerDrawText;
             this.tvRemoteBranches.Location = new System.Drawing.Point(0, 17);
             this.tvRemoteBranches.Name = "tvRemoteBranches";
-            this.tvRemoteBranches.Size = new System.Drawing.Size(342, 297);
+            this.tvRemoteBranches.Size = new System.Drawing.Size(386, 302);
             this.tvRemoteBranches.TabIndex = 1;
             // 
             // mnuRemote
@@ -402,8 +410,8 @@
             // 
             this.splitContainer3.Panel2.Controls.Add(this.txtDiffText);
             this.splitContainer3.Panel2.Controls.Add(this.label5);
-            this.splitContainer3.Size = new System.Drawing.Size(682, 618);
-            this.splitContainer3.SplitterDistance = 336;
+            this.splitContainer3.Size = new System.Drawing.Size(773, 627);
+            this.splitContainer3.SplitterDistance = 340;
             this.splitContainer3.TabIndex = 0;
             // 
             // splitContainer4
@@ -421,8 +429,8 @@
             // 
             this.splitContainer4.Panel2.Controls.Add(this.tvStaged);
             this.splitContainer4.Panel2.Controls.Add(this.label4);
-            this.splitContainer4.Size = new System.Drawing.Size(682, 336);
-            this.splitContainer4.SplitterDistance = 320;
+            this.splitContainer4.Size = new System.Drawing.Size(773, 340);
+            this.splitContainer4.SplitterDistance = 362;
             this.splitContainer4.TabIndex = 1;
             // 
             // tvUnStaged
@@ -435,7 +443,7 @@
             this.tvUnStaged.Indent = 10;
             this.tvUnStaged.Location = new System.Drawing.Point(0, 17);
             this.tvUnStaged.Name = "tvUnStaged";
-            this.tvUnStaged.Size = new System.Drawing.Size(320, 319);
+            this.tvUnStaged.Size = new System.Drawing.Size(362, 323);
             this.tvUnStaged.TabIndex = 0;
             this.tvUnStaged.NodesDrag += new System.Windows.Forms.DragEventHandler(this.tv_NodesDrag);
             this.tvUnStaged.AfterCollapse += new System.Windows.Forms.TreeViewEventHandler(this.tv_AfterCollapse);
@@ -577,7 +585,7 @@
             this.tvStaged.Indent = 10;
             this.tvStaged.Location = new System.Drawing.Point(0, 17);
             this.tvStaged.Name = "tvStaged";
-            this.tvStaged.Size = new System.Drawing.Size(358, 319);
+            this.tvStaged.Size = new System.Drawing.Size(407, 323);
             this.tvStaged.TabIndex = 2;
             this.tvStaged.NodesDrag += new System.Windows.Forms.DragEventHandler(this.tv_NodesDrag);
             this.tvStaged.AfterCollapse += new System.Windows.Forms.TreeViewEventHandler(this.tv_AfterCollapse);
@@ -603,7 +611,7 @@
             this.txtDiffText.Location = new System.Drawing.Point(0, 17);
             this.txtDiffText.Name = "txtDiffText";
             this.txtDiffText.ReadOnly = true;
-            this.txtDiffText.Size = new System.Drawing.Size(682, 261);
+            this.txtDiffText.Size = new System.Drawing.Size(773, 266);
             this.txtDiffText.TabIndex = 0;
             this.txtDiffText.Text = "";
             // 
@@ -620,6 +628,7 @@
             // 
             // pnlButtons
             // 
+            this.pnlButtons.Controls.Add(this.chkIgnoreWhiteSpace);
             this.pnlButtons.Controls.Add(this.progMain);
             this.pnlButtons.Controls.Add(this.lblStatus);
             this.pnlButtons.Controls.Add(this.btnPush);
@@ -629,9 +638,9 @@
             this.pnlButtons.Controls.Add(this.btnRefresh);
             this.pnlButtons.Controls.Add(this.btnCommit);
             this.pnlButtons.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.pnlButtons.Location = new System.Drawing.Point(0, 618);
+            this.pnlButtons.Location = new System.Drawing.Point(0, 627);
             this.pnlButtons.Name = "pnlButtons";
-            this.pnlButtons.Size = new System.Drawing.Size(1028, 34);
+            this.pnlButtons.Size = new System.Drawing.Size(1163, 34);
             this.pnlButtons.TabIndex = 4;
             // 
             // progMain
@@ -655,7 +664,7 @@
             // btnPush
             // 
             this.btnPush.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnPush.Location = new System.Drawing.Point(827, 6);
+            this.btnPush.Location = new System.Drawing.Point(962, 6);
             this.btnPush.Name = "btnPush";
             this.btnPush.Size = new System.Drawing.Size(93, 23);
             this.btnPush.TabIndex = 6;
@@ -667,7 +676,7 @@
             // 
             this.btnPull.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.btnPull.Enabled = false;
-            this.btnPull.Location = new System.Drawing.Point(736, 6);
+            this.btnPull.Location = new System.Drawing.Point(871, 6);
             this.btnPull.Name = "btnPull";
             this.btnPull.Size = new System.Drawing.Size(85, 23);
             this.btnPull.TabIndex = 5;
@@ -678,7 +687,7 @@
             // btnViewStashes
             // 
             this.btnViewStashes.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnViewStashes.Location = new System.Drawing.Point(530, 6);
+            this.btnViewStashes.Location = new System.Drawing.Point(665, 6);
             this.btnViewStashes.Name = "btnViewStashes";
             this.btnViewStashes.Size = new System.Drawing.Size(95, 23);
             this.btnViewStashes.TabIndex = 4;
@@ -690,7 +699,7 @@
             // 
             this.btnStash.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.btnStash.Enabled = false;
-            this.btnStash.Location = new System.Drawing.Point(631, 6);
+            this.btnStash.Location = new System.Drawing.Point(766, 6);
             this.btnStash.Name = "btnStash";
             this.btnStash.Size = new System.Drawing.Size(99, 23);
             this.btnStash.TabIndex = 3;
@@ -701,7 +710,7 @@
             // btnRefresh
             // 
             this.btnRefresh.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnRefresh.Location = new System.Drawing.Point(426, 6);
+            this.btnRefresh.Location = new System.Drawing.Point(561, 6);
             this.btnRefresh.Name = "btnRefresh";
             this.btnRefresh.Size = new System.Drawing.Size(98, 23);
             this.btnRefresh.TabIndex = 2;
@@ -713,7 +722,7 @@
             // 
             this.btnCommit.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.btnCommit.Enabled = false;
-            this.btnCommit.Location = new System.Drawing.Point(926, 6);
+            this.btnCommit.Location = new System.Drawing.Point(1061, 6);
             this.btnCommit.Name = "btnCommit";
             this.btnCommit.Size = new System.Drawing.Size(99, 23);
             this.btnCommit.TabIndex = 1;
@@ -727,12 +736,17 @@
             this.timDebounce.Interval = 300;
             this.timDebounce.Tick += new System.EventHandler(this.timDebounce_Tick);
             // 
-            // pullAndMergeFromToolStripMenuItem
+            // chkIgnoreWhiteSpace
             // 
-            this.pullAndMergeFromToolStripMenuItem.Name = "pullAndMergeFromToolStripMenuItem";
-            this.pullAndMergeFromToolStripMenuItem.Size = new System.Drawing.Size(187, 22);
-            this.pullAndMergeFromToolStripMenuItem.Text = "&Pull And Merge From";
-            this.pullAndMergeFromToolStripMenuItem.Click += new System.EventHandler(this.pullAndMergeFromToolStripMenuItem_Click);
+            this.chkIgnoreWhiteSpace.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.chkIgnoreWhiteSpace.AutoSize = true;
+            this.chkIgnoreWhiteSpace.Location = new System.Drawing.Point(437, 10);
+            this.chkIgnoreWhiteSpace.Name = "chkIgnoreWhiteSpace";
+            this.chkIgnoreWhiteSpace.Size = new System.Drawing.Size(116, 17);
+            this.chkIgnoreWhiteSpace.TabIndex = 10;
+            this.chkIgnoreWhiteSpace.Text = "Ignore Whitespace";
+            this.chkIgnoreWhiteSpace.UseVisualStyleBackColor = true;
+            this.chkIgnoreWhiteSpace.CheckedChanged += new System.EventHandler(this.chkIgnoreWhiteSpace_CheckedChanged);
             // 
             // ucRepository
             // 
@@ -741,7 +755,7 @@
             this.Controls.Add(this.splitContainer1);
             this.Controls.Add(this.pnlButtons);
             this.Name = "ucRepository";
-            this.Size = new System.Drawing.Size(1028, 652);
+            this.Size = new System.Drawing.Size(1163, 661);
             this.Load += new System.EventHandler(this.ucRepository_Load);
             this.splitContainer1.Panel1.ResumeLayout(false);
             this.splitContainer1.Panel2.ResumeLayout(false);
@@ -838,5 +852,6 @@
 		private System.Windows.Forms.ToolStripMenuItem nextConflictToolStripMenuItem;
 		private System.Windows.Forms.ToolStripMenuItem checkoutForceToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem pullAndMergeFromToolStripMenuItem;
+        private System.Windows.Forms.CheckBox chkIgnoreWhiteSpace;
     }
 }

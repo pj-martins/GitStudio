@@ -736,7 +736,7 @@ namespace PaJaMa.GitStudio
 			Common.Common.RunInThread(new Action(() =>
 			{
 				var diffs = diff == null || diff.DifferenceType != DifferenceType.Modify ? new string[0] :
-				_helper.RunCommand("--no-pager diff " + (diff.IsStaged ? "--cached " : "") + "\"" + diff.FileName + "\"");
+				_helper.RunCommand("--no-pager diff " + (diff.IsStaged ? "--cached " : "") + (chkIgnoreWhiteSpace.Checked ? "-w " : "") + "\"" + diff.FileName + "\"");
 				// if (error) return;
 				this.Invoke(new Action(() =>
 				{
@@ -1200,5 +1200,10 @@ namespace PaJaMa.GitStudio
 				_helper.RunCommand("merge " + branch.BranchName, true);
 			}
 		}
+
+        private void chkIgnoreWhiteSpace_CheckedChanged(object sender, EventArgs e)
+        {
+			refreshPage();
+        }
     }
 }
