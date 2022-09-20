@@ -59,7 +59,7 @@ namespace PaJaMa.GitStudio
 
 		private void btnGo_Click(object sender, EventArgs e)
 		{
-			var helper = new GitHelper(Repository.LocalPath);
+			var helper = new GitHelper(Repository);
 						var branchName = cboRemote.Text;
 			if (branchName.StartsWith("origin/"))
 				branchName = branchName.Substring(7);

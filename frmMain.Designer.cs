@@ -36,6 +36,7 @@
             this.cloneToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.setupToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.tabMain = new PaJaMa.WinControls.TabControl.TabControl();
+            this.openSSHToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -55,6 +56,7 @@
             this.fileToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.newToolStripMenuItem,
             this.openToolStripMenuItem,
+            this.openSSHToolStripMenuItem,
             this.cloneToolStripMenuItem,
             this.setupToolStripMenuItem});
             this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
@@ -64,28 +66,28 @@
             // newToolStripMenuItem
             // 
             this.newToolStripMenuItem.Name = "newToolStripMenuItem";
-            this.newToolStripMenuItem.Size = new System.Drawing.Size(105, 22);
+            this.newToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.newToolStripMenuItem.Text = "&New";
             this.newToolStripMenuItem.Click += new System.EventHandler(this.newToolStripMenuItem_Click);
             // 
             // openToolStripMenuItem
             // 
             this.openToolStripMenuItem.Name = "openToolStripMenuItem";
-            this.openToolStripMenuItem.Size = new System.Drawing.Size(105, 22);
+            this.openToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.openToolStripMenuItem.Text = "&Open";
             this.openToolStripMenuItem.Click += new System.EventHandler(this.openToolStripMenuItem_Click);
             // 
             // cloneToolStripMenuItem
             // 
             this.cloneToolStripMenuItem.Name = "cloneToolStripMenuItem";
-            this.cloneToolStripMenuItem.Size = new System.Drawing.Size(105, 22);
+            this.cloneToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.cloneToolStripMenuItem.Text = "&Clone";
             this.cloneToolStripMenuItem.Click += new System.EventHandler(this.cloneToolStripMenuItem_Click);
             // 
             // setupToolStripMenuItem
             // 
             this.setupToolStripMenuItem.Name = "setupToolStripMenuItem";
-            this.setupToolStripMenuItem.Size = new System.Drawing.Size(105, 22);
+            this.setupToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.setupToolStripMenuItem.Text = "&Setup";
             this.setupToolStripMenuItem.Click += new System.EventHandler(this.setupToolStripMenuItem_Click);
             // 
@@ -101,6 +103,13 @@
             this.tabMain.TabClosing += new PaJaMa.WinControls.TabControl.TabEventHandler(this.tabMain_TabClosing);
             this.tabMain.TabChanged += new PaJaMa.WinControls.TabControl.TabEventHandler(this.tabMain_TabChanged);
             this.tabMain.TabOrderChanged += new PaJaMa.WinControls.TabControl.TabEventHandler(this.tabMain_TabOrderChanged);
+            // 
+            // openSSHToolStripMenuItem
+            // 
+            this.openSSHToolStripMenuItem.Name = "openSSHToolStripMenuItem";
+            this.openSSHToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.openSSHToolStripMenuItem.Text = "Open SS&H";
+            this.openSSHToolStripMenuItem.Click += new System.EventHandler(this.openSSHToolStripMenuItem_Click);
             // 
             // frmMain
             // 
@@ -131,6 +140,7 @@
 		private System.Windows.Forms.ToolStripMenuItem openToolStripMenuItem;
 		private System.Windows.Forms.ToolStripMenuItem setupToolStripMenuItem;
 		private System.Windows.Forms.ToolStripMenuItem newToolStripMenuItem;
-	}
+        private System.Windows.Forms.ToolStripMenuItem openSSHToolStripMenuItem;
+    }
 }
 

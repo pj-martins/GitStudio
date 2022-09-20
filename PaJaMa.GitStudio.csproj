@@ -59,6 +59,15 @@
     <Prefer32Bit>true</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>packages\Newtonsoft.Json.13.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="Renci.SshNet, Version=2016.1.0.0, Culture=neutral, PublicKeyToken=1cee9f8bde3db106, processorArchitecture=MSIL">
+      <HintPath>packages\SSH.NET.2016.1.0\lib\net40\Renci.SshNet.dll</HintPath>
+    </Reference>
+    <Reference Include="Renci.SshNet.Async, Version=1.4.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>packages\Renci.SshNet.Async.1.4.0\lib\net40\Renci.SshNet.Async.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Web" />
@@ -84,6 +93,12 @@
     </Compile>
     <Compile Include="frmOutput.Designer.cs">
       <DependentUpon>frmOutput.cs</DependentUpon>
+    </Compile>
+    <Compile Include="frmSshConnection.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="frmSshConnection.Designer.cs">
+      <DependentUpon>frmSshConnection.cs</DependentUpon>
     </Compile>
     <Compile Include="frmTrackRemote.cs">
       <SubType>Form</SubType>
@@ -163,6 +178,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <Compile Include="SshConnection.cs" />
     <Compile Include="ucRepository.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -178,6 +194,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="frmOutput.resx">
       <DependentUpon>frmOutput.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="frmSshConnection.resx">
+      <DependentUpon>frmSshConnection.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="frmTrackRemote.resx">
       <DependentUpon>frmTrackRemote.cs</DependentUpon>
@@ -223,6 +242,7 @@
       <SubType>Designer</SubType>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+    <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>

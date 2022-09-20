@@ -14,10 +14,13 @@ namespace PaJaMa.GitStudio
 	public class GitHelper
 	{
 		public string WorkingDirectory { get; private set; }
+		private SshConnection _sshConnection;
 		private static object _lock = new object();
-		public GitHelper(string workingDirectory)
+		public GitHelper() { }
+		public GitHelper(GitRepository repository)
 		{
-			this.WorkingDirectory = workingDirectory;
+			this.WorkingDirectory = repository.LocalPath;
+			_sshConnection = repository.SshConnection;
 		}
 
 		private string[] runCommand(string[] arguments, bool showProgress, bool includeBlankLines, bool checkForErrors, BackgroundWorker worker, ref bool hasError)
@@ -26,48 +29,68 @@ namespace PaJaMa.GitStudio
 			var action = new Action(() =>
 			{
 				int i = 1;
-				foreach (var argument in arguments)
+				if (_sshConnection != null)
 				{
-					var inf = new ProcessStartInfo("git", argument);
-					inf.UseShellExecute = false;
-					inf.RedirectStandardOutput = true;
-					inf.RedirectStandardError = true;
-					inf.StandardOutputEncoding = Encoding.UTF8;
-					inf.StandardErrorEncoding = Encoding.UTF8;
-					inf.WindowStyle = ProcessWindowStyle.Hidden;
-					inf.CreateNoWindow = true;
-					if (WorkingDirectory != null)
-						inf.WorkingDirectory = WorkingDirectory;
-					var p = new Process();
-					p.StartInfo = inf;
-					p.OutputDataReceived += new DataReceivedEventHandler((sender, e) =>
+					var client = new Renci.SshNet.SshClient(_sshConnection.Host, _sshConnection.UserName, _sshConnection.Password);
+					client.Connect();
+					var cmd = client.RunCommand($"cd {_sshConnection.Path} && {string.Join(" && ", arguments.Select(a => $"sudo git {a}"))}");
+					client.Disconnect();
+					client.Dispose();
+					client = null;
+					if (string.IsNullOrEmpty(cmd.Result) && !string.IsNullOrEmpty(cmd.Error))
 					{
-						if (includeBlankLines || !string.IsNullOrEmpty(e.Data))
-						{
-							lock (_lock)
-							{
-								lines.Add(new Tuple<string, bool>(e.Data, false));
-								if (worker != null)
-									worker.ReportProgress(100 * i / argument.Length, e.Data);
-							}
-						}
-					});
-					p.ErrorDataReceived += new DataReceivedEventHandler((sender, e) =>
+						lines = cmd.Error.Split('\n').Where(x => !string.IsNullOrWhiteSpace(x)).Select(x => new Tuple<string, bool>(x.Trim(), true)).ToList();
+					}
+					else
 					{
-						if (!string.IsNullOrEmpty(e.Data))
+						lines = cmd.Result.Split('\n').Where(x => !string.IsNullOrWhiteSpace(x)).Select(x => new Tuple<string, bool>(x.Trim(), false)).ToList();
+					}
+				}
+				else
+				{
+					foreach (var argument in arguments)
+					{
+						var inf = new ProcessStartInfo("git", argument);
+						inf.UseShellExecute = false;
+						inf.RedirectStandardOutput = true;
+						inf.RedirectStandardError = true;
+						inf.StandardOutputEncoding = Encoding.UTF8;
+						inf.StandardErrorEncoding = Encoding.UTF8;
+						inf.WindowStyle = ProcessWindowStyle.Hidden;
+						inf.CreateNoWindow = true;
+						if (WorkingDirectory != null)
+							inf.WorkingDirectory = WorkingDirectory;
+						var p = new Process();
+						p.StartInfo = inf;
+						p.OutputDataReceived += new DataReceivedEventHandler((sender, e) =>
 						{
-							lock (_lock)
+							if (includeBlankLines || !string.IsNullOrEmpty(e.Data))
 							{
-								lines.Add(new Tuple<string, bool>(e.Data, true));
-								if (worker != null)
-									worker.ReportProgress(100 * i / argument.Length, e.Data);
+								lock (_lock)
+								{
+									lines.Add(new Tuple<string, bool>(e.Data, false));
+									if (worker != null)
+										worker.ReportProgress(100 * i / argument.Length, e.Data);
+								}
 							}
-						}
-					});
-					p.Start();
-					p.BeginOutputReadLine();
-					p.BeginErrorReadLine();
-					p.WaitForExit();
+						});
+						p.ErrorDataReceived += new DataReceivedEventHandler((sender, e) =>
+						{
+							if (!string.IsNullOrEmpty(e.Data))
+							{
+								lock (_lock)
+								{
+									lines.Add(new Tuple<string, bool>(e.Data, true));
+									if (worker != null)
+										worker.ReportProgress(100 * i / argument.Length, e.Data);
+								}
+							}
+						});
+						p.Start();
+						p.BeginOutputReadLine();
+						p.BeginErrorReadLine();
+						p.WaitForExit();
+					}
 				}
 			});
 			if (showProgress)
@@ -277,7 +300,7 @@ namespace PaJaMa.GitStudio
 				if (branchName.StartsWith("origin/"))
 					branchName = branchName.Substring(7);
 
-				var lines = new GitHelper(null).RunCommand("clone " + url + " " + dlgOpenFolder.SelectedPath +
+				var lines = new GitHelper().RunCommand("clone " + url + " " + dlgOpenFolder.SelectedPath +
 					" -b " + branchName, true, ref hasError);
 				if (hasError && lines.Length > 0)
 				{

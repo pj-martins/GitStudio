@@ -37,7 +37,7 @@ namespace PaJaMa.GitStudio
 			set
 			{
 				_repository = value;
-				_helper = new GitHelper(value.LocalPath);
+				_helper = new GitHelper(value);
 			}
 		}
 
@@ -57,7 +57,7 @@ namespace PaJaMa.GitStudio
 				if (!RefreshBranches(true)) return;
 				_previousDifferences = null;
 				_inited = true;
-				if (!Repository.SuspendWatchingFiles)
+				if (!Repository.SuspendWatchingFiles && Repository.SshConnection == null)
 				{
 					progMain.Visible = true;
 					lblStatus.Text = "Watching files...";
@@ -188,6 +188,7 @@ namespace PaJaMa.GitStudio
 
 		private void addWatchers()
 		{
+			if (this.Repository.SshConnection != null) return;
 			lock (_lockWatchers)
 			{
 				var lst = _helper.RunCommand("ls-files");
@@ -1138,7 +1139,7 @@ namespace PaJaMa.GitStudio
 				_helper.RunCommand("checkout --theirs " + selectedItem.FileName);
 				_helper.RunCommand("add " + selectedItem.FileName, false);
 			}
-			
+
 			_previousDifferences = null;
 			refreshPage();
 		}
@@ -1190,8 +1191,8 @@ namespace PaJaMa.GitStudio
 			_lockChange = false;
 		}
 
-        private void pullAndMergeFromToolStripMenuItem_Click(object sender, EventArgs e)
-        {
+		private void pullAndMergeFromToolStripMenuItem_Click(object sender, EventArgs e)
+		{
 			var branch = tvLocalBranches.SelectedNode.Tag as LocalBranch;
 			if (MessageBox.Show("Are you sure you want to merge " + branch.BranchName + " into " + _currentBranch.BranchName + "?", "Warning!",
 				MessageBoxButtons.YesNo) == DialogResult.Yes)
@@ -1201,9 +1202,9 @@ namespace PaJaMa.GitStudio
 			}
 		}
 
-        private void chkIgnoreWhiteSpace_CheckedChanged(object sender, EventArgs e)
-        {
+		private void chkIgnoreWhiteSpace_CheckedChanged(object sender, EventArgs e)
+		{
 			refreshPage();
-        }
-    }
+		}
+	}
 }

@@ -52,7 +52,7 @@ namespace PaJaMa.GitStudio
 			List<GitRepository> missing = new List<GitRepository>();
 			foreach (var repo in settings.Repositories)
 			{
-				if (!Directory.Exists(repo.LocalPath))
+				if (repo.SshConnection == null && !Directory.Exists(repo.LocalPath))
 				{
 					missing.Add(repo);
 					continue;
@@ -95,7 +95,7 @@ namespace PaJaMa.GitStudio
 			var uc = new ucRepository();
 			uc.Repository = repo;
 			uc.Dock = DockStyle.Fill;
-			var tab = new WinControls.TabControl.TabPage(repo.LocalPath);
+			var tab = new WinControls.TabControl.TabPage(repo.SshConnection != null ? $"SSH - {repo.SshConnection.Host}" : repo.LocalPath);
 			tab.Controls.Add(uc);
 			tab.ContextMenuStrip = new ContextMenuStrip();
 			tab.ContextMenuStrip.Items.Add("&Open In Explorer", null, new EventHandler(this.openInExplorerToolStripMenuItem_Click));
@@ -117,14 +117,14 @@ namespace PaJaMa.GitStudio
 			{
 				settings.LastBrowsedFolder = dlg.SelectedPath;
 				bool error = false;
-				var helper = new GitHelper(dlg.SelectedPath);
-				var remote = helper.RunCommand("config --get remote.origin.url", true, ref error).FirstOrDefault();
-				if (error) return;
 				var repo = new GitRepository()
 				{
-					LocalPath = dlg.SelectedPath,
-					RemoteURL = remote,
+					LocalPath = dlg.SelectedPath
 				};
+				var helper = new GitHelper(repo);
+				var remote = helper.RunCommand("config --get remote.origin.url", true, ref error).FirstOrDefault();
+				if (error) return;
+				repo.RemoteURL = remote;
 				var tab = createRepository(repo);
 				settings.Repositories.Add(repo);
 				SettingsHelper.SaveUserSettings<GitUserSettings>(settings);
@@ -144,13 +144,13 @@ namespace PaJaMa.GitStudio
 			{
 				settings.LastBrowsedFolder = dlg.SelectedPath;
 				bool error = false;
-				var helper = new GitHelper(dlg.SelectedPath);
-				helper.RunCommand("init", true, ref error);
-				if (error) return;
 				var repo = new GitRepository()
 				{
 					LocalPath = dlg.SelectedPath,
 				};
+				var helper = new GitHelper(repo);
+				helper.RunCommand("init", true, ref error);
+				if (error) return;
 				var tab = createRepository(repo);
 				settings.Repositories.Add(repo);
 				SettingsHelper.SaveUserSettings<GitUserSettings>(settings);
@@ -229,7 +229,7 @@ namespace PaJaMa.GitStudio
 			if (result.Result == System.Windows.Forms.DialogResult.OK)
 			{
 				bool error = false;
-				var helper = new GitHelper(repo.LocalPath);
+				var helper = new GitHelper(repo);
 				helper.RunCommand("remote add origin " + result.Text, true, ref error);
 				if (error) return;
 				repo.RemoteURL = result.Text;
@@ -261,5 +261,28 @@ namespace PaJaMa.GitStudio
 		{
 
 		}
-	}
+
+        private void openSSHToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+			var dlg = new frmSshConnection();
+			if (dlg.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+			{
+				bool error = false;
+				var repo = new GitRepository()
+				{
+					SshConnection = dlg.SshConnection,
+				};
+				var helper = new GitHelper(repo);
+				var remote = helper.RunCommand("config --get remote.origin.url", true, ref error).FirstOrDefault();
+				repo.RemoteURL = remote;
+				if (error) return;
+				var tab = createRepository(repo);
+				var settings = SettingsHelper.GetUserSettings<GitUserSettings>();
+				settings.Repositories.Add(repo);
+				SettingsHelper.SaveUserSettings<GitUserSettings>(settings);
+				tabMain.SelectedTab = tab;
+				(tab.Controls[0] as ucRepository).Init();
+			}
+		}
+    }
 }
