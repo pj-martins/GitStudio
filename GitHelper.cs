@@ -56,7 +56,7 @@ namespace PaJaMa.GitStudio
 						{
 							if (includeBlankLines || !string.IsNullOrEmpty(e.Data))
 							{
-								if (!e.Data.Contains("[?1h") && !e.Data.Contains("[?11"))
+								if (e.Data != null && !e.Data.Contains("[?1h") && !e.Data.Contains("[?11") && !e.Data.Contains("Connection "))
 								{
 									lock (_lock)
 									{
@@ -71,7 +71,7 @@ namespace PaJaMa.GitStudio
 						{
 							if (!string.IsNullOrEmpty(e.Data))
 							{
-								if (!e.Data.Contains("[?1h") && !e.Data.Contains("[?11"))
+								if (e.Data != null && !e.Data.Contains("[?1h") && !e.Data.Contains("[?11") && !e.Data.Contains("Connection "))
 								{
 									lock (_lock)
 									{
@@ -238,6 +238,7 @@ namespace PaJaMa.GitStudio
 					//}
 					foreach (var b in branchLines.Select(bl => bl.Trim()))
 					{
+						if (b.Contains("[?1l")) continue;
 						var branchParts = b.Split(new string[] { " " }, StringSplitOptions.RemoveEmptyEntries).ToList();
 						Branch branch = remote ? (Branch)new RemoteBranch() : new LocalBranch();
 						branches.Add(branch);
@@ -386,19 +387,26 @@ namespace PaJaMa.GitStudio
 		private void checkSubdirectoryAddDifferences(Difference difference, List<Difference> diffs)
 		{
 			string[] ignoreLines = new string[0];
-			var ignoreFile = Path.Combine(WorkingDirectory, ".gitignore");
-			if (File.Exists(ignoreFile))
-				ignoreLines = File.ReadAllLines(ignoreFile);
-			var dir = Path.Combine(WorkingDirectory, difference.FileName);
-			if (Directory.Exists(dir))
+			if (_sshConnection != null)
 			{
-				var files = recursivelyGetFiles(dir, ignoreLines);
-				foreach (var file in files)
+
+			}
+			else
+			{
+				var ignoreFile = Path.Combine(WorkingDirectory, ".gitignore");
+				if (File.Exists(ignoreFile))
+					ignoreLines = File.ReadAllLines(ignoreFile);
+				var dir = Path.Combine(WorkingDirectory, difference.FileName);
+				if (Directory.Exists(dir))
 				{
-					var diff = new Difference();
-					diff.DifferenceType = DifferenceType.Add;
-					diff.FileName = file.Substring(WorkingDirectory.Length + 1).Replace("\\", "/");
-					diffs.Add(diff);
+					var files = recursivelyGetFiles(dir, ignoreLines);
+					foreach (var file in files)
+					{
+						var diff = new Difference();
+						diff.DifferenceType = DifferenceType.Add;
+						diff.FileName = file.Substring(WorkingDirectory.Length + 1).Replace("\\", "/");
+						diffs.Add(diff);
+					}
 				}
 			}
 		}

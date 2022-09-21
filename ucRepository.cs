@@ -548,10 +548,20 @@ namespace PaJaMa.GitStudio
 				if (node.Tag == null) continue;
 				var diff = node.Tag as Difference;
 				if (diff.DifferenceType != DifferenceType.Modify) continue;
-				var currFile = Path.Combine(Repository.LocalPath, diff.FileName.Replace("\"", ""));
-				var tmpDir = Path.Combine(Path.GetTempPath(), "GitStudio");
-				if (!Directory.Exists(tmpDir)) Directory.CreateDirectory(tmpDir);
-				var tmpFile = Path.Combine(tmpDir, Guid.NewGuid() + ".tmp");
+                var tmpDir = Path.Combine(Path.GetTempPath(), "GitStudio");
+                if (!Directory.Exists(tmpDir)) Directory.CreateDirectory(tmpDir);
+                var tmpFile = Path.Combine(tmpDir, Guid.NewGuid() + ".tmp");
+                String currFile = String.Empty;
+				if (_repository.SshConnection != null)
+				{
+					currFile = Path.Combine(tmpDir, Guid.NewGuid() + ".tmp");
+					var content = SshHelper.RunCommand(_repository.SshConnection, $"cat {_repository.SshConnection.Path}/{diff.FileName.Replace("\"", "")}");
+					File.WriteAllText(currFile, content);
+                }
+				else
+				{
+					currFile = Path.Combine(Repository.LocalPath, diff.FileName.Replace("\"", ""));
+				}
 				bool error = false;
 				var oldContent = _helper.RunCommand("--no-pager show " + _currentBranch + ":\"" + diff.FileName + "\"", true, false, ref error);
 				if (error) return;
@@ -617,11 +627,18 @@ namespace PaJaMa.GitStudio
 						_helper.RunCommand("reset -- \"" + selectedItem.FileName + "\"");
 					if (selectedItem.DifferenceType == DifferenceType.Add)
 					{
-						var path = Path.Combine(Repository.LocalPath, selectedItem.FileName);
-						if (selectedItem.FileName.EndsWith("/"))
-							Directory.Delete(path, true);
-						else if (File.Exists(path))
-							File.Delete(path);
+						if (_repository.SshConnection != null)
+						{
+
+						}
+						else
+						{
+							var path = Path.Combine(Repository.LocalPath, selectedItem.FileName);
+							if (selectedItem.FileName.EndsWith("/"))
+								Directory.Delete(path, true);
+							else if (File.Exists(path))
+								File.Delete(path);
+						}
 					}
 					else
 					{

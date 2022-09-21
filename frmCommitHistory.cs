@@ -202,8 +202,9 @@ namespace PaJaMa.GitStudio
 					return;
 				}
 
-				var content1 = Helper.RunCommand("--no-pager show " + commitsToCompare.Item2.CommitID + ":\"" + selectedRow.Cells["File"].Value.ToString() + "\"");
-				var content2 = Helper.RunCommand("--no-pager show " + commitsToCompare.Item1.CommitID + ":\"" + selectedRow.Cells["File"].Value.ToString() + "\"");
+				bool hasError = false;
+                var content1 = Helper.RunCommand("--no-pager show " + commitsToCompare.Item2.CommitID.Split(' ').First() + ":\"" + selectedRow.Cells["File"].Value.ToString() + "\"", true, false, ref hasError);
+				var content2 = Helper.RunCommand("--no-pager show " + commitsToCompare.Item1.CommitID.Split(' ').First() + ":\"" + selectedRow.Cells["File"].Value.ToString() + "\"", true, false, ref hasError);
 
 				var tmpDir = Path.Combine(Path.GetTempPath(), "GitStudio");
 				if (!Directory.Exists(tmpDir)) Directory.CreateDirectory(tmpDir);

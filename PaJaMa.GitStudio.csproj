@@ -181,6 +181,7 @@
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
     <Compile Include="SshConnection.cs" />
+    <Compile Include="SshHelper.cs" />
     <Compile Include="ucRepository.cs">
       <SubType>UserControl</SubType>
     </Compile>
