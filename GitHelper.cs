@@ -177,7 +177,7 @@ namespace PaJaMa.GitStudio
 				action.Invoke();
 			}
 
-			File.AppendAllLines("testlog.txt", lines.Select(x => x.Item1));
+			// File.AppendAllLines("testlog.txt", lines.Select(x => x.Item1));
 			if (lines.Any(l => l.Item2) && checkForErrors)
 			{
 				hasError = true;
