@@ -15,6 +15,8 @@ namespace PaJaMa.GitStudio
         public string UserName { get; set; }
         public string Path { get; set; }
         public string PasswordEncrypted { get; set; }
+        public string KeyFile { get; set; }
+        public bool UseCMD { get; set; }
 
         [JsonIgnore]
         public string Password

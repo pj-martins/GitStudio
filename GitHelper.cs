@@ -31,19 +31,91 @@ namespace PaJaMa.GitStudio
 				int i = 1;
 				if (_sshConnection != null)
 				{
-					var client = new Renci.SshNet.SshClient(_sshConnection.Host, _sshConnection.UserName, _sshConnection.Password);
-					client.Connect();
-					var cmd = client.RunCommand($"cd {_sshConnection.Path} && {string.Join(" && ", arguments.Select(a => $"sudo git {a}"))}");
-					client.Disconnect();
-					client.Dispose();
-					client = null;
-					if (string.IsNullOrEmpty(cmd.Result) && !string.IsNullOrEmpty(cmd.Error))
+					if (_sshConnection.UseCMD)
 					{
-						lines = cmd.Error.Split('\n').Where(x => !string.IsNullOrWhiteSpace(x)).Select(x => new Tuple<string, bool>(x.Trim(), true)).ToList();
+						if (!File.Exists("ssh.exe"))
+						{
+							File.WriteAllBytes("ssh.exe", Resources.ssh);
+						}
+						var args = $"{_sshConnection.UserName}@{_sshConnection.Host} -t \"cd {_sshConnection.Path} && sudo git config color.ui false --replace-all && {string.Join(" && ", arguments.Select(a => $"sudo git {a}"))} && sudo git config color.ui true --replace-all\"";
+						File.AppendAllText("testlog.txt", $"{args}\n");
+						// MessageBox.Show($"{_sshConnection.Host} -t \"cd {_sshConnection.Path} && {string.Join(" && ", arguments.Select(a => $"sudo git {a}"))}\"");
+						var inf = new ProcessStartInfo("ssh", args);
+						inf.UseShellExecute = false;
+						inf.RedirectStandardOutput = true;
+						inf.RedirectStandardError = true;
+						inf.StandardOutputEncoding = Encoding.ASCII;
+						inf.StandardErrorEncoding = Encoding.ASCII;
+						inf.WindowStyle = ProcessWindowStyle.Hidden;
+						inf.CreateNoWindow = true;
+						if (WorkingDirectory != null)
+							inf.WorkingDirectory = WorkingDirectory;
+						var p = new Process();
+						p.StartInfo = inf;
+						p.OutputDataReceived += new DataReceivedEventHandler((sender, e) =>
+						{
+							if (includeBlankLines || !string.IsNullOrEmpty(e.Data))
+							{
+								if (!e.Data.Contains("[?1h") && !e.Data.Contains("[?11"))
+								{
+									lock (_lock)
+									{
+										lines.Add(new Tuple<string, bool>(e.Data, false));
+										if (worker != null)
+											worker.ReportProgress(50, e.Data);
+									}
+								}
+							}
+						});
+						p.ErrorDataReceived += new DataReceivedEventHandler((sender, e) =>
+						{
+							if (!string.IsNullOrEmpty(e.Data))
+							{
+								if (!e.Data.Contains("[?1h") && !e.Data.Contains("[?11"))
+								{
+									lock (_lock)
+									{
+										lines.Add(new Tuple<string, bool>(e.Data, true));
+										if (worker != null)
+											worker.ReportProgress(50, e.Data);
+									}
+								}
+							}
+						});
+						p.Start();
+						p.BeginOutputReadLine();
+						p.BeginErrorReadLine();
+						p.WaitForExit();
 					}
 					else
 					{
-						lines = cmd.Result.Split('\n').Where(x => !string.IsNullOrWhiteSpace(x)).Select(x => new Tuple<string, bool>(x.Trim(), false)).ToList();
+						var methods = new List<Renci.SshNet.AuthenticationMethod>();
+						if (!string.IsNullOrEmpty(_sshConnection.Password))
+						{
+							methods.Add(new Renci.SshNet.PasswordAuthenticationMethod(_sshConnection.UserName, _sshConnection.Password));
+						}
+						else if (!string.IsNullOrEmpty(_sshConnection.KeyFile))
+						{
+							methods.Add(new Renci.SshNet.PrivateKeyAuthenticationMethod(_sshConnection.UserName, new Renci.SshNet.PrivateKeyFile(_sshConnection.KeyFile)));
+						}
+						else
+						{
+							methods.Add(new Renci.SshNet.NoneAuthenticationMethod(_sshConnection.UserName));
+						}
+						var client = new Renci.SshNet.SshClient(new Renci.SshNet.ConnectionInfo(_sshConnection.Host, _sshConnection.UserName, methods.ToArray()));
+						client.Connect();
+						var cmd = client.RunCommand($"cd {_sshConnection.Path} && {string.Join(" && ", arguments.Select(a => $"sudo git {a}"))}");
+						client.Disconnect();
+						client.Dispose();
+						client = null;
+						if (string.IsNullOrEmpty(cmd.Result) && !string.IsNullOrEmpty(cmd.Error))
+						{
+							lines = cmd.Error.Split('\n').Where(x => !string.IsNullOrWhiteSpace(x)).Select(x => new Tuple<string, bool>(x.Trim(), true)).ToList();
+						}
+						else
+						{
+							lines = cmd.Result.Split('\n').Where(x => !string.IsNullOrWhiteSpace(x)).Select(x => new Tuple<string, bool>(x.Trim(), false)).ToList();
+						}
 					}
 				}
 				else
@@ -105,9 +177,11 @@ namespace PaJaMa.GitStudio
 				action.Invoke();
 			}
 
+			File.AppendAllLines("testlog.txt", lines.Select(x => x.Item1));
 			if (lines.Any(l => l.Item2) && checkForErrors)
 			{
 				hasError = true;
+				File.AppendAllLines($"error_{DateTime.Now.ToString("yyyyMMdd")}.log", lines.Where(l => l.Item2).Select(x => x.Item1));
 			}
 
 			return lines.Select(l => l.Item1).ToArray();

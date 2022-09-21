@@ -25,6 +25,8 @@ namespace PaJaMa.GitStudio
             this.SshConnection.UserName = txtUser.Text;
             this.SshConnection.Password = txtPassword.Text;
             this.SshConnection.Path = txtPath.Text;
+            this.SshConnection.KeyFile = txtKeyFile.Text;
+            this.SshConnection.UseCMD = chkUseCMD.Checked;
             this.DialogResult = DialogResult.OK;
         }
     }
