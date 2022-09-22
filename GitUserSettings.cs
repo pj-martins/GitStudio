@@ -34,5 +34,10 @@ namespace PaJaMa.GitStudio
 		public GitRepository()
 		{
 		}
+
+		public override string ToString()
+		{
+			return SshConnection == null ? LocalPath : $"{SshConnection.Host}:{SshConnection.Path}";
+		}
 	}
 }

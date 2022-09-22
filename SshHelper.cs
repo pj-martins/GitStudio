@@ -19,7 +19,6 @@ namespace PaJaMa.GitStudio
                 File.WriteAllBytes("ssh.exe", Resources.ssh);
             }
             var args = $"{connection.UserName}@{connection.Host} -t \"{command}\"";
-            File.AppendAllText("testlog.txt", $"{args}\n");
             var inf = new ProcessStartInfo("ssh", args);
             inf.UseShellExecute = false;
             inf.RedirectStandardOutput = true;

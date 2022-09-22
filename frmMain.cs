@@ -1,4 +1,5 @@
 ﻿using PaJaMa.Common;
+using PaJaMa.GitStudio.Properties;
 using PaJaMa.WinControls;
 using System;
 using System.Collections.Generic;
@@ -58,7 +59,7 @@ namespace PaJaMa.GitStudio
 					continue;
 				}
 				var tab = createRepository(repo);
-				if (tab.Text == settings.FocusedRepository)
+				if (tab.Tag.ToString() == settings.FocusedRepository)
 					selectedTab = tab;
 			}
 			if (missing.Any())
@@ -126,10 +127,21 @@ namespace PaJaMa.GitStudio
 			var tab = new WinControls.TabControl.TabPage(tabText);
 			tab.Controls.Add(uc);
 			tab.ContextMenuStrip = new ContextMenuStrip();
-			tab.ContextMenuStrip.Items.Add("&Open In Explorer", null, new EventHandler(this.openInExplorerToolStripMenuItem_Click));
+			if (repo.SshConnection == null)
+			{
+				tab.ContextMenuStrip.Items.Add("&Open In Explorer", null, new EventHandler(this.openInExplorerToolStripMenuItem_Click));
+			}
 			tab.ContextMenuStrip.Items.Add("Set &Remote", null, new EventHandler(this.setRemoteToolStripMenuItem_Click));
-			tab.ContextMenuStrip.Items.Add("&Enable File Watching", null, new EventHandler(this.EnableFileWatchingToolStripMenuItem_Click));
-			tab.ContextMenuStrip.Items.Add("&Disable File Watching", null, new EventHandler(this.DisableFileWatchingToolStripMenuItem_Click));
+			if (repo.SshConnection == null)
+			{
+				tab.ContextMenuStrip.Items.Add("&Enable File Watching", null, new EventHandler(this.EnableFileWatchingToolStripMenuItem_Click));
+				tab.ContextMenuStrip.Items.Add("&Disable File Watching", null, new EventHandler(this.DisableFileWatchingToolStripMenuItem_Click));
+			}
+			else
+			{
+                tab.ContextMenuStrip.Items.Add("&Set Writeable", null, new EventHandler(this.SetWriteableToolStripMenuItem_Click));
+            }
+			tab.Tag = repo;
 			tabMain.TabPages.Add(tab);
 			return tab;
 		}
@@ -233,7 +245,7 @@ namespace PaJaMa.GitStudio
 			_lastPage = e.TabPage;
 			(e.TabPage.Controls[0] as ucRepository).Init();
 			var settings = SettingsHelper.GetUserSettings<GitUserSettings>();
-			settings.FocusedRepository = tabMain.SelectedTab.Text;
+			settings.FocusedRepository = tabMain.SelectedTab.Tag.ToString();
 			SettingsHelper.SaveUserSettings<GitUserSettings>(settings);
 		}
 
@@ -252,7 +264,7 @@ namespace PaJaMa.GitStudio
 		{
 			var settings = SettingsHelper.GetUserSettings<GitUserSettings>();
 			var tab = tabMain.SelectedTab;
-			var repo = settings.Repositories.First(r => r.LocalPath == tab.Text);
+			var repo = settings.Repositories.First(r => r.ToString() == tab.Tag.ToString());
 			var result = WinControls.InputBox.Show("Enter remote URL", "Remote URL", repo.RemoteURL);
 			if (result.Result == System.Windows.Forms.DialogResult.OK)
 			{
@@ -270,7 +282,7 @@ namespace PaJaMa.GitStudio
 		{
 			var settings = SettingsHelper.GetUserSettings<GitUserSettings>();
 			var tab = tabMain.SelectedTab;
-			var repo = settings.Repositories.First(r => r.LocalPath == tab.Text);
+			var repo = settings.Repositories.First(r => r.ToString() == tab.Tag.ToString());
 			repo.SuspendWatchingFiles = false;
 			SettingsHelper.SaveUserSettings<GitUserSettings>(settings);
 
@@ -280,15 +292,17 @@ namespace PaJaMa.GitStudio
 		{
 			var settings = SettingsHelper.GetUserSettings<GitUserSettings>();
 			var tab = tabMain.SelectedTab;
-			var repo = settings.Repositories.First(r => r.LocalPath == tab.Text);
+			var repo = settings.Repositories.First(r => r.ToString() == tab.Tag.ToString());
 			repo.SuspendWatchingFiles = true;
 			SettingsHelper.SaveUserSettings<GitUserSettings>(settings);
 		}
 
-		private void MnuTab_Opening(object sender, CancelEventArgs e)
+		private void SetWriteableToolStripMenuItem_Click(object sender, EventArgs e)
 		{
+			var repo = tabMain.SelectedTab.Tag as GitRepository;
+			SshHelper.RunCommand(repo.SshConnection, $"sudo chmod 777 -R {repo.SshConnection.Path}");
+        }
 
-		}
 
         private void openSSHToolStripMenuItem_Click(object sender, EventArgs e)
         {
