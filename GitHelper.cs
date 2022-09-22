@@ -37,9 +37,7 @@ namespace PaJaMa.GitStudio
 						{
 							File.WriteAllBytes("ssh.exe", Resources.ssh);
 						}
-						var args = $"{_sshConnection.UserName}@{_sshConnection.Host} -t \"cd {_sshConnection.Path} && sudo git config color.ui false --replace-all && {string.Join(" && ", arguments.Select(a => $"sudo git {a}"))} && sudo git config color.ui true --replace-all\"";
-						File.AppendAllText("testlog.txt", $"{args}\n");
-						// MessageBox.Show($"{_sshConnection.Host} -t \"cd {_sshConnection.Path} && {string.Join(" && ", arguments.Select(a => $"sudo git {a}"))}\"");
+						var args = $"{_sshConnection.UserName}@{_sshConnection.Host} -t \"cd {_sshConnection.Path} && git config color.ui false --replace-all && {string.Join(" && ", arguments.Select(a => $"git {a.Replace("\"", "\\\"")}"))} && git config color.ui true --replace-all\"";
 						var inf = new ProcessStartInfo("ssh", args);
 						inf.UseShellExecute = false;
 						inf.RedirectStandardOutput = true;
@@ -104,7 +102,7 @@ namespace PaJaMa.GitStudio
 						}
 						var client = new Renci.SshNet.SshClient(new Renci.SshNet.ConnectionInfo(_sshConnection.Host, _sshConnection.UserName, methods.ToArray()));
 						client.Connect();
-						var cmd = client.RunCommand($"cd {_sshConnection.Path} && {string.Join(" && ", arguments.Select(a => $"sudo git {a}"))}");
+						var cmd = client.RunCommand($"cd {_sshConnection.Path} && {string.Join(" && ", arguments.Select(a => $"git {a}"))}");
 						client.Disconnect();
 						client.Dispose();
 						client = null;
@@ -177,7 +175,6 @@ namespace PaJaMa.GitStudio
 				action.Invoke();
 			}
 
-			// File.AppendAllLines("testlog.txt", lines.Select(x => x.Item1));
 			if (lines.Any(l => l.Item2) && checkForErrors)
 			{
 				hasError = true;
@@ -343,7 +340,8 @@ namespace PaJaMa.GitStudio
 						diff.DifferenceType = DifferenceType.Unknown;
 						break;
 					default:
-						throw new Exception(diffParts[0]);
+						continue;
+						// throw new Exception(diffParts[0]);
 				}
 
 				if (diffParts[0].Contains("U") || diffParts[0] == "AA")

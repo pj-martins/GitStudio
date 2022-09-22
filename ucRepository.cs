@@ -1223,5 +1223,15 @@ namespace PaJaMa.GitStudio
 		{
 			refreshPage();
 		}
+
+		private void mergeFromSquashToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+            var branch = tvLocalBranches.SelectedNode.Tag as LocalBranch;
+            if (MessageBox.Show("Are you sure you want to merge and squash " + branch.BranchName + " into " + _currentBranch.BranchName + "?", "Warning!",
+                MessageBoxButtons.YesNo) == DialogResult.Yes)
+            {
+                _helper.RunCommand("merge --squash " + branch.BranchName, true);
+            }
+        }
 	}
 }

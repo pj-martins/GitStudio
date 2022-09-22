@@ -116,13 +116,13 @@ namespace PaJaMa.GitStudio
 			if (commitsToCompare.Item1 != null)
 			{
 				lblCommits.Text = commitsToCompare.Item1.CommitID + " - " + commitsToCompare.Item2.CommitID;
-				diffs = Helper.RunCommand("--no-pager diff --name-status " + commitsToCompare.Item1.CommitID
-					+ " " + commitsToCompare.Item2.CommitID, false);
+				diffs = Helper.RunCommand("--no-pager diff --name-status " + commitsToCompare.Item1.CommitID.Split(' ').First()
+					+ " " + commitsToCompare.Item2.CommitID.Split(' ').First(), false);
 			}
 			else
 			{
 				lblCommits.Text = commitsToCompare.Item2.CommitID;
-				diffs = Helper.RunCommand("--no-pager show --name-status -r " + commitsToCompare.Item2.CommitID);
+				diffs = Helper.RunCommand("--no-pager show --name-status -r " + commitsToCompare.Item2.CommitID.Split(' ').First());
 			}
 			var details = new Dictionary<string, DifferenceType>();
 			foreach (var diff in diffs)
@@ -158,7 +158,7 @@ namespace PaJaMa.GitStudio
 
 		private void gridDetails_SelectionChanged(object sender, EventArgs e)
 		{
-			var commitsToCompare = getCommitsToCompare(false);
+			var commitsToCompare = getCommitsToCompare(true);
 			if (commitsToCompare == null)
 			{
 				txtDifferences.Text = string.Empty;
@@ -173,8 +173,8 @@ namespace PaJaMa.GitStudio
 			}
 
 			var diffs = Helper.RunCommand("--no-pager diff " +
-				(commitsToCompare.Item1 != null ? commitsToCompare.Item1.CommitID + " " : "") +
-				commitsToCompare.Item2.CommitID + " -- " + selectedRow.Cells["File"].Value.ToString());
+				(commitsToCompare.Item1 != null ? commitsToCompare.Item1.CommitID.Split(' ').First() + " " : "") +
+				commitsToCompare.Item2.CommitID.Split(' ').First() + " -- " + selectedRow.Cells["File"].Value.ToString());
 			txtDifferences.Text = string.Join("\r\n", diffs);
 		}
 

@@ -130,8 +130,8 @@ namespace PaJaMa.GitStudio
 			}
 
 			var diffs = Helper.RunCommand("--no-pager diff " +
-				(commitsToCompare.Item1 != null ? commitsToCompare.Item1.CommitID + " " : "") +
-				commitsToCompare.Item2.CommitID + " -- " + selectedFile.ToString());
+				(commitsToCompare.Item1 != null ? commitsToCompare.Item1.CommitID.Split(' ').First() + " " : "") +
+				commitsToCompare.Item2.CommitID.Split(' ').First() + " -- " + selectedFile.ToString());
 			txtDifferences.Text = string.Join("\r\n", diffs);
 		}
 
@@ -157,8 +157,8 @@ namespace PaJaMa.GitStudio
 				return;
 			}
 
-			var content1 = Helper.RunCommand("--no-pager show " + commitsToCompare.Item2.CommitID + ":\"" + selectedFile + "\"");
-			var content2 = Helper.RunCommand("--no-pager show " + commitsToCompare.Item1.CommitID + ":\"" + selectedFile + "\"");
+			var content1 = Helper.RunCommand("--no-pager show " + commitsToCompare.Item2.CommitID.Split(' ').First() + ":\"" + selectedFile + "\"");
+			var content2 = Helper.RunCommand("--no-pager show " + commitsToCompare.Item1.CommitID.Split(' ').First() + ":\"" + selectedFile + "\"");
 
 			var tmpDir = Path.Combine(Path.GetTempPath(), "GitStudio");
 			if (!Directory.Exists(tmpDir)) Directory.CreateDirectory(tmpDir);

@@ -95,7 +95,35 @@ namespace PaJaMa.GitStudio
 			var uc = new ucRepository();
 			uc.Repository = repo;
 			uc.Dock = DockStyle.Fill;
-			var tab = new WinControls.TabControl.TabPage(repo.SshConnection != null ? $"SSH - {repo.SshConnection.Host}:{repo.SshConnection.Path}" : repo.LocalPath);
+			var tabText = string.Empty;
+			if (repo.SshConnection != null)
+			{
+				tabText = "SSH - ";
+				if (repo.SshConnection.Host.Length > 30)
+				{
+					tabText += repo.SshConnection.Host.Substring(0, 30) + "...";
+				}
+				else
+				{
+					tabText += repo.SshConnection.Host;
+				}
+
+				tabText += ":";
+				if (repo.SshConnection.Path.Length > 30)
+				{
+					tabText += "..." + repo.SshConnection.Path.Substring(repo.SshConnection.Path.Length - 30);
+				}
+				else
+				{
+					tabText += repo.SshConnection.Path;
+				}
+
+			}
+			else
+			{
+				tabText = repo.LocalPath;
+			}
+			var tab = new WinControls.TabControl.TabPage(tabText);
 			tab.Controls.Add(uc);
 			tab.ContextMenuStrip = new ContextMenuStrip();
 			tab.ContextMenuStrip.Items.Add("&Open In Explorer", null, new EventHandler(this.openInExplorerToolStripMenuItem_Click));

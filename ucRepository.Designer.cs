@@ -83,6 +83,7 @@
             this.txtDiffText = new System.Windows.Forms.RichTextBox();
             this.label5 = new System.Windows.Forms.Label();
             this.pnlButtons = new System.Windows.Forms.Panel();
+            this.chkIgnoreWhiteSpace = new System.Windows.Forms.CheckBox();
             this.progMain = new System.Windows.Forms.ProgressBar();
             this.lblStatus = new System.Windows.Forms.Label();
             this.btnPush = new System.Windows.Forms.Button();
@@ -92,7 +93,7 @@
             this.btnRefresh = new System.Windows.Forms.Button();
             this.btnCommit = new System.Windows.Forms.Button();
             this.timDebounce = new System.Windows.Forms.Timer(this.components);
-            this.chkIgnoreWhiteSpace = new System.Windows.Forms.CheckBox();
+            this.mergeFromSquashToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
@@ -166,11 +167,13 @@
             // 
             // mnuLocal
             // 
+            this.mnuLocal.ImageScalingSize = new System.Drawing.Size(20, 20);
             this.mnuLocal.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.checkoutToolStripMenuItem,
             this.deleteToolStripMenuItem,
             this.branchLocalToolStripMenuItem,
             this.mergeFromLocalToolStripMenuItem,
+            this.mergeFromSquashToolStripMenuItem,
             this.pullAndMergeFromToolStripMenuItem,
             this.rebaseFromToolStripMenuItem1,
             this.abortMergeToolStripMenuItem,
@@ -181,7 +184,7 @@
             this.trackRemoteToolStripMenuItem,
             this.checkoutForceToolStripMenuItem});
             this.mnuLocal.Name = "mnuLocal";
-            this.mnuLocal.Size = new System.Drawing.Size(188, 290);
+            this.mnuLocal.Size = new System.Drawing.Size(188, 334);
             this.mnuLocal.Opening += new System.ComponentModel.CancelEventHandler(this.mnuLocal_Opening);
             // 
             // checkoutToolStripMenuItem
@@ -299,6 +302,7 @@
             // 
             // mnuRemote
             // 
+            this.mnuRemote.ImageScalingSize = new System.Drawing.Size(20, 20);
             this.mnuRemote.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.branchToolStripMenuItem,
             this.fetchToolStripMenuItem,
@@ -455,6 +459,7 @@
             // 
             // mnuDiffs
             // 
+            this.mnuDiffs.ImageScalingSize = new System.Drawing.Size(20, 20);
             this.mnuDiffs.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.viewExternalToolStripMenuItem,
             this.undoToolStripMenuItem,
@@ -643,6 +648,18 @@
             this.pnlButtons.Size = new System.Drawing.Size(1163, 34);
             this.pnlButtons.TabIndex = 4;
             // 
+            // chkIgnoreWhiteSpace
+            // 
+            this.chkIgnoreWhiteSpace.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.chkIgnoreWhiteSpace.AutoSize = true;
+            this.chkIgnoreWhiteSpace.Location = new System.Drawing.Point(437, 10);
+            this.chkIgnoreWhiteSpace.Name = "chkIgnoreWhiteSpace";
+            this.chkIgnoreWhiteSpace.Size = new System.Drawing.Size(116, 17);
+            this.chkIgnoreWhiteSpace.TabIndex = 10;
+            this.chkIgnoreWhiteSpace.Text = "Ignore Whitespace";
+            this.chkIgnoreWhiteSpace.UseVisualStyleBackColor = true;
+            this.chkIgnoreWhiteSpace.CheckedChanged += new System.EventHandler(this.chkIgnoreWhiteSpace_CheckedChanged);
+            // 
             // progMain
             // 
             this.progMain.Location = new System.Drawing.Point(3, 6);
@@ -736,17 +753,12 @@
             this.timDebounce.Interval = 300;
             this.timDebounce.Tick += new System.EventHandler(this.timDebounce_Tick);
             // 
-            // chkIgnoreWhiteSpace
+            // mergeFromSquashToolStripMenuItem
             // 
-            this.chkIgnoreWhiteSpace.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.chkIgnoreWhiteSpace.AutoSize = true;
-            this.chkIgnoreWhiteSpace.Location = new System.Drawing.Point(437, 10);
-            this.chkIgnoreWhiteSpace.Name = "chkIgnoreWhiteSpace";
-            this.chkIgnoreWhiteSpace.Size = new System.Drawing.Size(116, 17);
-            this.chkIgnoreWhiteSpace.TabIndex = 10;
-            this.chkIgnoreWhiteSpace.Text = "Ignore Whitespace";
-            this.chkIgnoreWhiteSpace.UseVisualStyleBackColor = true;
-            this.chkIgnoreWhiteSpace.CheckedChanged += new System.EventHandler(this.chkIgnoreWhiteSpace_CheckedChanged);
+            this.mergeFromSquashToolStripMenuItem.Name = "mergeFromSquashToolStripMenuItem";
+            this.mergeFromSquashToolStripMenuItem.Size = new System.Drawing.Size(187, 22);
+            this.mergeFromSquashToolStripMenuItem.Text = "Merge From &Squash";
+            this.mergeFromSquashToolStripMenuItem.Click += new System.EventHandler(this.mergeFromSquashToolStripMenuItem_Click);
             // 
             // ucRepository
             // 
@@ -853,5 +865,6 @@
 		private System.Windows.Forms.ToolStripMenuItem checkoutForceToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem pullAndMergeFromToolStripMenuItem;
         private System.Windows.Forms.CheckBox chkIgnoreWhiteSpace;
+        private System.Windows.Forms.ToolStripMenuItem mergeFromSquashToolStripMenuItem;
     }
 }
