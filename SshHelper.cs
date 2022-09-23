@@ -11,7 +11,7 @@ namespace PaJaMa.GitStudio
     public class SshHelper
     {
         private static object _lock = new object();
-        public static string RunCommand(SshConnection connection, string command)
+        public static List<string> RunCommandAsLines(SshConnection connection, string command, bool includeBlankLines = false)
         {
             var lines = new List<string>();
             if (!File.Exists("ssh.exe"))
@@ -31,7 +31,7 @@ namespace PaJaMa.GitStudio
             p.StartInfo = inf;
             p.OutputDataReceived += new DataReceivedEventHandler((sender, e) =>
             {
-                if (!string.IsNullOrEmpty(e.Data))
+                if (includeBlankLines || !string.IsNullOrEmpty(e.Data))
                 {
                     if (e.Data != null && !e.Data.Contains("Connection "))
                     {
@@ -61,6 +61,12 @@ namespace PaJaMa.GitStudio
             p.BeginOutputReadLine();
             p.BeginErrorReadLine();
             p.WaitForExit();
+            return lines;
+        }
+
+        public static string RunCommand(SshConnection connection, string command)
+        {
+            var lines = RunCommandAsLines(connection, command);
             return string.Join("\r\n", lines);
         }
     }
