@@ -57,7 +57,7 @@ namespace PaJaMa.GitStudio
 				if (!RefreshBranches(true)) return;
 				_previousDifferences = null;
 				_inited = true;
-				if (!Repository.SuspendWatchingFiles && Repository.SshConnection == null)
+				if (!Repository.SuspendWatchingFiles && Repository.SSHConnection == null)
 				{
 					progMain.Visible = true;
 					lblStatus.Text = "Watching files...";
@@ -188,7 +188,7 @@ namespace PaJaMa.GitStudio
 
 		private void addWatchers()
 		{
-			if (this.Repository.SshConnection != null) return;
+			if (this.Repository.SSHConnection != null) return;
 			lock (_lockWatchers)
 			{
 				var lst = _helper.RunCommand("ls-files");
@@ -552,10 +552,10 @@ namespace PaJaMa.GitStudio
                 if (!Directory.Exists(tmpDir)) Directory.CreateDirectory(tmpDir);
                 var tmpFile = Path.Combine(tmpDir, Guid.NewGuid() + ".tmp");
                 String currFile = String.Empty;
-				if (_repository.SshConnection != null)
+				if (_repository.SSHConnection != null)
 				{
 					currFile = Path.Combine(tmpDir, Guid.NewGuid() + ".tmp");
-					var content = SshHelper.RunCommand(_repository.SshConnection, $"cat {_repository.SshConnection.Path}/{diff.FileName.Replace("\"", "")}", true);
+					var content = SSHHelper.RunCommand(_repository.SSHConnection, $"cat {_repository.SSHConnection.Path}/{diff.FileName.Replace("\"", "")}", true);
 					File.WriteAllText(currFile, content);
                 }
 				else
@@ -627,7 +627,7 @@ namespace PaJaMa.GitStudio
 						_helper.RunCommand("reset -- \"" + selectedItem.FileName + "\"");
 					if (selectedItem.DifferenceType == DifferenceType.Add)
 					{
-						if (_repository.SshConnection != null)
+						if (_repository.SSHConnection != null)
 						{
 
 						}

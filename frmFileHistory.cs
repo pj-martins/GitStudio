@@ -25,9 +25,9 @@ namespace PaJaMa.GitStudio
         private void frmFileHistory_Load(object sender, EventArgs e)
         {
             PaJaMa.WinControls.FormSettings.LoadSettings(this);
-            if (Helper.SshConnection != null)
+            if (Helper.SSHConnection != null)
             {
-                refreshSshFiles(Helper.SshConnection.Path, tvFiles.Nodes);
+                refreshSSHFiles(Helper.SSHConnection.Path, tvFiles.Nodes);
             }
             else
             {
@@ -56,9 +56,9 @@ namespace PaJaMa.GitStudio
             }
         }
 
-        private void refreshSshFiles(string parentPath, TreeNodeCollection nodes)
+        private void refreshSSHFiles(string parentPath, TreeNodeCollection nodes)
         {
-            var lines = SshHelper.RunCommandAsLines(Helper.SshConnection, $"cd {parentPath} && ls -l -a -F");
+            var lines = SSHHelper.RunCommandAsLines(Helper.SSHConnection, $"cd {parentPath} && ls -l -a -F");
             foreach (var line in lines)
             {
                 var parts = line.Split(' ').Where(x => !string.IsNullOrEmpty(x.Trim())).ToList();
@@ -198,7 +198,7 @@ namespace PaJaMa.GitStudio
             }
 
             var selectedFile = tvFiles.SelectedNode == null || tvFiles.SelectedNode.Tag == null ? null : tvFiles.SelectedNode.Tag.ToString().Replace("\\", "/");
-            if (Helper.SshConnection != null) selectedFile = selectedFile.Substring(Helper.SshConnection.Path.Length + 1);
+            if (Helper.SSHConnection != null) selectedFile = selectedFile.Substring(Helper.SSHConnection.Path.Length + 1);
             var commitsToCompare = getCommitsToCompare();
             if (commitsToCompare == null || commitsToCompare.Item1 == null)
             {
@@ -234,9 +234,9 @@ namespace PaJaMa.GitStudio
             if (e.Node.Nodes.Count == 1 && e.Node.Nodes[0].Text == "__")
             {
                 e.Node.Nodes.Clear();
-                if (this.Helper.SshConnection != null)
+                if (this.Helper.SSHConnection != null)
                 {
-                    refreshSshFiles(e.Node.Tag.ToString(), e.Node.Nodes);
+                    refreshSSHFiles(e.Node.Tag.ToString(), e.Node.Nodes);
                 }
                 else
                 {

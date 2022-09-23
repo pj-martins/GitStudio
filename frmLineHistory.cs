@@ -26,9 +26,9 @@ namespace PaJaMa.GitStudio
         private void frmLineHistory_Load(object sender, EventArgs e)
         {
             PaJaMa.WinControls.FormSettings.LoadSettings(this);
-            if (Helper.SshConnection != null)
+            if (Helper.SSHConnection != null)
             {
-                refreshSSHLines(Helper.SshConnection.Path);
+                refreshSSHLines(Helper.SSHConnection.Path);
             }
             else
             {
@@ -54,7 +54,7 @@ namespace PaJaMa.GitStudio
 
         private void refreshSSHLines(string path)
         {
-            var lines = SshHelper.RunCommandAsLines(Helper.SshConnection, $"cat {SelectedFile.Replace("\"", "")}", true);
+            var lines = SSHHelper.RunCommandAsLines(Helper.SSHConnection, $"cat {SelectedFile.Replace("\"", "")}", true);
             var ds = new List<Line>();
             for (int i = 0; i < lines.Count; i++)
             {

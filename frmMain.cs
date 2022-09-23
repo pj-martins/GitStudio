@@ -9,6 +9,7 @@ using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Linq;
+using System.Runtime;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -53,7 +54,7 @@ namespace PaJaMa.GitStudio
 			List<GitRepository> missing = new List<GitRepository>();
 			foreach (var repo in settings.Repositories)
 			{
-				if (repo.SshConnection == null && !Directory.Exists(repo.LocalPath))
+				if (repo.SSHConnection == null && !Directory.Exists(repo.LocalPath))
 				{
 					missing.Add(repo);
 					continue;
@@ -91,34 +92,40 @@ namespace PaJaMa.GitStudio
 				(tabMain.SelectedTab.Controls[0] as ucRepository).Init();
 		}
 
+		private string getTabText(GitRepository repo)
+		{
+            string tabText = "SSH - ";
+            if (repo.SSHConnection.Host.Length > 30)
+            {
+                tabText += repo.SSHConnection.Host.Substring(0, 30) + "...";
+            }
+            else
+            {
+                tabText += repo.SSHConnection.Host;
+            }
+
+            tabText += ":";
+            if (repo.SSHConnection.Path.Length > 30)
+            {
+                tabText += "..." + repo.SSHConnection.Path.Substring(repo.SSHConnection.Path.Length - 30);
+            }
+            else
+            {
+                tabText += repo.SSHConnection.Path;
+            }
+
+			return tabText;
+        }
+
 		private WinControls.TabControl.TabPage createRepository(GitRepository repo)
 		{
 			var uc = new ucRepository();
 			uc.Repository = repo;
 			uc.Dock = DockStyle.Fill;
 			var tabText = string.Empty;
-			if (repo.SshConnection != null)
+			if (repo.SSHConnection != null)
 			{
-				tabText = "SSH - ";
-				if (repo.SshConnection.Host.Length > 30)
-				{
-					tabText += repo.SshConnection.Host.Substring(0, 30) + "...";
-				}
-				else
-				{
-					tabText += repo.SshConnection.Host;
-				}
-
-				tabText += ":";
-				if (repo.SshConnection.Path.Length > 30)
-				{
-					tabText += "..." + repo.SshConnection.Path.Substring(repo.SshConnection.Path.Length - 30);
-				}
-				else
-				{
-					tabText += repo.SshConnection.Path;
-				}
-
+				tabText = getTabText(repo);
 			}
 			else
 			{
@@ -127,12 +134,12 @@ namespace PaJaMa.GitStudio
 			var tab = new WinControls.TabControl.TabPage(tabText);
 			tab.Controls.Add(uc);
 			tab.ContextMenuStrip = new ContextMenuStrip();
-			if (repo.SshConnection == null)
+			if (repo.SSHConnection == null)
 			{
 				tab.ContextMenuStrip.Items.Add("&Open In Explorer", null, new EventHandler(this.openInExplorerToolStripMenuItem_Click));
 			}
 			tab.ContextMenuStrip.Items.Add("Set &Remote", null, new EventHandler(this.setRemoteToolStripMenuItem_Click));
-			if (repo.SshConnection == null)
+			if (repo.SSHConnection == null)
 			{
 				tab.ContextMenuStrip.Items.Add("&Enable File Watching", null, new EventHandler(this.EnableFileWatchingToolStripMenuItem_Click));
 				tab.ContextMenuStrip.Items.Add("&Disable File Watching", null, new EventHandler(this.DisableFileWatchingToolStripMenuItem_Click));
@@ -140,6 +147,7 @@ namespace PaJaMa.GitStudio
 			else
 			{
                 tab.ContextMenuStrip.Items.Add("&Set Writeable", null, new EventHandler(this.SetWriteableToolStripMenuItem_Click));
+                tab.ContextMenuStrip.Items.Add("&Edit SSH Settings", null, new EventHandler(this.EditSSHSettingsToolStripMenuItem_Click));
             }
 			tab.Tag = repo;
 			tabMain.TabPages.Add(tab);
@@ -300,19 +308,43 @@ namespace PaJaMa.GitStudio
 		private void SetWriteableToolStripMenuItem_Click(object sender, EventArgs e)
 		{
 			var repo = tabMain.SelectedTab.Tag as GitRepository;
-			SshHelper.RunCommand(repo.SshConnection, $"sudo chmod 777 -R {repo.SshConnection.Path}");
+			SSHHelper.RunCommand(repo.SSHConnection, $"sudo chmod 777 -R {repo.SSHConnection.Path}");
         }
+
+		private void EditSSHSettingsToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+            var dlg = new frmSSHConnection();
+			var repo = tabMain.SelectedTab.Tag as GitRepository;
+			dlg.SSHConnection = repo.SSHConnection;
+            var settings = SettingsHelper.GetUserSettings<GitUserSettings>();
+			var curr = settings.Repositories.First(x => x.SSHConnection?.Host == repo.SSHConnection.Host && x.SSHConnection?.Path == repo.SSHConnection.Path);
+
+            if (dlg.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+			{
+				curr.SSHConnection = dlg.SSHConnection;
+				bool error = false;
+				var helper = new GitHelper(repo);
+				var remote = helper.RunCommand("config --get remote.origin.url", true, ref error).FirstOrDefault();
+				repo.RemoteURL = remote;
+				repo.SSHConnection = dlg.SSHConnection;
+				if (error) return;
+				settings.FocusedRepository = repo.ToString();
+				SettingsHelper.SaveUserSettings<GitUserSettings>(settings);
+				tabMain.SelectedTab.Text = getTabText(repo);
+                (tabMain.SelectedTab.Controls[0] as ucRepository).Init();
+			}
+		}
 
 
         private void openSSHToolStripMenuItem_Click(object sender, EventArgs e)
         {
-			var dlg = new frmSshConnection();
+			var dlg = new frmSSHConnection();
 			if (dlg.ShowDialog() == System.Windows.Forms.DialogResult.OK)
 			{
 				bool error = false;
 				var repo = new GitRepository()
 				{
-					SshConnection = dlg.SshConnection,
+					SSHConnection = dlg.SSHConnection,
 				};
 				var helper = new GitHelper(repo);
 				var remote = helper.RunCommand("config --get remote.origin.url", true, ref error).FirstOrDefault();

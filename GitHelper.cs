@@ -14,13 +14,13 @@ namespace PaJaMa.GitStudio
 	public class GitHelper
 	{
 		public string WorkingDirectory { get; private set; }
-		public SshConnection SshConnection { get; private set; }
+		public SSHConnection SSHConnection { get; private set; }
         private static object _lock = new object();
 		public GitHelper() { }
 		public GitHelper(GitRepository repository)
 		{
 			this.WorkingDirectory = repository.LocalPath;
-			this.SshConnection = repository.SshConnection;
+			this.SSHConnection = repository.SSHConnection;
 		}
 
 		private string[] runCommand(string[] arguments, bool showProgress, bool includeBlankLines, bool checkForErrors, BackgroundWorker worker, ref bool hasError)
@@ -29,15 +29,15 @@ namespace PaJaMa.GitStudio
 			var action = new Action(() =>
 			{
 				int i = 1;
-				if (SshConnection != null)
+				if (SSHConnection != null)
 				{
-					if (SshConnection.UseCMD)
+					if (SSHConnection.UseCMD)
 					{
 						if (!File.Exists("ssh.exe"))
 						{
 							File.WriteAllBytes("ssh.exe", Resources.ssh);
 						}
-						var args = $"{SshConnection.UserName}@{SshConnection.Host} -t \"cd {SshConnection.Path} && git config color.ui false --replace-all && {string.Join(" && ", arguments.Select(a => $"git {a.Replace("\"", "\\\"")}"))} && git config color.ui true --replace-all\"";
+						var args = $"{SSHConnection.UserName}@{SSHConnection.Host} -t \"cd {SSHConnection.Path} && git config color.ui false --replace-all && {string.Join(" && ", arguments.Select(a => $"git {a.Replace("\"", "\\\"")}"))} && git config color.ui true --replace-all\"";
 						var inf = new ProcessStartInfo("ssh", args);
 						inf.UseShellExecute = false;
 						inf.RedirectStandardOutput = true;
@@ -88,21 +88,21 @@ namespace PaJaMa.GitStudio
 					else
 					{
 						var methods = new List<Renci.SshNet.AuthenticationMethod>();
-						if (!string.IsNullOrEmpty(SshConnection.Password))
+						if (!string.IsNullOrEmpty(SSHConnection.Password))
 						{
-							methods.Add(new Renci.SshNet.PasswordAuthenticationMethod(SshConnection.UserName, SshConnection.Password));
+							methods.Add(new Renci.SshNet.PasswordAuthenticationMethod(SSHConnection.UserName, SSHConnection.Password));
 						}
-						else if (!string.IsNullOrEmpty(SshConnection.KeyFile))
+						else if (!string.IsNullOrEmpty(SSHConnection.KeyFile))
 						{
-							methods.Add(new Renci.SshNet.PrivateKeyAuthenticationMethod(SshConnection.UserName, new Renci.SshNet.PrivateKeyFile(SshConnection.KeyFile)));
+							methods.Add(new Renci.SshNet.PrivateKeyAuthenticationMethod(SSHConnection.UserName, new Renci.SshNet.PrivateKeyFile(SSHConnection.KeyFile)));
 						}
 						else
 						{
-							methods.Add(new Renci.SshNet.NoneAuthenticationMethod(SshConnection.UserName));
+							methods.Add(new Renci.SshNet.NoneAuthenticationMethod(SSHConnection.UserName));
 						}
-						var client = new Renci.SshNet.SshClient(new Renci.SshNet.ConnectionInfo(SshConnection.Host, SshConnection.UserName, methods.ToArray()));
+						var client = new Renci.SshNet.SshClient(new Renci.SshNet.ConnectionInfo(SSHConnection.Host, SSHConnection.UserName, methods.ToArray()));
 						client.Connect();
-						var cmd = client.RunCommand($"cd {SshConnection.Path} && {string.Join(" && ", arguments.Select(a => $"git {a}"))}");
+						var cmd = client.RunCommand($"cd {SSHConnection.Path} && {string.Join(" && ", arguments.Select(a => $"git {a}"))}");
 						client.Disconnect();
 						client.Dispose();
 						client = null;
@@ -385,7 +385,7 @@ namespace PaJaMa.GitStudio
 		private void checkSubdirectoryAddDifferences(Difference difference, List<Difference> diffs)
 		{
 			string[] ignoreLines = new string[0];
-			if (SshConnection != null)
+			if (SSHConnection != null)
 			{
 
 			}

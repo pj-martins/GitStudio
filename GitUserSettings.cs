@@ -29,7 +29,7 @@ namespace PaJaMa.GitStudio
 		public string RemoteURL { get; set; }
 		public string LocalPath { get; set; }
 		public bool SuspendWatchingFiles { get; set; }
-		public SshConnection SshConnection { get; set; }
+		public SSHConnection SSHConnection { get; set; }
 
 		public GitRepository()
 		{
@@ -37,7 +37,7 @@ namespace PaJaMa.GitStudio
 
 		public override string ToString()
 		{
-			return SshConnection == null ? LocalPath : $"{SshConnection.Host}:{SshConnection.Path}";
+			return SSHConnection == null ? LocalPath : $"{SSHConnection.Host}:{SSHConnection.Path}";
 		}
 	}
 }

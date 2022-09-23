@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace PaJaMa.GitStudio
 {
-    public class SshConnection
+    public class SSHConnection
     {
         private const string PASSWORD = "SS4CONN";
 

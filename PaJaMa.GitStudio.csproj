@@ -91,11 +91,11 @@
     <Compile Include="frmOutput.Designer.cs">
       <DependentUpon>frmOutput.cs</DependentUpon>
     </Compile>
-    <Compile Include="frmSshConnection.cs">
+    <Compile Include="frmSSHConnection.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="frmSshConnection.Designer.cs">
-      <DependentUpon>frmSshConnection.cs</DependentUpon>
+    <Compile Include="frmSSHConnection.Designer.cs">
+      <DependentUpon>frmSSHConnection.cs</DependentUpon>
     </Compile>
     <Compile Include="frmTrackRemote.cs">
       <SubType>Form</SubType>
@@ -180,8 +180,8 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <Compile Include="SshConnection.cs" />
-    <Compile Include="SshHelper.cs" />
+    <Compile Include="SSHConnection.cs" />
+    <Compile Include="SSHHelper.cs" />
     <Compile Include="ucRepository.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -198,8 +198,8 @@
     <EmbeddedResource Include="frmOutput.resx">
       <DependentUpon>frmOutput.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="frmSshConnection.resx">
-      <DependentUpon>frmSshConnection.cs</DependentUpon>
+    <EmbeddedResource Include="frmSSHConnection.resx">
+      <DependentUpon>frmSSHConnection.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="frmTrackRemote.resx">
       <DependentUpon>frmTrackRemote.cs</DependentUpon>

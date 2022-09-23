@@ -8,10 +8,10 @@ using System.Threading.Tasks;
 
 namespace PaJaMa.GitStudio
 {
-    public class SshHelper
+    public class SSHHelper
     {
         private static object _lock = new object();
-        public static List<string> RunCommandAsLines(SshConnection connection, string command, bool includeBlankLines = false)
+        public static List<string> RunCommandAsLines(SSHConnection connection, string command, bool includeBlankLines = false)
         {
             var lines = new List<string>();
             if (!File.Exists("ssh.exe"))
@@ -64,7 +64,7 @@ namespace PaJaMa.GitStudio
             return lines;
         }
 
-        public static string RunCommand(SshConnection connection, string command, bool includeBlankLines = false)
+        public static string RunCommand(SSHConnection connection, string command, bool includeBlankLines = false)
         {
             var lines = RunCommandAsLines(connection, command, includeBlankLines);
             return string.Join("\r\n", lines);
