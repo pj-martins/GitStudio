@@ -555,7 +555,7 @@ namespace PaJaMa.GitStudio
 				if (_repository.SshConnection != null)
 				{
 					currFile = Path.Combine(tmpDir, Guid.NewGuid() + ".tmp");
-					var content = SshHelper.RunCommand(_repository.SshConnection, $"cat {_repository.SshConnection.Path}/{diff.FileName.Replace("\"", "")}");
+					var content = SshHelper.RunCommand(_repository.SshConnection, $"cat {_repository.SshConnection.Path}/{diff.FileName.Replace("\"", "")}", true);
 					File.WriteAllText(currFile, content);
                 }
 				else

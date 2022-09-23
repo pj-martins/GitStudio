@@ -64,9 +64,9 @@ namespace PaJaMa.GitStudio
             return lines;
         }
 
-        public static string RunCommand(SshConnection connection, string command)
+        public static string RunCommand(SshConnection connection, string command, bool includeBlankLines = false)
         {
-            var lines = RunCommandAsLines(connection, command);
+            var lines = RunCommandAsLines(connection, command, includeBlankLines);
             return string.Join("\r\n", lines);
         }
     }
