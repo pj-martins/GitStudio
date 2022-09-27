@@ -629,7 +629,7 @@ namespace PaJaMa.GitStudio
 					{
 						if (_repository.SSHConnection != null)
 						{
-
+							SSHHelper.RunCommand(_repository.SSHConnection, $"rm {_repository.SSHConnection.Path}/{selectedItem.FileName}");
 						}
 						else
 						{
