@@ -50,6 +50,7 @@ namespace PaJaMa.GitStudio
 			FormSettings.LoadSettings(this);
 
 			var settings = SettingsHelper.GetUserSettings<GitUserSettings>();
+			GitHelper.GitLocation = settings.GitLocation;
 			WinControls.TabControl.TabPage selectedTab = null;
 			List<GitRepository> missing = new List<GitRepository>();
 			foreach (var repo in settings.Repositories)
