@@ -92,7 +92,7 @@ namespace PaJaMa.GitStudio
 				(tabMain.SelectedTab.Controls[0] as ucRepository).Init();
 		}
 
-		private string getTabText(GitRepository repo)
+		private Tuple<string, string> getTabText(GitRepository repo)
 		{
             string tabText = "SSH - ";
             if (repo.SSHConnection.Host.Length > 30)
@@ -114,7 +114,7 @@ namespace PaJaMa.GitStudio
                 tabText += repo.SSHConnection.Path;
             }
 
-			return tabText;
+			return new Tuple<string, string>(tabText, $"{repo.SSHConnection.Host}:{repo.SSHConnection.Path}");
         }
 
 		private WinControls.TabControl.TabPage createRepository(GitRepository repo)
@@ -123,15 +123,19 @@ namespace PaJaMa.GitStudio
 			uc.Repository = repo;
 			uc.Dock = DockStyle.Fill;
 			var tabText = string.Empty;
+			var tipText = string.Empty;
 			if (repo.SSHConnection != null)
 			{
-				tabText = getTabText(repo);
+				var sshTabText = getTabText(repo);
+				tabText = sshTabText.Item1;
+				tipText = sshTabText.Item2;
 			}
 			else
 			{
-				tabText = repo.LocalPath;
+				tabText = tipText = repo.LocalPath;
 			}
 			var tab = new WinControls.TabControl.TabPage(tabText);
+			tab.TooltipText = tipText;
 			tab.Controls.Add(uc);
 			tab.ContextMenuStrip = new ContextMenuStrip();
 			if (repo.SSHConnection == null)
@@ -330,7 +334,9 @@ namespace PaJaMa.GitStudio
 				if (error) return;
 				settings.FocusedRepository = repo.ToString();
 				SettingsHelper.SaveUserSettings<GitUserSettings>(settings);
-				tabMain.SelectedTab.Text = getTabText(repo);
+				var tipAndText = getTabText(repo);
+				tabMain.SelectedTab.Text = tipAndText.Item1;
+				tabMain.SelectedTab.TooltipText = tipAndText.Item2;
                 (tabMain.SelectedTab.Controls[0] as ucRepository).Init();
 			}
 		}
