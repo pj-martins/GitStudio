@@ -54,7 +54,13 @@ namespace PaJaMa.GitStudio
 						{
 							if (includeBlankLines || !string.IsNullOrEmpty(e.Data))
 							{
-								if (e.Data != null && !e.Data.Contains("[?1h") && !e.Data.Contains("[?11") && !e.Data.Contains("Connection "))
+								var illegals = new List<string>()
+								{
+									"[?1l",
+									"[?1h",
+									"[?11"
+								};
+								if (e.Data != null && !illegals.Any(x => e.Data.Contains(x)) && !e.Data.Contains("Connection "))
 								{
 									lock (_lock)
 									{
