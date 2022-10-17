@@ -25,6 +25,7 @@ namespace PaJaMa.GitStudio
 			txtExternalDiffApplication.Text = _settings.ExternalDiffApplication;
 			txtArgumentsFormat.Text = _settings.ExternalDiffArgumentsFormat;
 			txtGitHubUserName.Text = _settings.GitHubUserName;
+			txtGitLocation.Text = _settings.GitLocation;
 		}
 
 		private void btnSave_Click(object sender, EventArgs e)
@@ -32,6 +33,7 @@ namespace PaJaMa.GitStudio
 			_settings.ExternalDiffApplication = txtExternalDiffApplication.Text;
 			_settings.ExternalDiffArgumentsFormat = txtArgumentsFormat.Text;
 			_settings.GitHubUserName = txtGitHubUserName.Text;
+			_settings.GitLocation = txtGitLocation.Text;
 			SettingsHelper.SaveUserSettings<GitUserSettings>(_settings);
 			this.DialogResult = System.Windows.Forms.DialogResult.OK;
 			this.Close();
@@ -48,6 +50,14 @@ namespace PaJaMa.GitStudio
 			var dlg = new OpenFileDialog();
 			if (dlg.ShowDialog() == System.Windows.Forms.DialogResult.OK)
 				txtExternalDiffApplication.Text = dlg.FileName;
+		}
+
+		private void btnGitLocationBrowse_Click(object sender, EventArgs e)
+		{
+			var dlg = new OpenFileDialog();
+			dlg.Filter = "git.exe";
+			if (dlg.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+				txtGitLocation.Text = dlg.FileName;
 		}
 	}
 }

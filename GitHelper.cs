@@ -13,6 +13,7 @@ namespace PaJaMa.GitStudio
 {
 	public class GitHelper
 	{
+		public static string GitLocation { get; set; }
 		public string WorkingDirectory { get; private set; }
 		public SSHConnection SSHConnection { get; private set; }
         private static object _lock = new object();
@@ -126,7 +127,8 @@ namespace PaJaMa.GitStudio
 				{
 					foreach (var argument in arguments)
 					{
-						var inf = new ProcessStartInfo("git", argument);
+						var gitLocation = GitLocation ?? "git";
+						var inf = new ProcessStartInfo(gitLocation, argument);
 						inf.UseShellExecute = false;
 						inf.RedirectStandardOutput = true;
 						inf.RedirectStandardError = true;
