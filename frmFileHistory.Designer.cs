@@ -145,6 +145,7 @@
 			this.txtDifferences.Name = "txtDifferences";
 			this.txtDifferences.ReadOnly = true;
 			this.txtDifferences.Size = new System.Drawing.Size(269, 640);
+			this.txtDifferences.ScrollBars = System.Windows.Forms.ScrollBars.Both;
 			this.txtDifferences.TabIndex = 0;
 			// 
 			// historyToolStripMenuItem
