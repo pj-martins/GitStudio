@@ -90,8 +90,13 @@ namespace PaJaMa.GitStudio
                     }
                     else
                     {
-
+                        var fileNode = nodes.Add(sub);
+                        fileNode.Tag = $"{parentPath}/{sub}";
                     }
+                }
+                else
+                {
+
                 }
             }
         }
