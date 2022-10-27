@@ -31,6 +31,7 @@ namespace PaJaMa.GitStudio
 		public string LocalPath { get; set; }
 		public bool SuspendWatchingFiles { get; set; }
 		public SSHConnection SSHConnection { get; set; }
+		public string Title { get; set; }
 
 		public GitRepository()
 		{
