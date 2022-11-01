@@ -164,6 +164,7 @@ namespace PaJaMa.GitStudio
             {
                 tab.ContextMenuStrip.Items.Add("&Set Writeable", null, new EventHandler(this.SetWriteableToolStripMenuItem_Click));
                 tab.ContextMenuStrip.Items.Add("&Edit SSH Settings", null, new EventHandler(this.EditSSHSettingsToolStripMenuItem_Click));
+                tab.ContextMenuStrip.Items.Add("&Clone SSH Repo", null, new EventHandler(this.CloneSSHRepoToolStripMenuItem_Click));
             }
             tab.Tag = repo;
             tabMain.TabPages.Add(tab);
@@ -347,18 +348,19 @@ namespace PaJaMa.GitStudio
         {
             var dlg = new frmSSHConnection();
             var repo = tabMain.SelectedTab.Tag as GitRepository;
-            dlg.SSHConnection = repo.SSHConnection;
+            dlg.GitRepository = repo;
             var settings = SettingsHelper.GetUserSettings<GitUserSettings>();
             var curr = settings.Repositories.First(x => x.SSHConnection?.Host == repo.SSHConnection.Host && x.SSHConnection?.Path == repo.SSHConnection.Path);
 
             if (dlg.ShowDialog() == System.Windows.Forms.DialogResult.OK)
             {
-                curr.SSHConnection = dlg.SSHConnection;
+                curr.SSHConnection = dlg.GitRepository.SSHConnection;
+                curr.Title = dlg.GitRepository.Title;
                 bool error = false;
                 var helper = new GitHelper(repo);
                 var remote = helper.RunCommand("config --get remote.origin.url", true, ref error).FirstOrDefault();
                 repo.RemoteURL = remote;
-                repo.SSHConnection = dlg.SSHConnection;
+                repo.SSHConnection = curr.SSHConnection;
                 if (error) return;
                 settings.FocusedRepository = repo.ToString();
                 SettingsHelper.SaveUserSettings<GitUserSettings>(settings);
@@ -369,24 +371,51 @@ namespace PaJaMa.GitStudio
             }
         }
 
+        private void CloneSSHRepoToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            var dlg = new frmSSHConnection();
+            var repo = tabMain.SelectedTab.Tag as GitRepository;
+            dlg.GitRepository = new GitRepository();
+            dlg.GitRepository.Title = repo.Title + " (Copy)";
+            dlg.GitRepository.SSHConnection = new SSHConnection()
+            {
+                Host = repo.SSHConnection.Host,
+                UserName = repo.SSHConnection.UserName,
+                Path = repo.SSHConnection.Path,
+                PasswordEncrypted = repo.SSHConnection.PasswordEncrypted,
+                KeyFile = repo.SSHConnection.KeyFile,
+                UseCMD = repo.SSHConnection.UseCMD,
+            };
+            if (dlg.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+            {
+                bool error = false;
+                var helper = new GitHelper(dlg.GitRepository);
+                var remote = helper.RunCommand("config --get remote.origin.url", true, ref error).FirstOrDefault();
+                dlg.GitRepository.RemoteURL = remote;
+                if (error) return;
+                var tab = createRepository(dlg.GitRepository);
+                var settings = SettingsHelper.GetUserSettings<GitUserSettings>();
+                settings.Repositories.Add(dlg.GitRepository);
+                SettingsHelper.SaveUserSettings<GitUserSettings>(settings);
+                tabMain.SelectedTab = tab;
+                (tab.Controls[0] as ucRepository).Init();
+            }
+        }
 
         private void openSSHToolStripMenuItem_Click(object sender, EventArgs e)
         {
             var dlg = new frmSSHConnection();
+            dlg.GitRepository = new GitRepository();
             if (dlg.ShowDialog() == System.Windows.Forms.DialogResult.OK)
             {
                 bool error = false;
-                var repo = new GitRepository()
-                {
-                    SSHConnection = dlg.SSHConnection,
-                };
-                var helper = new GitHelper(repo);
+                var helper = new GitHelper(dlg.GitRepository);
                 var remote = helper.RunCommand("config --get remote.origin.url", true, ref error).FirstOrDefault();
-                repo.RemoteURL = remote;
+                dlg.GitRepository.RemoteURL = remote;
                 if (error) return;
-                var tab = createRepository(repo);
+                var tab = createRepository(dlg.GitRepository);
                 var settings = SettingsHelper.GetUserSettings<GitUserSettings>();
-                settings.Repositories.Add(repo);
+                settings.Repositories.Add(dlg.GitRepository);
                 SettingsHelper.SaveUserSettings<GitUserSettings>(settings);
                 tabMain.SelectedTab = tab;
                 (tab.Controls[0] as ucRepository).Init();

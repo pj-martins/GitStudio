@@ -12,7 +12,7 @@ namespace PaJaMa.GitStudio
 {
     public partial class frmSSHConnection : Form
     {
-        public SSHConnection SSHConnection { get; set; }
+        public GitRepository GitRepository { get; set; }
         public frmSSHConnection()
         {
             InitializeComponent();
@@ -20,26 +20,28 @@ namespace PaJaMa.GitStudio
 
         private void btnOpen_Click(object sender, EventArgs e)
         {
-            if (this.SSHConnection == null) this.SSHConnection = new SSHConnection();
-            this.SSHConnection.Host = txtHost.Text;
-            this.SSHConnection.UserName = txtUser.Text;
-            this.SSHConnection.Password = txtPassword.Text;
-            this.SSHConnection.Path = txtPath.Text;
-            this.SSHConnection.KeyFile = txtKeyFile.Text;
-            this.SSHConnection.UseCMD = chkUseCMD.Checked;
+            if (this.GitRepository.SSHConnection == null) this.GitRepository.SSHConnection = new SSHConnection();
+            this.GitRepository.Title = txtTitle.Text;
+            this.GitRepository.SSHConnection.Host = txtHost.Text;
+            this.GitRepository.SSHConnection.UserName = txtUser.Text;
+            this.GitRepository.SSHConnection.Password = txtPassword.Text;
+            this.GitRepository.SSHConnection.Path = txtPath.Text;
+            this.GitRepository.SSHConnection.KeyFile = txtKeyFile.Text;
+            this.GitRepository.SSHConnection.UseCMD = chkOpenSSH.Checked;
             this.DialogResult = DialogResult.OK;
         }
 
         private void frmSSHConnection_Load(object sender, EventArgs e)
         {
-            if (this.SSHConnection != null)
+            txtTitle.Text = this.GitRepository.Title;
+            if (this.GitRepository.SSHConnection != null)
             {
-                txtHost.Text = this.SSHConnection.Host;
-                txtUser.Text = this.SSHConnection.UserName;
-                txtPassword.Text = this.SSHConnection.Password;
-                txtPath.Text = this.SSHConnection.Path;
-                txtKeyFile.Text = this.SSHConnection.KeyFile;
-                chkUseCMD.Checked = this.SSHConnection.UseCMD;
+                txtHost.Text = this.GitRepository.SSHConnection.Host;
+                txtUser.Text = this.GitRepository.SSHConnection.UserName;
+                txtPassword.Text = this.GitRepository.SSHConnection.Password;
+                txtPath.Text = this.GitRepository.SSHConnection.Path;
+                txtKeyFile.Text = this.GitRepository.SSHConnection.KeyFile;
+                chkOpenSSH.Checked = this.GitRepository.SSHConnection.UseCMD;
                 btnOpen.Text = "Save";
             }
         }

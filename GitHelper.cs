@@ -90,7 +90,11 @@ namespace PaJaMa.GitStudio
 						p.Start();
 						p.BeginOutputReadLine();
 						p.BeginErrorReadLine();
-						p.WaitForExit();
+						bool completed = p.WaitForExit(5000);
+						if (!completed)
+						{
+							// TODO: lines.Add(new Tuple<string, bool>("TIMEDOUT", true));
+						}
 					}
 					else
 					{
