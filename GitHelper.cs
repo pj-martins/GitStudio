@@ -249,6 +249,7 @@ namespace PaJaMa.GitStudio
 					{
 						if (b.Contains("[?1l")) continue;
 						var branchParts = b.Split(new string[] { " " }, StringSplitOptions.RemoveEmptyEntries).ToList();
+						if (branchParts.Count < 2) continue;
 						Branch branch = remote ? (Branch)new RemoteBranch() : new LocalBranch();
 						branches.Add(branch);
 						if (!remote && branchParts[0] == "*")
