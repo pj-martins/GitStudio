@@ -97,10 +97,13 @@ namespace PaJaMa.GitStudio
         private Tuple<string, string> getTabText(GitRepository repo)
         {
             string tabText;
-            if (!string.IsNullOrEmpty(repo.Title))
-            {
-                tabText = repo.Title;
-            }
+            string tipText;
+            
+            if (repo.SSHConnection == null)
+			{
+                tabText = repo.LocalPath;
+                tipText = repo.LocalPath;
+			}
             else
             {
                 tabText = "SSH - ";
@@ -122,9 +125,16 @@ namespace PaJaMa.GitStudio
                 {
                     tabText += repo.SSHConnection.Path;
                 }
+
+                tipText = $"{repo.SSHConnection.Host}:{repo.SSHConnection.Path}";
             }
 
-            return new Tuple<string, string>(tabText, $"{repo.SSHConnection.Host}:{repo.SSHConnection.Path}");
+            if (!string.IsNullOrEmpty(repo.Title))
+            {
+                tabText = repo.Title;
+            }
+
+            return new Tuple<string, string>(tabText, tipText);
         }
 
         private WinControls.TabControl.TabPage createRepository(GitRepository repo)
@@ -132,21 +142,9 @@ namespace PaJaMa.GitStudio
             var uc = new ucRepository();
             uc.Repository = repo;
             uc.Dock = DockStyle.Fill;
-            var tabText = string.Empty;
-            var tipText = string.Empty;
-            if (repo.SSHConnection != null)
-            {
-                var sshTabText = getTabText(repo);
-                tabText = sshTabText.Item1;
-                tipText = sshTabText.Item2;
-            }
-            else
-            {
-                tabText = string.IsNullOrEmpty(repo.Title) ? repo.LocalPath : repo.Title;
-                tipText = repo.LocalPath;
-            }
-            var tab = new WinControls.TabControl.TabPage(tabText);
-            tab.TooltipText = tipText;
+            var tabText = getTabText(repo);
+            var tab = new WinControls.TabControl.TabPage(tabText.Item1);
+            tab.TooltipText = tabText.Item2;
             tab.Controls.Add(uc);
             tab.ContextMenuStrip = new ContextMenuStrip();
             tab.ContextMenuStrip.Items.Add("Edit &Title", null, new EventHandler(this.editTitleToolStripMenuItem_Click));
@@ -271,7 +269,7 @@ namespace PaJaMa.GitStudio
             var tab = e.TabPage;
             (tab.Controls[0] as ucRepository).Deactivate();
             if (tab == _lastPage) _lastPage = null;
-            var repo = settings.Repositories.First(r => r.LocalPath == tab.Text);
+            var repo = settings.Repositories.First(r => getTabText(r).Item1 == tab.Text);
             settings.Repositories.Remove(repo);
             tabMain.TabPages.Remove(tab);
             SettingsHelper.SaveUserSettings<GitUserSettings>(settings);
