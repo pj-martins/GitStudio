@@ -276,7 +276,7 @@ namespace PaJaMa.GitStudio
 										lb.Ahead = Convert.ToInt16(match3.Groups[1].Value);
 									match3 = Regex.Match(match2.Groups[2].Value, "behind (\\d*)");
 									if (match3.Success)
-										lb.Behind = Convert.ToInt16(match3.Groups[1].Value);
+										lb.Behind = string.IsNullOrEmpty(match3.Groups[1].Value) ? 0 : Convert.ToInt16(match3.Groups[1].Value);
 								}
 								if (!lb.RemoteIsGone)
 								{
