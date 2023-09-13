@@ -11,7 +11,12 @@ namespace PaJaMa.GitStudio
     public class SSHHelper
     {
         private static object _lock = new object();
-        public static List<string> RunCommandAsLines(SSHConnection connection, string command, bool includeBlankLines = false)
+
+        public static List<string> RunCommandAsLines(
+            SSHConnection connection,
+            string command,
+            bool includeBlankLines = false
+        )
         {
             var lines = new List<string>();
             if (!File.Exists("ssh.exe"))
@@ -27,44 +32,53 @@ namespace PaJaMa.GitStudio
             inf.StandardErrorEncoding = Encoding.ASCII;
             inf.WindowStyle = ProcessWindowStyle.Hidden;
             inf.CreateNoWindow = true;
-            var p = new Process();
-            p.StartInfo = inf;
-            p.OutputDataReceived += new DataReceivedEventHandler((sender, e) =>
+            using (var p = new Process())
             {
-                if (includeBlankLines || !string.IsNullOrEmpty(e.Data))
-                {
-                    if (e.Data != null && !e.Data.Contains("Connection "))
+                p.StartInfo = inf;
+                p.OutputDataReceived += new DataReceivedEventHandler(
+                    (sender, e) =>
                     {
-                        lock (_lock)
+                        if (includeBlankLines || !string.IsNullOrEmpty(e.Data))
                         {
-                            lines.Add(e.Data);
+                            if (e.Data != null && !e.Data.Contains("Connection "))
+                            {
+                                lock (_lock)
+                                {
+                                    lines.Add(e.Data);
+                                }
+                            }
                         }
                     }
-                }
-            });
-            //p.ErrorDataReceived += new DataReceivedEventHandler((sender, e) =>
-            //{
-            //    if (!string.IsNullOrEmpty(e.Data))
-            //    {
-            //        if (e.Data != null && !e.Data.Contains("[?1h") && !e.Data.Contains("[?11") && !e.Data.Contains("Connection "))
-            //        {
-            //            lock (_lock)
-            //            {
-            //                lines.Add(new Tuple<string, bool>(e.Data, true));
-            //                if (worker != null)
-            //                    worker.ReportProgress(50, e.Data);
-            //            }
-            //        }
-            //    }
-            //});
-            p.Start();
-            p.BeginOutputReadLine();
-            p.BeginErrorReadLine();
-            p.WaitForExit();
+                );
+                //p.ErrorDataReceived += new DataReceivedEventHandler((sender, e) =>
+                //{
+                //    if (!string.IsNullOrEmpty(e.Data))
+                //    {
+                //        if (e.Data != null && !e.Data.Contains("[?1h") && !e.Data.Contains("[?11") && !e.Data.Contains("Connection "))
+                //        {
+                //            lock (_lock)
+                //            {
+                //                lines.Add(new Tuple<string, bool>(e.Data, true));
+                //                if (worker != null)
+                //                    worker.ReportProgress(50, e.Data);
+                //            }
+                //        }
+                //    }
+                //});
+                p.Start();
+                p.BeginOutputReadLine();
+                p.BeginErrorReadLine();
+                p.WaitForExit();
+                p.Dispose();
+            }
             return lines;
         }
 
-        public static string RunCommand(SSHConnection connection, string command, bool includeBlankLines = false)
+        public static string RunCommand(
+            SSHConnection connection,
+            string command,
+            bool includeBlankLines = false
+        )
         {
             var lines = RunCommandAsLines(connection, command, includeBlankLines);
             return string.Join("\r\n", lines);

@@ -30,6 +30,7 @@
 		{
 			this.txtMessage = new System.Windows.Forms.TextBox();
 			this.chkPush = new System.Windows.Forms.CheckBox();
+			this.chkAmend = new System.Windows.Forms.CheckBox();
 			this.cboRemote = new System.Windows.Forms.ComboBox();
 			this.btnGo = new System.Windows.Forms.Button();
 			this.label1 = new System.Windows.Forms.Label();
@@ -44,7 +45,7 @@
 			this.txtMessage.Location = new System.Drawing.Point(12, 25);
 			this.txtMessage.Multiline = true;
 			this.txtMessage.Name = "txtMessage";
-			this.txtMessage.Size = new System.Drawing.Size(526, 242);
+			this.txtMessage.Size = new System.Drawing.Size(576, 242);
 			this.txtMessage.TabIndex = 0;
 			// 
 			// chkPush
@@ -58,6 +59,17 @@
 			this.chkPush.Text = "Push To";
 			this.chkPush.UseVisualStyleBackColor = true;
 			this.chkPush.CheckedChanged += new System.EventHandler(this.chkPush_CheckedChanged);
+			// 
+			// chkAmend
+			// 
+			this.chkAmend.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+			this.chkAmend.AutoSize = true;
+			this.chkAmend.Location = new System.Drawing.Point(309, 277);
+			this.chkAmend.Name = "chkAmend";
+			this.chkAmend.Size = new System.Drawing.Size(66, 17);
+			this.chkAmend.TabIndex = 1;
+			this.chkAmend.Text = "Amend";
+			this.chkAmend.UseVisualStyleBackColor = true;
 			// 
 			// cboRemote
 			// 
@@ -104,12 +116,13 @@
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-			this.ClientSize = new System.Drawing.Size(550, 308);
+			this.ClientSize = new System.Drawing.Size(600, 308);
 			this.Controls.Add(this.btnCancel);
 			this.Controls.Add(this.label1);
 			this.Controls.Add(this.btnGo);
 			this.Controls.Add(this.cboRemote);
 			this.Controls.Add(this.chkPush);
+			this.Controls.Add(this.chkAmend);
 			this.Controls.Add(this.txtMessage);
 			this.Name = "frmCommit";
 			this.ShowIcon = false;
@@ -125,6 +138,7 @@
 
 		private System.Windows.Forms.TextBox txtMessage;
 		private System.Windows.Forms.CheckBox chkPush;
+		private System.Windows.Forms.CheckBox chkAmend;
 		private System.Windows.Forms.ComboBox cboRemote;
 		private System.Windows.Forms.Button btnGo;
 		private System.Windows.Forms.Label label1;
