@@ -40,6 +40,7 @@
             this.pullAndMergeFromToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.rebaseFromToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.abortMergeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.concludeMergeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.compareToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.historyToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.renameToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -177,6 +178,7 @@
             this.pullAndMergeFromToolStripMenuItem,
             this.rebaseFromToolStripMenuItem1,
             this.abortMergeToolStripMenuItem,
+            this.concludeMergeToolStripMenuItem,
             this.compareToolStripMenuItem,
             this.historyToolStripMenuItem1,
             this.renameToolStripMenuItem,
@@ -235,6 +237,13 @@
             this.abortMergeToolStripMenuItem.Size = new System.Drawing.Size(187, 22);
             this.abortMergeToolStripMenuItem.Text = "&Abort Merge";
             this.abortMergeToolStripMenuItem.Click += new System.EventHandler(this.abortMergeToolStripMenuItem_Click);
+            // 
+            // concludeMergeToolStripMenuItem
+            // 
+            this.concludeMergeToolStripMenuItem.Name = "concludeMergeToolStripMenuItem";
+            this.concludeMergeToolStripMenuItem.Size = new System.Drawing.Size(187, 22);
+            this.concludeMergeToolStripMenuItem.Text = "C&onclude Merge";
+            this.concludeMergeToolStripMenuItem.Click += new System.EventHandler(this.btnCommit_Click);
             // 
             // compareToolStripMenuItem
             // 
@@ -830,6 +839,7 @@
 		private System.Windows.Forms.ToolStripMenuItem unStageToolStripMenuItem;
 		private System.Windows.Forms.ToolStripMenuItem ignoreExtensionToolStripMenuItem;
 		private System.Windows.Forms.ToolStripMenuItem abortMergeToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem concludeMergeToolStripMenuItem;
 		private System.Windows.Forms.ToolStripMenuItem deleteRemoteToolStripMenuItem;
 		private System.Windows.Forms.Label label1;
 		private System.Windows.Forms.Label label2;
