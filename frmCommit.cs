@@ -92,7 +92,7 @@ namespace PaJaMa.GitStudio
 			worker.DoWork += (object sender2, DoWorkEventArgs e2) =>
 			{
 				var helper = new GitHelper(Repository);
-				var lines = helper.RunCommand("commit -m \"" + txtMessage.Text + "\"", worker).ToList();
+				var lines = helper.RunCommand("commit" + (chkAmend.Checked ? " --amend" : "") + " -m \"" + txtMessage.Text + "\"", worker).ToList();
 				if (lines.Any(l => l.StartsWith("error")))
 					return;
 
