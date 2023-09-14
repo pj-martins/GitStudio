@@ -988,6 +988,11 @@ namespace PaJaMa.GitStudio
 			}
 		}
 
+		private void btnStatus_Click(object sender, EventArgs e)
+		{
+			ScrollableMessageBox.Show(_helper.RunCommand("status"), "Status");
+		}
+
 		private void btnRefresh_Click(object sender, EventArgs e)
 		{
 			refreshPage();

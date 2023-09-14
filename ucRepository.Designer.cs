@@ -91,6 +91,7 @@
             this.btnViewStashes = new System.Windows.Forms.Button();
             this.btnStash = new System.Windows.Forms.Button();
             this.btnRefresh = new System.Windows.Forms.Button();
+            this.btnStatus = new System.Windows.Forms.Button();
             this.btnCommit = new System.Windows.Forms.Button();
             this.timDebounce = new System.Windows.Forms.Timer(this.components);
             this.mergeFromSquashToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -641,6 +642,7 @@
             this.pnlButtons.Controls.Add(this.btnViewStashes);
             this.pnlButtons.Controls.Add(this.btnStash);
             this.pnlButtons.Controls.Add(this.btnRefresh);
+            this.pnlButtons.Controls.Add(this.btnStatus);
             this.pnlButtons.Controls.Add(this.btnCommit);
             this.pnlButtons.Dock = System.Windows.Forms.DockStyle.Bottom;
             this.pnlButtons.Location = new System.Drawing.Point(0, 627);
@@ -652,7 +654,7 @@
             // 
             this.chkIgnoreWhiteSpace.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.chkIgnoreWhiteSpace.AutoSize = true;
-            this.chkIgnoreWhiteSpace.Location = new System.Drawing.Point(437, 10);
+            this.chkIgnoreWhiteSpace.Location = new System.Drawing.Point(303, 10);
             this.chkIgnoreWhiteSpace.Name = "chkIgnoreWhiteSpace";
             this.chkIgnoreWhiteSpace.Size = new System.Drawing.Size(116, 17);
             this.chkIgnoreWhiteSpace.TabIndex = 10;
@@ -723,6 +725,17 @@
             this.btnStash.Text = "Stash";
             this.btnStash.UseVisualStyleBackColor = true;
             this.btnStash.Click += new System.EventHandler(this.btnStash_Click);
+            // 
+            // btnStatus
+            // 
+            this.btnStatus.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnStatus.Location = new System.Drawing.Point(457, 6);
+            this.btnStatus.Name = "btnRefresh";
+            this.btnStatus.Size = new System.Drawing.Size(98, 23);
+            this.btnStatus.TabIndex = 2;
+            this.btnStatus.Text = "Status";
+            this.btnStatus.UseVisualStyleBackColor = true;
+            this.btnStatus.Click += new System.EventHandler(this.btnStatus_Click);
             // 
             // btnRefresh
             // 
@@ -836,6 +849,7 @@
 		private System.Windows.Forms.Label label4;
 		private System.Windows.Forms.Label label5;
 		private System.Windows.Forms.Button btnRefresh;
+        private System.Windows.Forms.Button btnStatus;
 		private System.Windows.Forms.ToolStripMenuItem compareToolStripMenuItem;
 		private System.Windows.Forms.ToolStripMenuItem compareToolStripMenuItem1;
 		private System.Windows.Forms.ToolStripMenuItem historyToolStripMenuItem;
