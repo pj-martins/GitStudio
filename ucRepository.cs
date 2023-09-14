@@ -520,9 +520,7 @@ namespace PaJaMa.GitStudio
 					// TODO
 				}
 
-				btnCommit.Enabled = true; // TODO: tvStaged.Nodes.Count > 0;
 				btnStash.Enabled = true; // TODO: conditional
-				btnCommit.Enabled = tvStaged.Nodes.Count > 0;
 				progMain.Visible = false;
 				lblStatus.Text = string.Empty;
 
