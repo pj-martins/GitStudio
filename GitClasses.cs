@@ -55,7 +55,7 @@ namespace PaJaMa.GitStudio
 		public string Author { get; set; }
 		public string Date { get; set; }
 		public string Comment { get; set; }
-		public string DiffText { get; set; }
+		public List<string> DiffLines { get; set; }
 
 		[Browsable(false)]
 		public int Index { get; set; }

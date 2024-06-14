@@ -34,6 +34,37 @@ namespace PaJaMa.GitStudio
 				{
 					if (SSHConnection.UseCMD)
 					{
+                        // var rawLines = SSHHelper.RunCommandAsLines(SSHConnection, $"cd {SSHConnection.Path} && git config color.ui false --replace-all && {string.Join(" && ", arguments.Select(a => $"git {a.Replace("\"", "\\\"")}"))} && git config color.ui true --replace-all");
+                        // var rawLines = SSHHelper.RunCommandAsLines(SSHConnection, $"git config color.ui false --replace-all && {string.Join(" && ", arguments.Select(a => $"git {a.Replace("\"", "\\\"")}"))} && git config color.ui true --replace-all");
+                        var rawLines = SSHHelper.RunCommandAsLines(SSHConnection,
+							$"git config color.ui false --replace-all && {string.Join(" && ", arguments.Select(a => $"git {a}"))} && git config color.ui true --replace-all",
+							false, 100);
+                        // File.WriteAllText(Path.Combine("Output", $"raw_{DateTime.Now:yyyyMMddHHmmssfff}.txt"), String.Join("\n", rawLines));
+                        // rawLines.RemoveAt(rawLines.Count - 1);
+                        // var maxInd = rawLines.Where(r => r.Contains("--replace-all")).Select(l => rawLines.IndexOf(l) + 1).Max();
+                        // rawLines = rawLines.Skip(maxInd).ToList();
+                        foreach (var rl in rawLines)
+						{
+							if (includeBlankLines || !string.IsNullOrEmpty(rl))
+							{
+								var illegals = new List<string>()
+								{
+									"[?1l",
+									"[?1h",
+									"[?11"
+								};
+								if (!illegals.Any(x => rl.Contains(x)) && !rl.Contains("Connection "))
+								{
+									lock (_lock)
+									{
+										lines.Add(new Tuple<string, bool>(rl, false));
+										if (worker != null)
+											worker.ReportProgress(50, rl);
+									}
+								}
+							}
+						}
+						/*
 						if (!File.Exists("ssh.exe"))
 						{
 							File.WriteAllBytes("ssh.exe", Resources.ssh);
@@ -95,6 +126,7 @@ namespace PaJaMa.GitStudio
 						{
 							// TODO: lines.Add(new Tuple<string, bool>("TIMEDOUT", true));
 						}
+						*/
 					}
 					else
 					{
@@ -230,7 +262,7 @@ namespace PaJaMa.GitStudio
 			return runCommand(new string[] { arguments }, false, false, false, worker, ref hasError);
 		}
 
-		public List<Branch> GetBranches(bool showProgress = false)
+		public List<Branch> GetBranches(bool showProgress)
 		{
 			bool remote = true;
 			List<Branch> branches = new List<Branch>();
@@ -321,42 +353,8 @@ namespace PaJaMa.GitStudio
 				}
 
 				var diffParts = d.Split(new string[] { " " }, StringSplitOptions.RemoveEmptyEntries).ToList();
-				switch (diffParts[0].ToUpper())
-				{
-					case "A":
-					case "C":
-					case "AA":
-					case "??":
-						diff.DifferenceType = DifferenceType.Add;
-						break;
-					case "M":
-					case "MM":
-					case "AM":
-					case "UU":
-					case "T":
-					case "RM":
-						diff.DifferenceType = DifferenceType.Modify;
-						break;
-					case "AD":
-					case "UD":
-					case "DU":
-					case "DD":
-					case "MD":
-					case "RD":
-					case "D":
-						diff.DifferenceType = DifferenceType.Delete;
-						break;
-					case "R":
-						diff.DifferenceType = DifferenceType.Rename;
-						break;
-					case "?":
-						diff.DifferenceType = DifferenceType.Unknown;
-						break;
-					default:
-						continue;
-						// throw new Exception(diffParts[0]);
-				}
-
+				if (!diffParts.Any()) continue;
+				diff.DifferenceType = Helpers.GetDifferenceType(diffParts[0]);
 				if (diffParts[0].Contains("U") || diffParts[0] == "AA")
 					diff.IsConflict = true;
 

@@ -34,7 +34,7 @@
 			this.lblDirection = new System.Windows.Forms.Label();
 			this.btnSwitch = new System.Windows.Forms.Button();
 			this.splitContainer1 = new System.Windows.Forms.SplitContainer();
-			this.txtDifferences = new System.Windows.Forms.TextBox();
+			this.ucDifferences = new ucDifferences();
 			this.mnuGrid = new System.Windows.Forms.ContextMenuStrip(this.components);
 			this.externalCompareToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			((System.ComponentModel.ISupportInitialize)(this.gridMain)).BeginInit();
@@ -105,20 +105,18 @@
 			// 
 			// splitContainer1.Panel2
 			// 
-			this.splitContainer1.Panel2.Controls.Add(this.txtDifferences);
+			this.splitContainer1.Panel2.Controls.Add(this.ucDifferences);
 			this.splitContainer1.Size = new System.Drawing.Size(740, 505);
 			this.splitContainer1.SplitterDistance = 373;
 			this.splitContainer1.TabIndex = 3;
 			// 
-			// txtDifferences
+			// ucDifferences
 			// 
-			this.txtDifferences.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.txtDifferences.Location = new System.Drawing.Point(0, 0);
-			this.txtDifferences.Multiline = true;
-			this.txtDifferences.Name = "txtDifferences";
-			this.txtDifferences.ReadOnly = true;
-			this.txtDifferences.Size = new System.Drawing.Size(363, 505);
-			this.txtDifferences.TabIndex = 0;
+			this.ucDifferences.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.ucDifferences.Location = new System.Drawing.Point(0, 0);
+			this.ucDifferences.Name = "ucDifferences";
+			this.ucDifferences.Size = new System.Drawing.Size(363, 505);
+			this.ucDifferences.TabIndex = 0;
 			// 
 			// mnuGrid
 			// 
@@ -166,7 +164,7 @@
 		private System.Windows.Forms.Button btnSwitch;
 		private System.Windows.Forms.Label lblDirection;
 		private System.Windows.Forms.SplitContainer splitContainer1;
-		private System.Windows.Forms.TextBox txtDifferences;
+		private ucDifferences ucDifferences;
 		private System.Windows.Forms.ContextMenuStrip mnuGrid;
 		private System.Windows.Forms.ToolStripMenuItem externalCompareToolStripMenuItem;
 	}

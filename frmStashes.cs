@@ -45,7 +45,7 @@ namespace PaJaMa.GitStudio
 			};
 			WinStatusBox.ShowProgress(worker, "Stashing", progressBarStyle: ProgressBarStyle.Marquee);
 			var stashes = new List<Stash>();
-			foreach (var item in items)
+			foreach (var item in items.Where(i => !string.IsNullOrWhiteSpace(i)))
 			{
 				var stash = new Stash();
 				var parts = item.Split(':');
@@ -63,7 +63,7 @@ namespace PaJaMa.GitStudio
 			if (selectedRows.Count() < 1)
 			{
 				gridDetails.DataSource = null;
-				txtDifferences.Text = string.Empty;
+				ucDifferences.ClearDifferences();
 				return;
 			}
 
@@ -76,28 +76,13 @@ namespace PaJaMa.GitStudio
 				var diffparts = diff.Split('\t');
 				if (diffparts.Length > 1)
 				{
-					if (diffparts[0] == "M")
-					{
-						details.Add(diffparts[1], DifferenceType.Modify);
-					}
-					else if (diffparts[0] == "A")
-					{
-						details.Add(diffparts[1], DifferenceType.Add);
-					}
-					else if (diffparts[0] == "D")
-					{
-						details.Add(diffparts[1], DifferenceType.Delete);
-					}
-					else if (diffparts[0] == "R")
-					{
-						details.Add(diffparts[1], DifferenceType.Rename);
-					}
+					details.Add(diffparts[1], Helpers.GetDifferenceType(diffparts[0]));
 				}
 			}
 			gridDetails.DataSource = details.Select(d => new
 			{
 				File = d.Key,
-				Action = d.Value.ToString(),
+				Action = d.Value,
 				StashID = stashID
 			}).ToList();
 		}
@@ -107,19 +92,19 @@ namespace PaJaMa.GitStudio
 			var selectedRow = gridDetails.SelectedRows.OfType<DataGridViewRow>().FirstOrDefault();
 			if (selectedRow == null)
 			{
-				txtDifferences.Text = string.Empty;
+				ucDifferences.ClearDifferences();
 				return;
 			}
 
 			var selectedStash = gridStashes.SelectedRows.OfType<DataGridViewRow>().FirstOrDefault();
 			if (selectedStash == null)
 			{
-				txtDifferences.Text = string.Empty;
+				ucDifferences.ClearDifferences();
 				return;
 			}
 
 			var diffs = Helper.RunCommand("--no-pager diff " + (selectedStash.DataBoundItem as Stash).StashID + " -- " + selectedRow.Cells["File"].Value.ToString());
-			txtDifferences.Text = string.Join("\r\n", diffs);
+			ucDifferences.SetDifferences(diffs, (DifferenceType)selectedRow.Cells["Action"].Value);
 		}
 
 		private void gridDetails_DoubleClick(object sender, EventArgs e)

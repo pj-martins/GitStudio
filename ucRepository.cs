@@ -41,6 +41,8 @@ namespace PaJaMa.GitStudio
 			}
 		}
 
+		public Form MainForm { get; set; }
+
 		private bool _inited = false;
 		private FileSystemWatcher _selectedWatcher;
 		private List<FileSystemWatcher> _watchers = new List<FileSystemWatcher>();
@@ -67,6 +69,10 @@ namespace PaJaMa.GitStudio
 						// this.Invoke(new Action(() => refreshPage()));
 					});
 				}
+				this.MainForm.FormClosing += (object sender, FormClosingEventArgs e) =>
+				{
+					Repository.SSHConnection?.Terminate();
+				};
 			}
 		}
 
@@ -74,13 +80,30 @@ namespace PaJaMa.GitStudio
 		{
 			_inited = false;
 			removeWatchers();
+			//if (Repository.SSHConnection != null)
+			//{
+			//	Repository.SSHConnection.Terminate();
+			//}
 		}
 
-		public bool RefreshBranches(bool initial = false)
+		public bool RefreshBranches(bool initial = false, int tries = 0)
 		{
 			var branches = _helper.GetBranches(initial);
 			if (branches == null) return false;
 			if (branches.Count < 1) return true;
+
+			if (Repository.SSHConnection != null && tries < 3)
+			{
+				// TODO: yuck!
+				if (branches.All(b => b.BranchName == "git"))
+				{
+					return RefreshBranches(initial, tries++);
+				}
+				else
+				{
+
+				}
+			}
 
 			_currentBranch = branches.OfType<LocalBranch>().FirstOrDefault(b => b.IsCurrent);
 			_remoteBranches = branches.OfType<RemoteBranch>().ToList();
@@ -409,8 +432,8 @@ namespace PaJaMa.GitStudio
 						_lockChange = true;
 						if (!changedDiff.IsConflict)
 						{
-							_helper.RunCommand("reset -- \"" + changedDiff.FileName + "\"");
-							_helper.RunCommand("add \"" + changedDiff.FileName + "\"");
+							_helper.RunCommand("reset -- " + getEscapedFile(changedDiff.FileName));
+							_helper.RunCommand("add " + getEscapedFile(changedDiff.FileName));
 						}
 						refreshPage();
 						if (selectedStaged != null && changedDiff.FileName == selectedStaged.FileName)
@@ -546,22 +569,27 @@ namespace PaJaMa.GitStudio
 				if (node.Tag == null) continue;
 				var diff = node.Tag as Difference;
 				if (diff.DifferenceType != DifferenceType.Modify) continue;
-                var tmpDir = Path.Combine(Path.GetTempPath(), "GitStudio");
-                if (!Directory.Exists(tmpDir)) Directory.CreateDirectory(tmpDir);
-                var tmpFile = Path.Combine(tmpDir, Guid.NewGuid() + ".tmp");
-                String currFile = String.Empty;
+				var tmpDir = Path.Combine(Path.GetTempPath(), "GitStudio");
+				if (!Directory.Exists(tmpDir)) Directory.CreateDirectory(tmpDir);
+				var tmpFile = Path.Combine(tmpDir, Guid.NewGuid() + ".tmp");
+				String currFile = String.Empty;
 				if (_repository.SSHConnection != null)
 				{
 					currFile = Path.Combine(tmpDir, Guid.NewGuid() + ".tmp");
-					var content = SSHHelper.RunCommand(_repository.SSHConnection, $"cat {_repository.SSHConnection.Path}/{diff.FileName.Replace("\"", "")}", true);
+					var repoPath = _repository.SSHConnection.Path;
+					if (repoPath.EndsWith("/"))
+					{
+						repoPath = repoPath.TrimEnd('/');
+					}
+					var content = SSHHelper.RunCommand(_repository.SSHConnection, $"cat {repoPath}/{diff.FileName.Replace("\"", "")}", true);
 					File.WriteAllText(currFile, content);
-                }
+				}
 				else
 				{
 					currFile = Path.Combine(Repository.LocalPath, diff.FileName.Replace("\"", ""));
 				}
 				bool error = false;
-				var oldContent = _helper.RunCommand("--no-pager show " + _currentBranch + ":\"" + diff.FileName + "\"", true, false, ref error);
+				var oldContent = _helper.RunCommand("--no-pager show " + _currentBranch + ":" + getEscapedFile(diff.FileName), true, false, ref error);
 				if (error) return;
 				File.WriteAllLines(tmpFile, oldContent);
 
@@ -622,7 +650,7 @@ namespace PaJaMa.GitStudio
 				{
 					worker.ReportProgress(100 * i++ / differences.Count, "Undoing " + selectedItem.FileName);
 					if (tv == tvStaged)
-						_helper.RunCommand("reset -- \"" + selectedItem.FileName + "\"");
+						_helper.RunCommand("reset -- " + getEscapedFile(selectedItem.FileName));
 					if (selectedItem.DifferenceType == DifferenceType.Add)
 					{
 						if (_repository.SSHConnection != null)
@@ -640,12 +668,12 @@ namespace PaJaMa.GitStudio
 					}
 					else
 					{
-						_helper.RunCommand("checkout -- \"" + selectedItem.FileName + "\"");
+						_helper.RunCommand("checkout -- " + getEscapedFile(selectedItem.FileName));
 					}
 				}
 			};
 			WinControls.WinProgressBox.ShowProgress(worker, "Undoing changes");
-			clearDifferences();
+			ucDiff.ClearDifferences();
 			refreshPage();
 		}
 
@@ -660,7 +688,7 @@ namespace PaJaMa.GitStudio
 			foreach (var node in nodes)
 			{
 				if (tv == tvStaged && node.Tag is Difference)
-					_helper.RunCommand("reset \"" + (node.Tag as Difference).FileName + "\"");
+					_helper.RunCommand("reset " + getEscapedFile((node.Tag as Difference).FileName));
 
 				var runningNode = node;
 				if (node.Tag is Difference)
@@ -679,7 +707,7 @@ namespace PaJaMa.GitStudio
 				}
 			}
 			File.AppendAllLines(Path.Combine(Repository.LocalPath, ".gitignore"), selectedItems);
-			clearDifferences();
+			ucDiff.ClearDifferences();
 			refreshPage();
 		}
 
@@ -726,7 +754,7 @@ namespace PaJaMa.GitStudio
 			}
 			if (e.Node.Tag == null)
 			{
-				clearDifferences();
+				ucDiff.ClearDifferences();
 				return;
 			}
 
@@ -751,21 +779,35 @@ namespace PaJaMa.GitStudio
 			lblStatus.Text = "Retrieving difference for " + diff.FileName;
 			Common.Common.RunInThread(new Action(() =>
 			{
-				var diffs = diff == null || diff.DifferenceType != DifferenceType.Modify ? new string[0] :
-				_helper.RunCommand("--no-pager diff " + (diff.IsStaged ? "--cached " : "") + (chkIgnoreWhiteSpace.Checked ? "-w " : "") + "\"" + diff.FileName + "\"");
-				// if (error) return;
+				var diffs = new string[0];
+				if (diff != null && diff.DifferenceType == DifferenceType.Modify)
+				{
+					diffs = _helper.RunCommand("--no-pager diff " + (diff.IsStaged ? "--cached " : "") + (chkIgnoreWhiteSpace.Checked ? "-w " : "") + getEscapedFile(diff.FileName));
+				}
+				else if (diff != null && diff.DifferenceType == DifferenceType.Add)
+				{
+					if (_repository.SSHConnection != null)
+					{
+						var content = SSHHelper.RunCommand(_repository.SSHConnection, $"cat {_repository.SSHConnection.Path}/{diff.FileName.Replace("\"", "")}", true);
+						diffs = content.Split(new string[] { "\r\n" }, StringSplitOptions.None);
+					}
+					else
+					{
+						var path = Path.Combine(Repository.LocalPath, diff.FileName.Replace("\"", ""));
+						if (File.Exists(path))
+						{
+							var content = File.ReadAllText(Path.Combine(Repository.LocalPath, diff.FileName.Replace("\"", "")));
+							diffs = content.Split(new string[] { "\r\n" }, StringSplitOptions.None);
+						}
+					}
+				}
 				this.Invoke(new Action(() =>
 				{
-					txtDiffText.Text = string.Join("\r\n", diffs);
+					ucDiff.SetDifferences(diffs, diff.DifferenceType);
 					progMain.Visible = false;
 					lblStatus.Text = string.Empty;
 				}));
 			}));
-		}
-
-		private void clearDifferences()
-		{
-			txtDiffText.Text = string.Empty;
 		}
 
 		private List<string> _collapsed = null;
@@ -818,7 +860,7 @@ namespace PaJaMa.GitStudio
 			frm.Repository = _repository;
 			frm.ShowDialog();
 			RefreshBranches();
-			clearDifferences();
+			ucDiff.ClearDifferences();
 			_previousDifferences = null;
 			refreshPage();
 		}
@@ -829,7 +871,7 @@ namespace PaJaMa.GitStudio
 			frm.Repository = _repository;
 			frm.ShowDialog();
 			RefreshBranches();
-			clearDifferences();
+			ucDiff.ClearDifferences();
 			_previousDifferences = null;
 			refreshPage();
 		}
@@ -841,6 +883,11 @@ namespace PaJaMa.GitStudio
 				MessageBoxButtons.YesNo) == DialogResult.Yes)
 			{
 				_helper.RunCommand("merge " + branch.BranchName, true);
+				if (Repository.SSHConnection != null)
+				{
+					RefreshBranches(true);
+					refreshPage();
+				}
 			}
 		}
 
@@ -851,6 +898,11 @@ namespace PaJaMa.GitStudio
 				MessageBoxButtons.YesNo) == DialogResult.Yes)
 			{
 				_helper.RunCommand("merge " + branch.BranchName, true);
+				if (Repository.SSHConnection != null)
+				{
+					RefreshBranches(true);
+					refreshPage();
+				}
 			}
 		}
 
@@ -861,6 +913,11 @@ namespace PaJaMa.GitStudio
 				MessageBoxButtons.YesNo) == DialogResult.Yes)
 			{
 				_helper.RunCommand("rebase " + branch.BranchName, true);
+				if (Repository.SSHConnection != null)
+				{
+					RefreshBranches(true);
+					refreshPage();
+				}
 			}
 		}
 
@@ -871,6 +928,11 @@ namespace PaJaMa.GitStudio
 				MessageBoxButtons.YesNo) == DialogResult.Yes)
 			{
 				_helper.RunCommand("rebase " + branch.BranchName, true);
+				if (Repository.SSHConnection != null)
+				{
+					RefreshBranches(true);
+					refreshPage();
+				}
 			}
 		}
 
@@ -878,9 +940,9 @@ namespace PaJaMa.GitStudio
 		{
 			var tv = tvUnStaged.Focused ? tvUnStaged : tvStaged;
 			var diff = tv.SelectedNode.Tag as Difference;
-			_helper.RunCommand("add \"" + diff.FileName + "\"", false);
+			_helper.RunCommand("add " + getEscapedFile(diff.FileName), false);
 			_previousDifferences = null;
-			clearDifferences();
+			ucDiff.ClearDifferences();
 			refreshPage();
 		}
 
@@ -905,10 +967,10 @@ namespace PaJaMa.GitStudio
 		{
 			foreach (var selectedItem in getSelectedNodeTags<Difference>(tvUnStaged))
 			{
-				_helper.RunCommand("add \"" + selectedItem.FileName + "\"");
+				_helper.RunCommand("add " + getEscapedFile(selectedItem.FileName));
 			}
 			_previousDifferences = null;
-			clearDifferences();
+			ucDiff.ClearDifferences();
 			refreshPage();
 		}
 
@@ -916,10 +978,10 @@ namespace PaJaMa.GitStudio
 		{
 			foreach (var selectedItem in getSelectedNodeTags<Difference>(tvStaged))
 			{
-				_helper.RunCommand("reset -- \"" + selectedItem.FileName + "\"");
+				_helper.RunCommand("reset -- " + getEscapedFile(selectedItem.FileName));
 			}
 			_previousDifferences = null;
-			clearDifferences();
+			ucDiff.ClearDifferences();
 			refreshPage();
 		}
 
@@ -934,7 +996,7 @@ namespace PaJaMa.GitStudio
 			foreach (var diff in differences)
 			{
 				if (tv == tvStaged)
-					_helper.RunCommand("reset \"" + diff.FileName + "\"");
+					_helper.RunCommand("reset " + getEscapedFile(diff.FileName));
 
 				var finf = new FileInfo(Path.Combine(Repository.LocalPath, diff.FileName));
 				if (finf.Exists)
@@ -943,7 +1005,7 @@ namespace PaJaMa.GitStudio
 				}
 			}
 			File.AppendAllLines(Path.Combine(Repository.LocalPath, ".gitignore"), selectedItems);
-			clearDifferences();
+			ucDiff.ClearDifferences();
 			refreshPage();
 		}
 
@@ -953,6 +1015,24 @@ namespace PaJaMa.GitStudio
 				MessageBoxButtons.YesNo) == DialogResult.Yes)
 			{
 				_helper.RunCommand("merge --abort");
+			}
+		}
+
+		private void concludeMergeToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+			if (MessageBox.Show("Are you sure you want to conclude merge for " + _currentBranch.BranchName + "?", "Warning!",
+				MessageBoxButtons.YesNo) == DialogResult.Yes)
+			{
+				_helper.RunCommand("merge --continue");
+			}
+		}
+
+		private void abortRebaseToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+			if (MessageBox.Show("Are you sure you want to abort rebase for " + _currentBranch.BranchName + "?", "Warning!",
+				MessageBoxButtons.YesNo) == DialogResult.Yes)
+			{
+				_helper.RunCommand("rebase --abort");
 			}
 		}
 
@@ -980,10 +1060,10 @@ namespace PaJaMa.GitStudio
 				foreach (var selectedItem in items)
 				{
 					var cmd = _draggingTreeView == tvUnStaged ? "add " : "reset -- ";
-					_helper.RunCommand(cmd + "\"" + selectedItem.FileName + "\"");
+					_helper.RunCommand(cmd + getEscapedFile(selectedItem.FileName));
 				}
 				_previousDifferences = null;
-				clearDifferences();
+				ucDiff.ClearDifferences();
 				refreshPage();
 			}
 		}
@@ -995,6 +1075,7 @@ namespace PaJaMa.GitStudio
 
 		private void btnRefresh_Click(object sender, EventArgs e)
 		{
+			RefreshBranches(true);
 			refreshPage();
 		}
 
@@ -1068,11 +1149,11 @@ namespace PaJaMa.GitStudio
 					.Where(f => f.Tag is Difference).Select(f => f.Tag as Difference).ToList();
 			foreach (var flat in flattened)
 			{
-				arguments.Add("add \"" + flat.FileName + "\"");
+				arguments.Add("add " + getEscapedFile(flat.FileName));
 			}
 			_helper.RunCommand(arguments.ToArray(), true);
 			_previousDifferences = null;
-			clearDifferences();
+			ucDiff.ClearDifferences();
 			refreshPage();
 		}
 
@@ -1083,11 +1164,11 @@ namespace PaJaMa.GitStudio
 				.Where(f => f.Tag is Difference).Select(f => f.Tag as Difference).ToList();
 			foreach (var flat in flattened)
 			{
-				arguments.Add("reset -- \"" + flat.FileName + "\"");
+				arguments.Add("reset -- " + getEscapedFile(flat.FileName));
 			}
 			_helper.RunCommand(arguments.ToArray(), true);
 			_previousDifferences = null;
-			clearDifferences();
+			ucDiff.ClearDifferences();
 			refreshPage();
 		}
 
@@ -1104,8 +1185,9 @@ namespace PaJaMa.GitStudio
 				branchName = branchName.Substring(7);
 			removeWatchers();
 			_helper.RunCommand("pull origin " + branchName, true);
-			RefreshBranches();
 			addWatchers();
+			RefreshBranches();
+
 		}
 
 		private void btnPush_Click(object sender, EventArgs e)
@@ -1229,12 +1311,22 @@ namespace PaJaMa.GitStudio
 
 		private void mergeFromSquashToolStripMenuItem_Click(object sender, EventArgs e)
 		{
-            var branch = tvLocalBranches.SelectedNode.Tag as LocalBranch;
-            if (MessageBox.Show("Are you sure you want to merge and squash " + branch.BranchName + " into " + _currentBranch.BranchName + "?", "Warning!",
-                MessageBoxButtons.YesNo) == DialogResult.Yes)
-            {
-                _helper.RunCommand("merge --squash " + branch.BranchName, true);
-            }
-        }
+			var branch = tvLocalBranches.SelectedNode.Tag as LocalBranch;
+			if (MessageBox.Show("Are you sure you want to merge and squash " + branch.BranchName + " into " + _currentBranch.BranchName + "?", "Warning!",
+				MessageBoxButtons.YesNo) == DialogResult.Yes)
+			{
+				_helper.RunCommand("merge --squash " + branch.BranchName, true);
+			}
+		}
+
+		private string getEscapedFile(string file)
+		{
+			var escaped = file;
+			if (escaped.Contains(" "))
+			{
+				escaped = "\"" + escaped + "\"";
+			}
+			return escaped;
+		}
 	}
 }

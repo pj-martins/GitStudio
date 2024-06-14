@@ -15,9 +15,12 @@ namespace PaJaMa.GitStudio
         public static List<string> RunCommandAsLines(
             SSHConnection connection,
             string command,
-            bool includeBlankLines = false
+            bool includeBlankLines = false,
+            int waitTime = 50
         )
         {
+            var lines = connection.RunCommand(command, waitTime);
+            /*
             var lines = new List<string>();
             if (!File.Exists("ssh.exe"))
             {
@@ -71,6 +74,7 @@ namespace PaJaMa.GitStudio
                 p.WaitForExit();
                 p.Dispose();
             }
+            */
             return lines;
         }
 

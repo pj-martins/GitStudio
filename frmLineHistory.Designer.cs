@@ -34,7 +34,7 @@
 			this.externalCompareToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.splitContainer1 = new System.Windows.Forms.SplitContainer();
 			this.splitContainer2 = new System.Windows.Forms.SplitContainer();
-			this.txtDifferences = new System.Windows.Forms.TextBox();
+			this.ucDifferences = new ucDifferences();
 			this.gridLines = new System.Windows.Forms.DataGridView();
 			this.Num = new System.Windows.Forms.DataGridViewTextBoxColumn();
 			this.Line = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -94,7 +94,7 @@
 			// 
 			// splitContainer1.Panel2
 			// 
-			this.splitContainer1.Panel2.Controls.Add(this.txtDifferences);
+			this.splitContainer1.Panel2.Controls.Add(this.ucDifferences);
 			this.splitContainer1.Size = new System.Drawing.Size(1060, 640);
 			this.splitContainer1.SplitterDistance = 787;
 			this.splitContainer1.TabIndex = 3;
@@ -116,15 +116,13 @@
 			this.splitContainer2.SplitterDistance = 420;
 			this.splitContainer2.TabIndex = 4;
 			// 
-			// txtDifferences
+			// ucDifferences
 			// 
-			this.txtDifferences.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.txtDifferences.Location = new System.Drawing.Point(0, 0);
-			this.txtDifferences.Multiline = true;
-			this.txtDifferences.Name = "txtDifferences";
-			this.txtDifferences.ReadOnly = true;
-			this.txtDifferences.Size = new System.Drawing.Size(269, 640);
-			this.txtDifferences.TabIndex = 0;
+			this.ucDifferences.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.ucDifferences.Location = new System.Drawing.Point(0, 0);
+			this.ucDifferences.Name = "ucDifferences";
+			this.ucDifferences.Size = new System.Drawing.Size(269, 640);
+			this.ucDifferences.TabIndex = 0;
 			// 
 			// gridLines
 			// 
@@ -192,7 +190,7 @@
 
 		private System.Windows.Forms.DataGridView gridCommits;
 		private System.Windows.Forms.SplitContainer splitContainer1;
-		private System.Windows.Forms.TextBox txtDifferences;
+		private ucDifferences ucDifferences;
 		private System.Windows.Forms.SplitContainer splitContainer2;
 		private System.Windows.Forms.ContextMenuStrip mnuDetails;
 		private System.Windows.Forms.ToolStripMenuItem externalCompareToolStripMenuItem;

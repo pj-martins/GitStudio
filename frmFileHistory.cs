@@ -7,6 +7,7 @@ using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using static PaJaMa.WinControls.Imaging;
@@ -56,6 +57,17 @@ namespace PaJaMa.GitStudio
             }
         }
 
+        private string cleanupSSHFile(string input)
+        {
+            var cleaned = input.Replace("\u001b[0m", "");
+            var match = Regex.Match(input, "\u001b\\[\\d*;\\d*;\\d*m");
+            if (match.Success)
+            {
+                cleaned = cleaned.Substring(match.Length);
+			}
+            return cleaned;
+        }
+
         private void refreshSSHFiles(string parentPath, TreeNodeCollection nodes)
         {
             var lines = SSHHelper.RunCommandAsLines(Helper.SSHConnection, $"cd {parentPath} && ls -l -a -F");
@@ -65,7 +77,8 @@ namespace PaJaMa.GitStudio
                 if (parts.Count >= 9)
                 {
                     var lastParts = parts.Skip(8).ToList();
-                    if (lastParts[0] == "./" || lastParts[0] == "../") continue;
+                    var filePart = cleanupSSHFile(lastParts[0]);
+                    if (filePart == "./" || filePart == "../") continue;
                     var ind = lastParts.IndexOf("->");
                     string symbolicLink = string.Empty;
                     if (ind > 0)
@@ -74,7 +87,7 @@ namespace PaJaMa.GitStudio
                         lastParts = lastParts.Take(ind).ToList();
                     }
 
-                    var sub = string.Join(" ", lastParts);
+                    var sub = cleanupSSHFile(string.Join(" ", lastParts));
                     if (sub.EndsWith("*"))
                     {
                         sub = sub.Substring(0, sub.Length - 1);
@@ -171,21 +184,21 @@ namespace PaJaMa.GitStudio
             var commitsToCompare = getCommitsToCompare();
             if (commitsToCompare == null)
             {
-                txtDifferences.Text = string.Empty;
+                ucDifferences.ClearDifferences();
                 return;
             }
 
             var selectedFile = tvFiles.SelectedNode == null ? null : tvFiles.SelectedNode.Tag;
             if (selectedFile == null)
             {
-                txtDifferences.Text = string.Empty;
-                return;
+				ucDifferences.ClearDifferences();
+				return;
             }
 
             var diffs = Helper.RunCommand("--no-pager diff " +
                 (commitsToCompare.Item1 != null ? commitsToCompare.Item1.CommitID.Split(' ').First() + " " : "") +
                 commitsToCompare.Item2.CommitID.Split(' ').First() + " -- " + selectedFile.ToString());
-            txtDifferences.Text = string.Join("\r\n", diffs);
+            ucDifferences.SetDifferences(diffs, DifferenceType.Modify);
         }
 
         private void gridDetails_DoubleClick(object sender, EventArgs e)
@@ -207,8 +220,8 @@ namespace PaJaMa.GitStudio
             var commitsToCompare = getCommitsToCompare();
             if (commitsToCompare == null || commitsToCompare.Item1 == null)
             {
-                txtDifferences.Text = string.Empty;
-                return;
+				ucDifferences.ClearDifferences();
+				return;
             }
 
             var content1 = Helper.RunCommand("--no-pager show " + commitsToCompare.Item2.CommitID.Split(' ').First() + ":\"" + selectedFile + "\"");

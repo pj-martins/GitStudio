@@ -40,7 +40,7 @@
 			this.gridDetails = new System.Windows.Forms.DataGridView();
 			this.mnuDetails = new System.Windows.Forms.ContextMenuStrip(this.components);
 			this.externalCompareToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-			this.txtDifferences = new System.Windows.Forms.TextBox();
+			this.ucDifferences = new ucDifferences();
 			((System.ComponentModel.ISupportInitialize)(this.gridStashes)).BeginInit();
 			this.mnuStashes.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
@@ -123,7 +123,7 @@
 			// 
 			// splitContainer1.Panel2
 			// 
-			this.splitContainer1.Panel2.Controls.Add(this.txtDifferences);
+			this.splitContainer1.Panel2.Controls.Add(this.ucDifferences);
 			this.splitContainer1.Size = new System.Drawing.Size(1060, 640);
 			this.splitContainer1.SplitterDistance = 727;
 			this.splitContainer1.TabIndex = 3;
@@ -176,15 +176,13 @@
 			this.externalCompareToolStripMenuItem.Text = "&External Compare";
 			this.externalCompareToolStripMenuItem.Click += new System.EventHandler(this.externalCompareToolStripMenuItem_Click);
 			// 
-			// txtDifferences
+			// ucDifferences
 			// 
-			this.txtDifferences.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.txtDifferences.Location = new System.Drawing.Point(0, 0);
-			this.txtDifferences.Multiline = true;
-			this.txtDifferences.Name = "txtDifferences";
-			this.txtDifferences.ReadOnly = true;
-			this.txtDifferences.Size = new System.Drawing.Size(329, 640);
-			this.txtDifferences.TabIndex = 0;
+			this.ucDifferences.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.ucDifferences.Location = new System.Drawing.Point(0, 0);
+			this.ucDifferences.Name = "ucDifferences";
+			this.ucDifferences.Size = new System.Drawing.Size(329, 640);
+			this.ucDifferences.TabIndex = 0;
 			// 
 			// frmStashes
 			// 
@@ -218,7 +216,7 @@
 
 		private System.Windows.Forms.DataGridView gridStashes;
 		private System.Windows.Forms.SplitContainer splitContainer1;
-		private System.Windows.Forms.TextBox txtDifferences;
+		private ucDifferences ucDifferences;
 		private System.Windows.Forms.SplitContainer splitContainer2;
 		private System.Windows.Forms.DataGridView gridDetails;
 		private System.Windows.Forms.ContextMenuStrip mnuStashes;

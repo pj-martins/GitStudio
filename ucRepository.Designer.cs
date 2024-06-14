@@ -1,4 +1,6 @@
-﻿namespace PaJaMa.GitStudio
+﻿using System.Drawing;
+
+namespace PaJaMa.GitStudio
 {
 	partial class ucRepository
 	{
@@ -40,6 +42,8 @@
             this.pullAndMergeFromToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.rebaseFromToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.abortMergeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.concludeMergeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.abortRebaseToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.compareToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.historyToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.renameToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -80,10 +84,10 @@
             this.label3 = new System.Windows.Forms.Label();
             this.tvStaged = new PaJaMa.WinControls.MultiSelectTreeView();
             this.label4 = new System.Windows.Forms.Label();
-            this.txtDiffText = new System.Windows.Forms.RichTextBox();
             this.label5 = new System.Windows.Forms.Label();
             this.pnlButtons = new System.Windows.Forms.Panel();
             this.chkIgnoreWhiteSpace = new System.Windows.Forms.CheckBox();
+            this.ucDiff = new ucDifferences();
             this.progMain = new System.Windows.Forms.ProgressBar();
             this.lblStatus = new System.Windows.Forms.Label();
             this.btnPush = new System.Windows.Forms.Button();
@@ -178,6 +182,8 @@
             this.pullAndMergeFromToolStripMenuItem,
             this.rebaseFromToolStripMenuItem1,
             this.abortMergeToolStripMenuItem,
+            this.concludeMergeToolStripMenuItem,
+            this.abortRebaseToolStripMenuItem,
             this.compareToolStripMenuItem,
             this.historyToolStripMenuItem1,
             this.renameToolStripMenuItem,
@@ -236,6 +242,20 @@
             this.abortMergeToolStripMenuItem.Size = new System.Drawing.Size(187, 22);
             this.abortMergeToolStripMenuItem.Text = "&Abort Merge";
             this.abortMergeToolStripMenuItem.Click += new System.EventHandler(this.abortMergeToolStripMenuItem_Click);
+            // 
+            // concludeMergeToolStripMenuItem
+            // 
+            this.concludeMergeToolStripMenuItem.Name = "concludeMergeToolStripMenuItem";
+            this.concludeMergeToolStripMenuItem.Size = new System.Drawing.Size(187, 22);
+            this.concludeMergeToolStripMenuItem.Text = "&Conclude Merge";
+            this.concludeMergeToolStripMenuItem.Click += new System.EventHandler(this.concludeMergeToolStripMenuItem_Click);
+            // 
+            // abortRebaseToolStripMenuItem
+            // 
+            this.abortRebaseToolStripMenuItem.Name = "abortRebaseToolStripMenuItem";
+            this.abortRebaseToolStripMenuItem.Size = new System.Drawing.Size(187, 22);
+            this.abortRebaseToolStripMenuItem.Text = "A&bort Rebase";
+            this.abortRebaseToolStripMenuItem.Click += new System.EventHandler(this.abortRebaseToolStripMenuItem_Click);
             // 
             // compareToolStripMenuItem
             // 
@@ -413,7 +433,7 @@
             // 
             // splitContainer3.Panel2
             // 
-            this.splitContainer3.Panel2.Controls.Add(this.txtDiffText);
+            this.splitContainer3.Panel2.Controls.Add(this.ucDiff);
             this.splitContainer3.Panel2.Controls.Add(this.label5);
             this.splitContainer3.Size = new System.Drawing.Size(773, 627);
             this.splitContainer3.SplitterDistance = 340;
@@ -611,19 +631,9 @@
             this.label4.TabIndex = 4;
             this.label4.Text = "Stage Changes";
             // 
-            // txtDiffText
-            // 
-            this.txtDiffText.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.txtDiffText.Location = new System.Drawing.Point(0, 17);
-            this.txtDiffText.Name = "txtDiffText";
-            this.txtDiffText.ReadOnly = true;
-            this.txtDiffText.Size = new System.Drawing.Size(773, 266);
-            this.txtDiffText.TabIndex = 0;
-            this.txtDiffText.Text = "";
-            // 
-            // label5
-            // 
-            this.label5.AutoSize = true;
+			// label5
+			// 
+			this.label5.AutoSize = true;
             this.label5.Dock = System.Windows.Forms.DockStyle.Top;
             this.label5.Location = new System.Drawing.Point(0, 0);
             this.label5.Name = "label5";
@@ -661,10 +671,16 @@
             this.chkIgnoreWhiteSpace.Text = "Ignore Whitespace";
             this.chkIgnoreWhiteSpace.UseVisualStyleBackColor = true;
             this.chkIgnoreWhiteSpace.CheckedChanged += new System.EventHandler(this.chkIgnoreWhiteSpace_CheckedChanged);
-            // 
-            // progMain
-            // 
-            this.progMain.Location = new System.Drawing.Point(3, 6);
+			// 
+			// ucDiff
+			// 
+			this.ucDiff.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.ucDiff.Location = new System.Drawing.Point(0, 17);
+			this.ucDiff.Name = "ucDiff";
+			// 
+			// progMain
+			// 
+			this.progMain.Location = new System.Drawing.Point(3, 6);
             this.progMain.Name = "progMain";
             this.progMain.Size = new System.Drawing.Size(269, 23);
             this.progMain.Style = System.Windows.Forms.ProgressBarStyle.Marquee;
@@ -730,7 +746,7 @@
             // 
             this.btnStatus.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.btnStatus.Location = new System.Drawing.Point(457, 6);
-            this.btnStatus.Name = "btnRefresh";
+            this.btnStatus.Name = "btnStatus";
             this.btnStatus.Size = new System.Drawing.Size(98, 23);
             this.btnStatus.TabIndex = 2;
             this.btnStatus.Text = "Status";
@@ -825,7 +841,6 @@
 		private System.Windows.Forms.ToolStripMenuItem deleteToolStripMenuItem;
 		private System.Windows.Forms.SplitContainer splitContainer3;
 		private PaJaMa.WinControls.MultiSelectTreeView tvUnStaged;
-		private System.Windows.Forms.RichTextBox txtDiffText;
 		private System.Windows.Forms.ContextMenuStrip mnuDiffs;
 		private System.Windows.Forms.ToolStripMenuItem viewExternalToolStripMenuItem;
 		private System.Windows.Forms.SplitContainer splitContainer4;
@@ -842,6 +857,8 @@
 		private System.Windows.Forms.ToolStripMenuItem unStageToolStripMenuItem;
 		private System.Windows.Forms.ToolStripMenuItem ignoreExtensionToolStripMenuItem;
 		private System.Windows.Forms.ToolStripMenuItem abortMergeToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem concludeMergeToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem abortRebaseToolStripMenuItem;
 		private System.Windows.Forms.ToolStripMenuItem deleteRemoteToolStripMenuItem;
 		private System.Windows.Forms.Label label1;
 		private System.Windows.Forms.Label label2;
@@ -879,5 +896,6 @@
         private System.Windows.Forms.ToolStripMenuItem pullAndMergeFromToolStripMenuItem;
         private System.Windows.Forms.CheckBox chkIgnoreWhiteSpace;
         private System.Windows.Forms.ToolStripMenuItem mergeFromSquashToolStripMenuItem;
+        private ucDifferences ucDiff;
     }
 }

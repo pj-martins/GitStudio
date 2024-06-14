@@ -39,18 +39,18 @@ namespace PaJaMa.GitStudio
 		{
 			lblDirection.Text = ToBranch.BranchName + " -> " + FromBranch.BranchName;
 			var diffs = Helper.RunCommand("--no-pager diff --name-status " + FromBranch.BranchName + " " + ToBranch.BranchName);
-			gridMain.DataSource = diffs.Select(d => d.Contains('\t')
+			gridMain.DataSource = diffs.Where(d => !string.IsNullOrWhiteSpace(d)).Select(d => d.Contains('\t')
 			?
 			new
 			{
 				File = d.Split('\t')[1],
-				Action = d.Split('\t')[0] == "A" ? "Add" : (d.Split('\t')[0] == "M" ? "Modify" : "Delete")
+				Action = Helpers.GetDifferenceType(d.Split('\t')[0])
 			}
 			:
 			new
 			{
 				File = d,
-				Action = "ERROR"
+				Action = DifferenceType.Unknown
 			}).ToList();
 		}
 
@@ -67,16 +67,27 @@ namespace PaJaMa.GitStudio
 			externalCompareToolStripMenuItem_Click(sender, e);
 		}
 
+		private string getEscapedFile(string fileName)
+		{
+			var outFile = fileName;
+            if (outFile.Contains(" "))
+            {
+                outFile = "\"" + outFile + "\"";
+            }
+			return outFile;
+        }
+
 		private void gridMain_SelectionChanged(object sender, EventArgs e)
 		{
 			var selectedRow = gridMain.SelectedRows.OfType<DataGridViewRow>().FirstOrDefault();
 			if (selectedRow == null)
 			{
-				txtDifferences.Text = string.Empty;
+				ucDifferences.ClearDifferences();
 				return;
 			}
-			var diffs = Helper.RunCommand("--no-pager diff " + FromBranch.BranchName + " " + ToBranch.BranchName + " -- \"" + selectedRow.Cells["File"].Value.ToString() + "\"");
-			txtDifferences.Text = string.Join("\r\n", diffs);
+
+            var diffs = Helper.RunCommand("--no-pager diff " + FromBranch.BranchName + " " + ToBranch.BranchName + " -- " + getEscapedFile(selectedRow.Cells["File"].Value.ToString()));
+			ucDifferences.SetDifferences(diffs, (DifferenceType)selectedRow.Cells["Action"].Value);
 		}
 
 		private void externalCompareToolStripMenuItem_Click(object sender, EventArgs e)
@@ -91,8 +102,8 @@ namespace PaJaMa.GitStudio
 			{
 				if (selectedRow.Cells["Action"].Value.ToString() != "Modify") continue;
 				bool hasError = false;
-				var content1 = Helper.RunCommand("--no-pager show " + FromBranch.BranchName + ":\"" + selectedRow.Cells["File"].Value.ToString() + "\"", true, false, ref hasError);
-				var content2 = Helper.RunCommand("--no-pager show " + ToBranch.BranchName + ":\"" + selectedRow.Cells["File"].Value.ToString() + "\"", true, false, ref hasError);
+				var content1 = Helper.RunCommand("--no-pager show " + FromBranch.BranchName + ":" + getEscapedFile(selectedRow.Cells["File"].Value.ToString()), true, false, ref hasError);
+				var content2 = Helper.RunCommand("--no-pager show " + ToBranch.BranchName + ":" + getEscapedFile(selectedRow.Cells["File"].Value.ToString()), true, false, ref hasError);
 
 				var tmpDir = Path.Combine(Path.GetTempPath(), "GitStudio");
 				if (!Directory.Exists(tmpDir)) Directory.CreateDirectory(tmpDir);

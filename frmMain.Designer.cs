@@ -100,9 +100,9 @@
             this.tabMain.SelectedTab = null;
             this.tabMain.Size = new System.Drawing.Size(984, 471);
             this.tabMain.TabIndex = 1;
-            this.tabMain.TabClosing += new PaJaMa.WinControls.TabControl.TabEventHandler(this.tabMain_TabClosing);
-            this.tabMain.TabChanged += new PaJaMa.WinControls.TabControl.TabEventHandler(this.tabMain_TabChanged);
-            this.tabMain.TabOrderChanged += new PaJaMa.WinControls.TabControl.TabEventHandler(this.tabMain_TabOrderChanged);
+            this.tabMain.TabClosing += new PaJaMa.WinControls.TabControl.TabEventHandler(this.tab_TabClosing);
+            this.tabMain.TabChanged += new PaJaMa.WinControls.TabControl.TabEventHandler(this.tab_TabChanged);
+            this.tabMain.TabOrderChanged += new PaJaMa.WinControls.TabControl.TabEventHandler(this.tab_TabOrderChanged);
             // 
             // openSSHToolStripMenuItem
             // 

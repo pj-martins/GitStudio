@@ -37,7 +37,7 @@
 			this.externalCompareToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.panel1 = new System.Windows.Forms.Panel();
 			this.lblCommits = new System.Windows.Forms.Label();
-			this.txtDifferences = new System.Windows.Forms.TextBox();
+			this.ucDifferences = new ucDifferences();
 			this.mnuCommits = new System.Windows.Forms.ContextMenuStrip(this.components);
 			this.getToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			((System.ComponentModel.ISupportInitialize)(this.gridCommits)).BeginInit();
@@ -84,7 +84,7 @@
 			// 
 			// splitContainer1.Panel2
 			// 
-			this.splitContainer1.Panel2.Controls.Add(this.txtDifferences);
+			this.splitContainer1.Panel2.Controls.Add(this.ucDifferences);
 			this.splitContainer1.Size = new System.Drawing.Size(1060, 640);
 			this.splitContainer1.SplitterDistance = 787;
 			this.splitContainer1.TabIndex = 3;
@@ -155,15 +155,13 @@
 			this.lblCommits.Size = new System.Drawing.Size(0, 13);
 			this.lblCommits.TabIndex = 0;
 			// 
-			// txtDifferences
+			// ucDifferences
 			// 
-			this.txtDifferences.Dock = System.Windows.Forms.DockStyle.Fill;
-			this.txtDifferences.Location = new System.Drawing.Point(0, 0);
-			this.txtDifferences.Multiline = true;
-			this.txtDifferences.Name = "txtDifferences";
-			this.txtDifferences.ReadOnly = true;
-			this.txtDifferences.Size = new System.Drawing.Size(269, 640);
-			this.txtDifferences.TabIndex = 0;
+			this.ucDifferences.Dock = System.Windows.Forms.DockStyle.Fill;
+			this.ucDifferences.Location = new System.Drawing.Point(0, 0);
+			this.ucDifferences.Name = "ucDifferences";
+			this.ucDifferences.Size = new System.Drawing.Size(269, 640);
+			this.ucDifferences.TabIndex = 0;
 			// 
 			// mnuCommits
 			// 
@@ -214,7 +212,7 @@
 
 		private System.Windows.Forms.DataGridView gridCommits;
 		private System.Windows.Forms.SplitContainer splitContainer1;
-		private System.Windows.Forms.TextBox txtDifferences;
+		private ucDifferences ucDifferences;
 		private System.Windows.Forms.SplitContainer splitContainer2;
 		private System.Windows.Forms.DataGridView gridDetails;
 		private System.Windows.Forms.ContextMenuStrip mnuDetails;
