@@ -706,7 +706,14 @@ namespace PaJaMa.GitStudio
 					selectedItems.Add(runningText);
 				}
 			}
-			File.AppendAllLines(Path.Combine(Repository.LocalPath, ".gitignore"), selectedItems);
+			if (Repository.SSHConnection != null)
+			{
+				SSHHelper.RunCommand(_repository.SSHConnection, $"echo \"{string.Join("\n", selectedItems)}\" >> {_repository.SSHConnection.Path}/.gitignore");
+			}
+			else
+			{
+				File.AppendAllLines(Path.Combine(Repository.LocalPath, ".gitignore"), selectedItems);
+			}
 			ucDiff.ClearDifferences();
 			refreshPage();
 		}
