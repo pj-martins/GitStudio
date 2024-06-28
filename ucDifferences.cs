@@ -57,8 +57,8 @@ namespace PaJaMa.GitStudio
 				var match = Regex.Match(lines[i], "^@@ \\-(\\d*),\\d* \\+(\\d*),\\d* @@");
 				if (match.Success)
 				{
-					removeStart = Convert.ToInt16(match.Groups[1].Value);
-					addStart = Convert.ToInt16(match.Groups[2].Value);
+					removeStart = Convert.ToInt32(match.Groups[1].Value);
+					addStart = Convert.ToInt32(match.Groups[2].Value);
 					addIndex = 0;
 					removeIndex = 0;
 					lineIndicators.Add(i);

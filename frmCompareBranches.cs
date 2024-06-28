@@ -38,7 +38,7 @@ namespace PaJaMa.GitStudio
 		private void refreshDifferences()
 		{
 			lblDirection.Text = ToBranch.BranchName + " -> " + FromBranch.BranchName;
-			var diffs = Helper.RunCommand("--no-pager diff --name-status " + FromBranch.BranchName + " " + ToBranch.BranchName);
+			var diffs = Helper.RunCommand("diff --name-status " + FromBranch.BranchName + " " + ToBranch.BranchName);
 			gridMain.DataSource = diffs.Where(d => !string.IsNullOrWhiteSpace(d)).Select(d => d.Contains('\t')
 			?
 			new
@@ -86,7 +86,7 @@ namespace PaJaMa.GitStudio
 				return;
 			}
 
-            var diffs = Helper.RunCommand("--no-pager diff " + FromBranch.BranchName + " " + ToBranch.BranchName + " -- " + getEscapedFile(selectedRow.Cells["File"].Value.ToString()));
+            var diffs = Helper.RunCommand("diff " + FromBranch.BranchName + " " + ToBranch.BranchName + " -- " + getEscapedFile(selectedRow.Cells["File"].Value.ToString()));
 			ucDifferences.SetDifferences(diffs, (DifferenceType)selectedRow.Cells["Action"].Value);
 		}
 
@@ -102,8 +102,8 @@ namespace PaJaMa.GitStudio
 			{
 				if (selectedRow.Cells["Action"].Value.ToString() != "Modify") continue;
 				bool hasError = false;
-				var content1 = Helper.RunCommand("--no-pager show " + FromBranch.BranchName + ":" + getEscapedFile(selectedRow.Cells["File"].Value.ToString()), true, false, ref hasError);
-				var content2 = Helper.RunCommand("--no-pager show " + ToBranch.BranchName + ":" + getEscapedFile(selectedRow.Cells["File"].Value.ToString()), true, false, ref hasError);
+				var content1 = Helper.RunCommand("show " + FromBranch.BranchName + ":" + getEscapedFile(selectedRow.Cells["File"].Value.ToString()), true, false, ref hasError);
+				var content2 = Helper.RunCommand("show " + ToBranch.BranchName + ":" + getEscapedFile(selectedRow.Cells["File"].Value.ToString()), true, false, ref hasError);
 
 				var tmpDir = Path.Combine(Path.GetTempPath(), "GitStudio");
 				if (!Directory.Exists(tmpDir)) Directory.CreateDirectory(tmpDir);

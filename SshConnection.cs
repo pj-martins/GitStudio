@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using ScintillaNET;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -21,8 +22,9 @@ namespace PaJaMa.GitStudio
         public string PasswordEncrypted { get; set; }
         public string KeyFile { get; set; }
         public bool UseCMD { get; set; }
+		public bool RemoteCommand { get; set; }
 
-        private Process _sshProcess;
+		private Process _sshProcess;
         private bool _beginReceive = false;
         private List<string> _receiveLines = new List<string>();
         private DateTime? _lastReceive;
@@ -93,10 +95,11 @@ namespace PaJaMa.GitStudio
 
         private void dataReceived(object sender, DataReceivedEventArgs e)
         {
-            _lastReceive = DateTime.Now;
+			// File.AppendAllText("debugssh.txt", $"RECEIVING {e.Data.Replace("\r", "").Replace("\n", "|")}\n");
+			_lastReceive = DateTime.Now;
             if (_beginReceive)
             {
-                _receiveLines.Add(e.Data);
+                _receiveLines.Add(e.Data.Replace("\r", "").Replace("\n", "|"));
             }
         }
 
@@ -121,54 +124,122 @@ namespace PaJaMa.GitStudio
 
         public List<string> RunCommand(string command, int waitTime = 50)
         {
-            lock (_lock)
+            if (RemoteCommand)
             {
-                if (_sshProcess == null || _sshProcess.HasExited)
+				var lines = new List<string>();
+				if (!File.Exists("ssh.exe"))
+				{
+					File.WriteAllBytes("ssh.exe", Resources.ssh);
+				}
+				var args = $"{UserName}@{Host} -t \"cd {Path} && {command}";
+				var inf = new ProcessStartInfo("ssh", args);
+				inf.UseShellExecute = false;
+				inf.RedirectStandardOutput = true;
+				inf.RedirectStandardError = true;
+				inf.StandardOutputEncoding = Encoding.ASCII;
+				inf.StandardErrorEncoding = Encoding.ASCII;
+				inf.WindowStyle = ProcessWindowStyle.Hidden;
+				inf.CreateNoWindow = true;
+				var p = new Process();
+				p.StartInfo = inf;
+				p.OutputDataReceived += new DataReceivedEventHandler((sender, e) =>
+				{
+					if (!string.IsNullOrEmpty(e.Data))
+					{
+						var illegals = new List<string>()
+								{
+									"[?1l",
+									"[?1h",
+									"[?11"
+								};
+						if (e.Data != null && !illegals.Any(x => e.Data.Contains(x)) && !e.Data.Contains("Connection "))
+						{
+							lock (_lock)
+							{
+								lines.Add(e.Data);
+							}
+						}
+					}
+				});
+				//p.ErrorDataReceived += new DataReceivedEventHandler((sender, e) =>
+				//{
+				//	if (!string.IsNullOrEmpty(e.Data))
+				//	{
+				//		if (e.Data != null && !e.Data.Contains("[?1h") && !e.Data.Contains("[?11") && !e.Data.Contains("Connection "))
+				//		{
+				//			lock (_lock)
+				//			{
+				//				lines.Add(new Tuple<string, bool>(e.Data, true));
+				//				if (worker != null)
+				//					worker.ReportProgress(50, e.Data);
+				//			}
+				//		}
+				//	}
+				//});
+				p.Start();
+				p.BeginOutputReadLine();
+				p.BeginErrorReadLine();
+				bool completed = p.WaitForExit(5000);
+				if (!completed)
+				{
+					// TODO: lines.Add(new Tuple<string, bool>("TIMEDOUT", true));
+				}
+				return lines;
+			}
+            else
+            {
+                lock (_lock)
                 {
-                    initProcess();
-                    Thread.Sleep(100);
-                    waitForBreak(true, waitTime);
-                    _lastReceive = null;
-                    _sshProcess.StandardInput.WriteLine($"cd {Path}");
-                    Thread.Sleep(100);
-                    _sshProcess.StandardInput.WriteLine("clear");
-                    waitForBreak(true, waitTime);
-                    Thread.Sleep(1000);
-                    _lastReceive = null;
-                    _beginReceive = true;
-                }
-
-                _receiveLines.Clear();
-                _sshProcess.StandardInput.WriteLine(command);
-                Thread.Sleep(100);
-                waitForBreak(false, waitTime);
-                var lines = _receiveLines.Where(l => l != null && !l.StartsWith("\u001b[")).ToList();
-                if (lines.Count > 0)
-                {
-                    var ind = lines.FindIndex(l => l.EndsWith("\u001b[?2004l"));
-                    if (ind > 0)
+                    if (_sshProcess == null || _sshProcess.HasExited)
                     {
-                        lines = lines.Skip(ind + 1).ToList();
+                        initProcess();
+                        Thread.Sleep(100);
+                        waitForBreak(true, waitTime);
+                        _lastReceive = null;
+                        _sshProcess.StandardInput.WriteLine($"cd {Path}");
+                        Thread.Sleep(100);
+						//_sshProcess.StandardInput.WriteLine($"git config color.ui false --replace-all");
+						//Thread.Sleep(100);
+						_sshProcess.StandardInput.WriteLine("clear");
+                        waitForBreak(true, waitTime);
+                        Thread.Sleep(1000);
+                        _lastReceive = null;
+                        _beginReceive = true;
                     }
 
-                    var firstInd = _receiveLines.FindIndex(l => l.Contains(" % "));
-                    if (firstInd >= 0)
+                    _receiveLines.Clear();
+                    // File.AppendAllText("debugssh.txt", $"__SENDING {command}\n");
+                    _sshProcess.StandardInput.WriteLine(command);
+                    Thread.Sleep(100);
+                    waitForBreak(false, waitTime);
+                    var lines = _receiveLines.Where(l => l != null && !l.StartsWith("\u001b[")).ToList();
+                    if (lines.Count > 0)
                     {
-                        var percentInd = _receiveLines[firstInd].IndexOf(" % ");
-                        var skipPart = _receiveLines[firstInd].Substring(0, percentInd);
-                        if (skipPart.Length > 0)
+                        var ind = lines.FindIndex(l => l.EndsWith("\u001b[?2004l"));
+                        if (ind > 0)
                         {
-                            var lastInd = lines.FindIndex(l => l.StartsWith(skipPart));
-                            if (lastInd > 1)
+                            lines = lines.Skip(ind + 1).ToList();
+                        }
+
+                        var firstInd = _receiveLines.FindIndex(l => l.Contains(" % "));
+                        if (firstInd >= 0)
+                        {
+                            var percentInd = _receiveLines[firstInd].IndexOf(" % ");
+                            var skipPart = _receiveLines[firstInd].Substring(0, percentInd);
+                            if (skipPart.Length > 0)
                             {
-                                lines = lines.Take(lastInd - 1).ToList();
+                                var lastInd = lines.FindIndex(l => l.StartsWith(skipPart));
+                                if (lastInd > 1)
+                                {
+                                    lines = lines.Take(lastInd - 1).ToList();
+                                }
                             }
                         }
                     }
+                    _receiveLines.Clear();
+                    _lastReceive = null;
+                    return lines;
                 }
-                _receiveLines.Clear();
-                _lastReceive = null;
-                return lines;
             }
         }
 

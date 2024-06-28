@@ -589,7 +589,7 @@ namespace PaJaMa.GitStudio
 					currFile = Path.Combine(Repository.LocalPath, diff.FileName.Replace("\"", ""));
 				}
 				bool error = false;
-				var oldContent = _helper.RunCommand("--no-pager show " + _currentBranch + ":" + getEscapedFile(diff.FileName), true, false, ref error);
+				var oldContent = _helper.RunCommand("show " + _currentBranch + ":" + getEscapedFile(diff.FileName), true, false, ref error);
 				if (error) return;
 				File.WriteAllLines(tmpFile, oldContent);
 
@@ -789,7 +789,7 @@ namespace PaJaMa.GitStudio
 				var diffs = new string[0];
 				if (diff != null && diff.DifferenceType == DifferenceType.Modify)
 				{
-					diffs = _helper.RunCommand("--no-pager diff " + (diff.IsStaged ? "--cached " : "") + (chkIgnoreWhiteSpace.Checked ? "-w " : "") + getEscapedFile(diff.FileName));
+					diffs = _helper.RunCommand("diff " + (diff.IsStaged ? "--cached " : "") + (chkIgnoreWhiteSpace.Checked ? "-w " : "") + getEscapedFile(diff.FileName));
 				}
 				else if (diff != null && diff.DifferenceType == DifferenceType.Add)
 				{

@@ -37,7 +37,8 @@ namespace PaJaMa.GitStudio
                         // var rawLines = SSHHelper.RunCommandAsLines(SSHConnection, $"cd {SSHConnection.Path} && git config color.ui false --replace-all && {string.Join(" && ", arguments.Select(a => $"git {a.Replace("\"", "\\\"")}"))} && git config color.ui true --replace-all");
                         // var rawLines = SSHHelper.RunCommandAsLines(SSHConnection, $"git config color.ui false --replace-all && {string.Join(" && ", arguments.Select(a => $"git {a.Replace("\"", "\\\"")}"))} && git config color.ui true --replace-all");
                         var rawLines = SSHHelper.RunCommandAsLines(SSHConnection,
-							$"git config color.ui false --replace-all && {string.Join(" && ", arguments.Select(a => $"git {a}"))} && git config color.ui true --replace-all",
+							$"git config color.ui false --replace-all && {string.Join(" && ", arguments.Select(a => $"git --no-pager {a}"))} && git config color.ui true --replace-all",
+							// string.Join(" && ", arguments.Select(a => $"git {a}")),
 							false, 100);
                         // File.WriteAllText(Path.Combine("Output", $"raw_{DateTime.Now:yyyyMMddHHmmssfff}.txt"), String.Join("\n", rawLines));
                         // rawLines.RemoveAt(rawLines.Count - 1);

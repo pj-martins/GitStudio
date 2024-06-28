@@ -28,7 +28,8 @@ namespace PaJaMa.GitStudio
             this.GitRepository.SSHConnection.Path = txtPath.Text;
             this.GitRepository.SSHConnection.KeyFile = txtKeyFile.Text;
             this.GitRepository.SSHConnection.UseCMD = chkOpenSSH.Checked;
-            this.DialogResult = DialogResult.OK;
+			this.GitRepository.SSHConnection.RemoteCommand = chkRemoteCommand.Checked;
+			this.DialogResult = DialogResult.OK;
         }
 
         private void frmSSHConnection_Load(object sender, EventArgs e)
@@ -42,6 +43,7 @@ namespace PaJaMa.GitStudio
                 txtPath.Text = this.GitRepository.SSHConnection.Path;
                 txtKeyFile.Text = this.GitRepository.SSHConnection.KeyFile;
                 chkOpenSSH.Checked = this.GitRepository.SSHConnection.UseCMD;
+                chkRemoteCommand.Checked = this.GitRepository.SSHConnection.RemoteCommand;
                 btnOpen.Text = "Save";
             }
         }

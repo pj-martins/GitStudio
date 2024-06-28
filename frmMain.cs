@@ -386,7 +386,9 @@ namespace PaJaMa.GitStudio
 				var settings = SettingsHelper.GetUserSettings<GitUserSettings>();
 				if (string.IsNullOrEmpty(input.Text))
 				{
-					throw new NotImplementedException();
+					var curr = settings.Repositories.FirstOrDefault((g) => g.Children.Any(c => c.AreEqual(repo)));
+					curr.Children = curr.Children.Where(c => !c.AreEqual(repo)).ToList();
+					// TODO:
 				}
 				else
 				{
@@ -572,6 +574,7 @@ namespace PaJaMa.GitStudio
 				PasswordEncrypted = repo.SSHConnection.PasswordEncrypted,
 				KeyFile = repo.SSHConnection.KeyFile,
 				UseCMD = repo.SSHConnection.UseCMD,
+				RemoteCommand = repo.SSHConnection.RemoteCommand,
 			};
 			if (dlg.ShowDialog() == System.Windows.Forms.DialogResult.OK)
 			{

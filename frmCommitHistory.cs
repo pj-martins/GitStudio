@@ -38,7 +38,7 @@ namespace PaJaMa.GitStudio
 		private void refreshDifferences()
 		{
 			splitContainer2.Panel2Collapsed = !string.IsNullOrEmpty(FileName);
-			var logs = Helper.RunCommand("--no-pager log " + (string.IsNullOrEmpty(FileName) ? Branch.BranchName : " -- " + FileName));
+			var logs = Helper.RunCommand("log " + (string.IsNullOrEmpty(FileName) ? Branch.BranchName : " -- " + FileName));
 			var commits = new List<Commit>();
 			//commits.Add(new Commit()
 			//{
@@ -116,13 +116,13 @@ namespace PaJaMa.GitStudio
 			if (commitsToCompare.Item1 != null)
 			{
 				lblCommits.Text = commitsToCompare.Item1.CommitID + " - " + commitsToCompare.Item2.CommitID;
-				diffs = Helper.RunCommand("--no-pager diff --name-status " + commitsToCompare.Item1.CommitID.Split(' ').First()
+				diffs = Helper.RunCommand("diff --name-status " + commitsToCompare.Item1.CommitID.Split(' ').First()
 					+ " " + commitsToCompare.Item2.CommitID.Split(' ').First(), false);
 			}
 			else
 			{
 				lblCommits.Text = commitsToCompare.Item2.CommitID;
-				diffs = Helper.RunCommand("--no-pager show --name-status -r " + commitsToCompare.Item2.CommitID.Split(' ').First());
+				diffs = Helper.RunCommand("show --name-status -r " + commitsToCompare.Item2.CommitID.Split(' ').First());
 			}
 			var details = new Dictionary<string, DifferenceType>();
 			foreach (var diff in diffs)
@@ -157,7 +157,7 @@ namespace PaJaMa.GitStudio
 				return;
 			}
 
-			var diffs = Helper.RunCommand("--no-pager diff " +
+			var diffs = Helper.RunCommand("diff " +
 				(commitsToCompare.Item1 != null ? commitsToCompare.Item1.CommitID.Split(' ').First() + " " : "") +
 				commitsToCompare.Item2.CommitID.Split(' ').First() + " -- " + selectedRow.Cells["File"].Value.ToString());
 			ucDifferences.SetDifferences(diffs, (DifferenceType)selectedRow.Cells["Action"].Value);
@@ -188,8 +188,8 @@ namespace PaJaMa.GitStudio
 				}
 
 				bool hasError = false;
-                var content1 = Helper.RunCommand("--no-pager show " + commitsToCompare.Item2.CommitID.Split(' ').First() + ":\"" + selectedRow.Cells["File"].Value.ToString() + "\"", true, false, ref hasError);
-				var content2 = Helper.RunCommand("--no-pager show " + commitsToCompare.Item1.CommitID.Split(' ').First() + ":\"" + selectedRow.Cells["File"].Value.ToString() + "\"", true, false, ref hasError);
+                var content1 = Helper.RunCommand("show " + commitsToCompare.Item2.CommitID.Split(' ').First() + ":\"" + selectedRow.Cells["File"].Value.ToString() + "\"", true, false, ref hasError);
+				var content2 = Helper.RunCommand("show " + commitsToCompare.Item1.CommitID.Split(' ').First() + ":\"" + selectedRow.Cells["File"].Value.ToString() + "\"", true, false, ref hasError);
 
 				var tmpDir = Path.Combine(Path.GetTempPath(), "GitStudio");
 				if (!Directory.Exists(tmpDir)) Directory.CreateDirectory(tmpDir);

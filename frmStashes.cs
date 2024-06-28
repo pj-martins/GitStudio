@@ -69,7 +69,7 @@ namespace PaJaMa.GitStudio
 
 			var stashID = (selectedRows.First().DataBoundItem as Stash).StashID;
 
-			var diffs = Helper.RunCommand("--no-pager stash show " + stashID + " --name-status", false);
+			var diffs = Helper.RunCommand("stash show " + stashID + " --name-status", false);
 			var details = new Dictionary<string, DifferenceType>();
 			foreach (var diff in diffs)
 			{
@@ -103,7 +103,7 @@ namespace PaJaMa.GitStudio
 				return;
 			}
 
-			var diffs = Helper.RunCommand("--no-pager diff " + (selectedStash.DataBoundItem as Stash).StashID + " -- " + selectedRow.Cells["File"].Value.ToString());
+			var diffs = Helper.RunCommand("diff " + (selectedStash.DataBoundItem as Stash).StashID + " -- " + selectedRow.Cells["File"].Value.ToString());
 			ucDifferences.SetDifferences(diffs, (DifferenceType)selectedRow.Cells["Action"].Value);
 		}
 
@@ -138,7 +138,7 @@ namespace PaJaMa.GitStudio
 				if (!Directory.Exists(tmpDir)) Directory.CreateDirectory(tmpDir);
 				var tmpFile = Path.Combine(tmpDir, Guid.NewGuid() + ".tmp");
 				bool error = false;
-				var oldContent = Helper.RunCommand("--no-pager show " + stashID + ":\"" + fileName + "\"", false, ref error);
+				var oldContent = Helper.RunCommand("show " + stashID + ":\"" + fileName + "\"", false, ref error);
 				if (error) return;
 				File.WriteAllLines(tmpFile, oldContent);
 				Process.Start(settings.ExternalDiffApplication, string.Format(settings.ExternalDiffArgumentsFormat, currFile, tmpFile));

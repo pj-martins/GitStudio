@@ -78,7 +78,7 @@ namespace PaJaMa.GitStudio
 						stop = i;
 				}
 			}
-			var logs = Helper.RunCommand($"--no-pager log -L {start},{stop}:{SelectedFile.Replace("\\", "/")}");
+			var logs = Helper.RunCommand($"log -L {start},{stop}:{SelectedFile.Replace("\\", "/")}");
 			var commits = new List<Commit>();
 			//commits.Add(new Commit()
 			//{
@@ -186,8 +186,8 @@ namespace PaJaMa.GitStudio
 				return;
 			}
 
-			var content1 = Helper.RunCommand("--no-pager show " + commitsToCompare.Item2.CommitID.Split(' ').First() + ":\"" + SelectedFile.Replace("\\", "/") + "\"");
-			var content2 = Helper.RunCommand("--no-pager show " + commitsToCompare.Item1.CommitID.Split(' ').First() + ":\"" + SelectedFile.Replace("\\", "/") + "\"");
+			var content1 = Helper.RunCommand("show " + commitsToCompare.Item2.CommitID.Split(' ').First() + ":\"" + SelectedFile.Replace("\\", "/") + "\"");
+			var content2 = Helper.RunCommand("show " + commitsToCompare.Item1.CommitID.Split(' ').First() + ":\"" + SelectedFile.Replace("\\", "/") + "\"");
 
 			var tmpDir = Path.Combine(Path.GetTempPath(), "GitStudio");
 			if (!Directory.Exists(tmpDir)) Directory.CreateDirectory(tmpDir);
