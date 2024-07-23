@@ -263,9 +263,10 @@ namespace PaJaMa.GitStudio
 			return runCommand(new string[] { arguments }, false, false, false, worker, ref hasError);
 		}
 
-		public List<Branch> GetBranches(bool showProgress)
+		public List<Branch> GetBranches(bool showProgress, int retry = 0)
 		{
 			bool remote = true;
+			bool somethingWentWrong = false;
 			List<Branch> branches = new List<Branch>();
 			var action = new Action(() =>
 			{
@@ -316,6 +317,13 @@ namespace PaJaMa.GitStudio
 								{
 									var remoteBranchName = match2.Success ? match2.Groups[1].Value : match.Groups[1].Value;
 									lb.TracksBranch = branches.OfType<RemoteBranch>().FirstOrDefault(rb => rb.BranchName == remoteBranchName);
+									if (lb.TracksBranch == null)
+									{
+										// TODO: something went wrong, try again
+										somethingWentWrong = true;
+										retry++;
+										break;
+									}
 								}
 							}
 						}
@@ -328,7 +336,14 @@ namespace PaJaMa.GitStudio
 			if (showProgress)
 			{
 				var backgroundWorker = new BackgroundWorker();
-				backgroundWorker.DoWork += (object sender, DoWorkEventArgs e) => action.Invoke();
+				backgroundWorker.DoWork += (object sender, DoWorkEventArgs e) =>
+				{
+					action.Invoke();
+					if (somethingWentWrong && retry < 2)
+					{
+						branches = GetBranches(false);
+					}
+				};
 				WinControls.WinProgressBox.ShowProgress(backgroundWorker, "Retrieving branches.");
 			}
 			else
