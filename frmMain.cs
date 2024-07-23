@@ -263,6 +263,7 @@ namespace PaJaMa.GitStudio
 				tab.ContextMenuStrip.Items.Add("&Edit SSH Settings", null, new EventHandler(this.EditSSHSettingsToolStripMenuItem_Click));
 				tab.ContextMenuStrip.Items.Add("&Clone SSH Repo", null, new EventHandler(this.CloneSSHRepoToolStripMenuItem_Click));
 			}
+			tab.ContextMenuStrip.Items.Add("&Terminal (wt.exe)", null, new EventHandler(this.TerminalToolStripMenuItem_Click));
 			tab.Tag = repo;
 			if (parent == null)
 			{
@@ -590,6 +591,37 @@ namespace PaJaMa.GitStudio
 				tabCtrl.SelectedTab = tab;
 				(tab.Controls[0] as ucRepository).Init();
 			}
+		}
+
+		private void TerminalToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+			var proc = new Process();
+			// proc.StartInfo.FileName = "cmd.exe";
+			proc.StartInfo.FileName = "wt.exe";
+			//proc.StartInfo.UseShellExecute = false;
+			//proc.StartInfo.RedirectStandardInput = true;
+			//proc.Start();
+			var tsi = sender as ToolStripItem;
+			var tabCtrl = tsi.Tag as WinControls.TabControl.TabControl;
+			var repo = tabCtrl.SelectedTab.Tag as GitRepository;
+			//if (repo.SSHConnection == null)
+			//{
+			//	proc.StandardInput.WriteLine($"cd {repo.LocalPath}");
+			//}
+			//else
+			//{
+			//	proc.StandardInput.WriteLine($"ssh.exe -tt {repo.SSHConnection.UserName}@{repo.SSHConnection.Host}");
+			//	proc.StandardInput.WriteLine($"cd {repo.SSHConnection.Path}");
+			//}
+			if (repo.SSHConnection == null)
+			{
+				proc.StartInfo.Arguments = $"-d {repo.LocalPath}";
+			}
+			else
+			{
+				proc.StartInfo.Arguments = $"ssh.exe -t {repo.SSHConnection.UserName}@{repo.SSHConnection.Host} \"cd {repo.SSHConnection.Path} && bash\"";
+			}
+			proc.Start();
 		}
 
 		private void openSSHToolStripMenuItem_Click(object sender, EventArgs e)

@@ -1194,6 +1194,8 @@ namespace PaJaMa.GitStudio
 			_helper.RunCommand("pull origin " + branchName, true);
 			addWatchers();
 			RefreshBranches();
+			// TEMP ugly workaround
+			if (this.Repository.SSHConnection != null) RefreshBranches();
 
 		}
 

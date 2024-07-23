@@ -99,7 +99,7 @@ namespace PaJaMa.GitStudio
 			_lastReceive = DateTime.Now;
             if (_beginReceive)
             {
-                _receiveLines.Add(e.Data.Replace("\r", "").Replace("\n", "|"));
+                _receiveLines.Add(e.Data);
             }
         }
 
